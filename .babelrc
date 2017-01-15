@@ -4,7 +4,7 @@
   "comments": false,
   "env": {
     "test": {
-      "plugins": [ "istanbul" ]
+      "plugins": [ "istanbul", "transform-flow-strip-types" ]
     }
   }
 }
