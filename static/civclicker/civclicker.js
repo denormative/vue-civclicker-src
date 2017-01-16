@@ -172,8 +172,8 @@ CivObj.prototype = {
   subType: 'normal',
   get data() { return curCiv[this.id] },
   set data(value) { curCiv[this.id] = value },
-  get owned() { return this.data.owned },
-  set owned(value) { this.data.owned = value },
+  get owned() { return +this.data.owned },
+  set owned(value) { this.data.owned = +value },
   prereqs: {},
   require: {}, // Default to free.  If this is undefined, makes the item unpurchaseable
   salable: false,
@@ -191,10 +191,10 @@ CivObj.prototype = {
   },
   reset: function() { return this.init(false) }, // Default reset behavior is to re-init non-prestige items.
   get limit() {
-    return (typeof this.initOwned === 'number') ? Infinity // Default is no limit for numbers
-                       : (typeof this.initOwned === 'boolean') ? true : 0
+    return +((typeof this.initOwned === 'number') ? Infinity // Default is no limit for numbers
+                       : (typeof this.initOwned === 'boolean') ? true : 0)
   }, // true (1) for booleans, 0 otherwise.
-  set limit(value) { return this.limit }, // Only here for JSLint.
+  set limit(value) { return +this.limit }, // Only here for JSLint.
     // xxx This is a hack; it assumes that any CivObj with a getter for its
     // 'require' has a variable cost.  Which is currently true, but might not
     // always be.
@@ -231,8 +231,8 @@ Resource.prototype = new CivObj({
   constructor: Resource,
   type: 'resource',
     // 'net' accessor always exists, even if the underlying value is undefined for most resources.
-  get net() { return this.data.net },
-  set net(value) { this.data.net = value },
+  get net() { return +this.data.net },
+  set net(value) { this.data.net = +value },
   increment: 0,
   specialChance: 0,
   specialMaterial: '',
@@ -273,8 +273,8 @@ Upgrade.prototype = new CivObj({
   type: 'upgrade',
   initOwned: false,
   vulnerable: false,
-  get limit() { return 1 }, // Can't re-buy these.
-  set limit(value) { return this.limit } // Only here for JSLint.
+  get limit() { return +1 }, // Can't re-buy these.
+  set limit(value) { return +this.limit } // Only here for JSLint.
 }, true)
 
 function Unit(props) { // props is an object containing the desired properties.
@@ -322,10 +322,10 @@ Unit.prototype = new CivObj({
     // Is this unit just some other sort of unit in a different place (but in the same limit pool)?
   isDest: function() { return (this.source !== undefined) && (civData[this.source].partyObj === this) },
   get limit() {
-    return (this.isDest()) ? civData[this.source].limit
-                                             : Object.getOwnPropertyDescriptor(CivObj.prototype, 'limit').get.call(this)
+    return +((this.isDest()) ? civData[this.source].limit
+                                             : Object.getOwnPropertyDescriptor(CivObj.prototype, 'limit').get.call(this))
   },
-  set limit(value) { return this.limit }, // Only here for JSLint.
+  set limit(value) { return +this.limit }, // Only here for JSLint.
 
     // The total quantity of this unit, regardless of status or place.
   get total() { return (this.isDest()) ? civData[this.source].total : (this.owned + (this.ill || 0) + (this.party || 0)) },
@@ -346,8 +346,8 @@ Achievement.prototype = new CivObj({
   initOwned: false,
   prestige: true, // Achievements are not lost on reset.
   vulnerable: false,
-  get limit() { return 1 }, // Can't re-buy these.
-  set limit(value) { return this.limit } // Only here for JSLint.
+  get limit() { return +1 }, // Can't re-buy these.
+  set limit(value) { return +this.limit } // Only here for JSLint.
 }, true)
 
 // Initialize Data
