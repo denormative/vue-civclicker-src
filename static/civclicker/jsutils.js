@@ -18,16 +18,20 @@
     If it is not there, see <http://www.gnu.org/licenses/>.
 **/
 
+/* global Node */
+
 function isValid(variable) {
   return ((variable !== null) &&
-            (variable !== undefined) &&
-            (variable === variable)) // This is a way to test for NaN that
-            // isn't subject to the unexpected behavior of isNaN().
+    (variable !== undefined) &&
+    (!Number.isNaN(variable))
+  )
 }
 
 // Returns the variable if it's valid, otherwise the default value (or "")
-function ifValid(variable, defVal) {
-  if (defVal === undefined) { defVal = '' }
+function ifValid(variable, defVal) { // eslint-disable-line no-unused-vars
+  if (defVal === undefined) {
+    defVal = ''
+  }
   return isValid(variable) ? variable : ''
 }
 
@@ -44,57 +48,63 @@ function _valOfArgs() {
 // Evaluates and returns variable if it's a function, otherwise just returns it.
 // Passes surplus arguments on to the function.
 // xxx argument forwarding needs testing.
-function valOf(variable) {
-  return (typeof variable === 'function')
-                            ? variable.apply(this, _valOfArgs(arguments))
-                            : variable
+function valOf(variable) { // eslint-disable-line no-unused-vars
+  return ((typeof variable === 'function') ?
+    variable.apply(this, _valOfArgs(arguments)) :
+    variable)
 }
 
-function bake_cookie(name, value) {
+function bakeCookie(name, value) { // eslint-disable-line no-unused-vars
   var exdate = new Date()
   exdate.setDate(exdate.getDate() + 30)
   var cookie = [name, '=', JSON.stringify(value), '; expires=.', exdate.toUTCString(), '; domain=.', window.location.host.toString(), '; path=/;'].join('')
   document.cookie = cookie
 }
-function read_cookie(name) {
+
+function readCookie(name) { // eslint-disable-line no-unused-vars
   var result = document.cookie.match(new RegExp(name + '=([^;]+)'))
-  if (result) { result = JSON.parse(result[1]) }
+  if (result) {
+    result = JSON.parse(result[1])
+  }
 
   return result
 }
 
 // Calculates the summation of elements (n...m] of the arithmetic sequence
 // with increment "incr".
-function calcArithSum(incr, n, m) {
-    // Default to just element n+1, if m isn't given.
-  if (m === undefined) { m = n + 1 }
+function calcArithSum(incr, n, m) { // eslint-disable-line no-unused-vars
+  // Default to just element n+1, if m isn't given.
+  if (m === undefined) {
+    m = n + 1
+  }
   return (m - n) * ((n * incr) + ((m - 1) * incr)) / 2
 }
 
 // Search for the largest integer X that generates func(X) < limitY.
 // func should be a continuous increasing numeric function.
 // xxx This would probably be more elegant written recursively.
-function logSearchFn(func, limitY) {
+function logSearchFn(func, limitY) { // eslint-disable-line no-unused-vars
   var minX = 0
   var maxX = 0
   var curX = 0
   var curY
 
-    // First, find an upper bound.
+  // First, find an upper bound.
   while ((curY = func(maxX)) <= limitY) {
-    minX = maxX  // Previous was too low
+    minX = maxX // Previous was too low
     maxX = maxX ? maxX * 2 : (maxX + 1)
   }
-    // Invariant:  minX <= desired X < maxX
+  // Invariant:  minX <= desired X < maxX
 
-    // Now binary search the range.
+  // Now binary search the range.
   while (maxX - minX > 1) {
     curX = Math.floor((maxX + minX) / 2) // Find midpoint
     curY = func(curX)
 
     if (curY <= limitY) {
       minX = curX // Under limit; becomes new lower bound.
-    } else {
+    }
+    else {
       maxX = curX // Over limit; becomes new upper bound.
     }
   }
@@ -104,19 +114,21 @@ function logSearchFn(func, limitY) {
 
 // Recursively merge the properties of one object into another.
 // Similar (though not identical) to jQuery.extend()
-function mergeObj(o1, o2) {
+function mergeObj(o1, o2) { // eslint-disable-line no-unused-vars
   var i
 
-  if (o2 === undefined) { return o1 }
+  if (o2 === undefined) {
+    return o1
+  }
 
-    // If either one is a non-object, just clobber o1.
+  // If either one is a non-object, just clobber o1.
   if ((typeof (o2) !== 'object') || (o1 === null) ||
-        (typeof (o1) !== 'object') || (o2 === null)) {
+    (typeof (o1) !== 'object') || (o2 === null)) {
     o1 = o2
     return o1
   }
 
-    // Both are non-null objects.  Copy o2's properties to o1.
+  // Both are non-null objects.  Copy o2's properties to o1.
   for (i in o2) {
     if (o2.hasOwnProperty(i)) {
       o1[i] = mergeObj(o1[i], o2[i])
@@ -133,44 +145,74 @@ function mergeObj(o1, o2) {
 // Compensates for IE's lack of support for the "initial" property value.
 // May not support all HTML elements.
 // Returns the input visibility state, or undefined on an error.
-function setElemDisplay(htmlElem, visible) {
-    // If we're passed a string, assume it's the element ID.
-  if (typeof htmlElem === 'string') { htmlElem = document.getElementById(htmlElem) }
+function setElemDisplay(htmlElem, visible) { // eslint-disable-line no-unused-vars
+  // If we're passed a string, assume it's the element ID.
+  if (typeof htmlElem === 'string') {
+    htmlElem = document.getElementById(htmlElem)
+  }
 
   if (!htmlElem) {
     return undefined
   }
 
-    // If the visibility is unspecified, toggle it.
-  if (visible === undefined) { visible = (htmlElem.style.display == 'none') }
+  // If the visibility is unspecified, toggle it.
+  if (visible === undefined) {
+    visible = (htmlElem.style.display === 'none')
+  }
 
   var tagName = htmlElem.tagName.toUpperCase()
 
-/* xxx This is disabled because browser support for visibility: collapse is too inconsistent.
-    // If it's a <col> element, use visibility: collapse instead.
-    if (tagName == "COL") {
-        htmlElem.style.visibility = visible ? "inherit" : "collapse";
-        return;
-    }
-*/
+  /* xxx This is disabled because browser support for visibility: collapse is too inconsistent.
+      // If it's a <col> element, use visibility: collapse instead.
+      if (tagName == "COL") {
+          htmlElem.style.visibility = visible ? "inherit" : "collapse";
+          return;
+      }
+  */
 
   var displayVal = (!visible) ? 'none' : 'initial'
   if (visible) {
-        // Note that HTML comes in upper case, XML in lower.
+    // Note that HTML comes in upper case, XML in lower.
     switch (tagName) {
-      case 'SPAN': displayVal = 'inline'; break
-      case 'DIV': displayVal = 'block'; break
-      case 'P': displayVal = 'block'; break
-      case 'TABLE': displayVal = 'table'; break
-      case 'CAPTION': displayVal = 'table-caption'; break
-      case 'THEAD': displayVal = 'table-header-group'; break
-      case 'TBODY': displayVal = 'table-row-group'; break
-      case 'TFOOT': displayVal = 'table-footer-group'; break
-      case 'TR': displayVal = 'table-row'; break
-      case 'COL': displayVal = 'table-column'; break
-      case 'TD': displayVal = 'table-cell'; break
-      case 'LI': displayVal = 'list-item'; break
-      default: console.log('Unsupported tag <' + tagName + '> passed to setElemDisplay()'); break
+      case 'SPAN':
+        displayVal = 'inline'
+        break
+      case 'DIV':
+        displayVal = 'block'
+        break
+      case 'P':
+        displayVal = 'block'
+        break
+      case 'TABLE':
+        displayVal = 'table'
+        break
+      case 'CAPTION':
+        displayVal = 'table-caption'
+        break
+      case 'THEAD':
+        displayVal = 'table-header-group'
+        break
+      case 'TBODY':
+        displayVal = 'table-row-group'
+        break
+      case 'TFOOT':
+        displayVal = 'table-footer-group'
+        break
+      case 'TR':
+        displayVal = 'table-row'
+        break
+      case 'COL':
+        displayVal = 'table-column'
+        break
+      case 'TD':
+        displayVal = 'table-cell'
+        break
+      case 'LI':
+        displayVal = 'list-item'
+        break
+      default:
+        console.log('Unsupported tag <' + tagName + '> passed to setElemDisplay()')
+        break
     }
   }
   htmlElem.style.display = displayVal
@@ -182,20 +224,26 @@ function setElemDisplay(htmlElem, visible) {
 // Also searches up the DOM tree on lookups, to mimic inheritance.
 // Pass 'value' to set the value, otherwise returns the value.
 // Returns "true" and "false" as actual booleans.
-function dataset(elem, attr, value) {
-  if (value !== undefined) { return elem.setAttribute('data-' + attr, value) }
+function dataset(elem, attr, value) { // eslint-disable-line no-unused-vars
+  if (value !== undefined) {
+    return elem.setAttribute('data-' + attr, value)
+  }
 
   var val = null
   for (var i = elem; i; i = i.parentNode) {
-    if (i.nodeType != Node.ELEMENT_NODE) { continue }
+    if (i.nodeType !== Node.ELEMENT_NODE) {
+      continue
+    }
     val = i.getAttribute('data-' + attr)
-    if (val !== null) { break }
+    if (val !== null) {
+      break
+    }
   }
-  return (val == 'true') ? true : (val == 'false') ? false : val
+  return (val === 'true') ? true : (val === 'false') ? false : val
 }
 
 // Probabilistic rounding function
-function rndRound(num) {
+function rndRound(num) { // eslint-disable-line no-unused-vars
   var baseVal = Math.floor(num)
   return baseVal + ((Math.random() < (num - baseVal)) ? 1 : 0)
 }
@@ -203,48 +251,68 @@ function rndRound(num) {
 // Copy properties from to dest from src
 // If 'names' array supplied, only copies the named properties
 // If 'deleteOld' is true, deletes the properties from the old object
-function copyProps(dest, src, names, deleteOld) {
-  if (!(names instanceof Array)) { names = Object.getOwnPropertyNames(src) }
-  if (!isValid(deleteOld)) { deleteOld = false }
+function copyProps(dest, src, names, deleteOld) { // eslint-disable-line no-unused-vars
+  if (!(names instanceof Array)) {
+    names = Object.getOwnPropertyNames(src)
+  }
+  if (!isValid(deleteOld)) {
+    deleteOld = false
+  }
 
   names.forEach(function(elem) {
-    if (!src.hasOwnProperty(elem)) { return }
-        // This syntax is needed to copy get/set properly; you can't just use '='.
+    if (!src.hasOwnProperty(elem)) {
+      return
+    }
+    // This syntax is needed to copy get/set properly; you can't just use '='.
     Object.defineProperty(dest, elem, Object.getOwnPropertyDescriptor(src, elem))
-    if (deleteOld) { delete src[elem] }
+    if (deleteOld) {
+      delete src[elem]
+    }
   })
 }
 
 // Delete the specified named cookie
-function deleteCookie(cookieName) {
+function deleteCookie(cookieName) { // eslint-disable-line no-unused-vars
   document.cookie = [cookieName, '=; expires=Thu, 01-Jan-1970 00:00:01 GMT; path=/; domain=.', window.location.host.toString()].join('')
 }
 
 // Get the fundamental object of the given type
 function getStdObj(typeName) {
   switch (typeName) {
-    case 'object': return Object
-    case 'boolean': return Boolean
-    case 'number': return Number
-    case 'string': return String
-    case 'function': return Function
-    default: return undefined
+    case 'object':
+      return Object
+    case 'boolean':
+      return Boolean
+    case 'number':
+      return Number
+    case 'string':
+      return String
+    case 'function':
+      return Function
+    default:
+      return undefined
   }
 }
 
 // Return one variable, coerced to the type of another.
-function matchType(inVar, toMatch) {
+function matchType(inVar, toMatch) { // eslint-disable-line no-unused-vars
   return getStdObj(typeof toMatch)(inVar)
 }
 
 // Adds indices for the specified array.
 // Looks for the specified attribute in each array entry, and adds an alias for
 // it at the top level.
-function indexArrayByAttr(inArray, attr) {
+function indexArrayByAttr(inArray, attr) { // eslint-disable-line no-unused-vars
   inArray.forEach(function(elem, ignore, arr) {
-        // Add a named alias to each entry.
+    // Add a named alias to each entry.
     if (isValid(elem[attr]) && !isValid(arr[elem[attr]])) {
-      Object.defineProperty(arr, elem.id, { value: elem, enumerable: false })
-    } else { console.log('Duplicate or missing ' + attr + ' attribute in array: ' + elem[attr]) }
+      Object.defineProperty(arr, elem.id, {
+        value: elem,
+        enumerable: false
+      })
+    }
+    else {
+      console.log('Duplicate or missing ' + attr + ' attribute in array: ' + elem[attr])
+    }
   })
 }
