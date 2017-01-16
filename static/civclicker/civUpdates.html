@@ -8,7 +8,7 @@
         .hasBackground::after {  /* Apply semi-translucent background */
             content: ""; position: fixed; z-index: -1;
             top: 0; left: 0; bottom: 0; right: 0; opacity: 0.18;
-            background: url("images/constableLandscapeRetouched.jpg") no-repeat center center fixed;
+            background: url("/static/civclicker/images/constableLandscapeRetouched.jpg") no-repeat center center fixed;
             background-size: cover;
         }
         dt {
@@ -206,7 +206,7 @@
         Control, Throne of Bones, partially completed healing, and the timers
         for attack and trade. (Original Bug)
     </p><p>
-        Rulers may not name themselves after an existing deity.  They may, 
+        Rulers may not name themselves after an existing deity.  They may,
         however, name a deity after themselves when first creating it.
     </p><p>
         Raid plunder is now set when the raid is started.
@@ -223,11 +223,11 @@
         If a large quantity building purchase causes overcrowding, only cause
         overcrowding for the ones that exceeded the available land. (Original bug)
     </p><p>
-        Major refactoring of the save game format and primary game data structures.  
+        Major refactoring of the save game format and primary game data structures.
     </p><p>
         Game settings are now presumed to be tied to the device the game is
         played on, and not to a particular save game.  Consequently, importing
-        a save string will no longer affect: autosave, custom increments active, 
+        a save string will no longer affect: autosave, custom increments active,
         font size, use of icons, and work-safe mode.
     </p>
     <h2>2014-06-08: v1.1.37(alpha)</h2>
@@ -309,7 +309,7 @@
         Add in-code definitions for the upgrades and their purchase costs.
     </p><p>
         Fix a bug that caused traded resources to overwrite the resource's
-        master definition.  Added temporary code to repair the corruption 
+        master definition.  Added temporary code to repair the corruption
         when the game is loaded.
     </p><p>
         Fix a bug that caused siege engines to stop working.
@@ -324,7 +324,7 @@
     <p>
         Discontinue cookie-based saves; they were deprecated four months ago,
         and the risk of losing data by running into the 4k limit makes it risky
-        to add more fields to the savegame structures.  HTML5 localStorage is 
+        to add more fields to the savegame structures.  HTML5 localStorage is
         supported by all major browsers back to IE8, and we're already using
         other constructs that require at least IE9.  The game will still try to
         load from cookies as a last-ditch attempt if the localStorage load fails,
@@ -477,7 +477,7 @@
         v1.1.13+ will load prior save games, but prior versions will lose their
         corpses if they try to load a v1.1.13+ save game.
     </p><p>
-        Moved the displays for happiness, free land, and zombies to be in more 
+        Moved the displays for happiness, free land, and zombies to be in more
         useful places.
     </p><p>
         Removed the panel subheadings; they were taking up space, and not
@@ -538,7 +538,7 @@
     </p>
     <h2>2014-03-30: v1.1.4 (alpha)</h2>
     <p>
-        Removed 'Max' siege engine creation button 
+        Removed 'Max' siege engine creation button
         (it was too easy to accidentally click).
     </p>
     <h2>2014-03-30: v1.1.3 (alpha)</h2>

@@ -24,6 +24,9 @@
     confirm
     */
 
+// FIXME: need to severely lint this file then remove this.
+/* eslint operator-linebreak: [0] */
+
 var version = 19 // This is an ordinal used to trigger reloads.
 function VersionData(major, minor, sub, mod) {
   this.major = major
@@ -1499,7 +1502,7 @@ function getResourceRowText(purchaseObj) {
   s += "<td><button data-action='increment'>" + purchaseObj.verb + ' ' + objName + '</button></td>'
   s += "<td class='itemname'>" + objName + ': </td>'
   s += "<td class='number'><span data-action='display'>0</span></td>"
-  s += "<td class='icon'><img src='images/" + objId + ".png' class='icon icon-lg' alt='" + objName + "'/></td>"
+  s += "<td class='icon'><img src='/static/civclicker/images/" + objId + ".png' class='icon icon-lg' alt='" + objName + "'/></td>"
   s += "<td class='number'>(Max: <span id='max" + objId + "'>200</span>)</td>"
   s += "<td class='number net'><span data-action='displayNet'>0</span>/s</td>"
 
