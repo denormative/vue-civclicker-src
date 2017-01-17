@@ -1,15 +1,18 @@
 <template>
 <div id="app">
+  <root></root>
 </div>
 </template>
 
 <script>
 import Hello from './components/Hello'
+import Root from './components/Root'
 
 export default {
   name: 'app',
   components: {
-    Hello
+    Hello,
+    Root
   },
   created: function() {
     window.addEventListener('keydown', function(event) {
