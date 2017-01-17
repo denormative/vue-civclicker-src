@@ -1,8 +1,6 @@
 <template>
-  <div id="app">
-    <img src="./assets/logo.png">
-    <hello></hello>
-  </div>
+<div id="app">
+</div>
 </template>
 
 <script>
@@ -12,17 +10,38 @@ export default {
   name: 'app',
   components: {
     Hello
+  },
+  created: function() {
+    window.addEventListener('keydown', function(event) {
+      switch (event.keyCode) {
+        case 70: // f
+          window.increment('food')
+          break
+        case 68: // d
+          window.increment('wood')
+          break
+        case 83: // s
+          window.increment('stone')
+          break
+        case 82: // r
+          console.log('recruit')
+          window.spawn(Infinity)
+          break
+        default:
+          break
+      }
+    })
   }
 }
 </script>
 
 <style>
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  /*font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
+  margin-top: 60px;*/
 }
 </style>

@@ -3655,7 +3655,7 @@ function save(savetype) {
   try {
     xmlhttp = new XMLHttpRequest()
     xmlhttp.overrideMimeType('text/plain')
-    xmlhttp.open('GET', 'version.txt?r=' + Math.random(), true)
+    xmlhttp.open('GET', '/static/civclicker/version.txt?r=' + Math.random(), true)
     xmlhttp.onreadystatechange = function() {
       if (xmlhttp.readyState === 4) {
         var sVersion = parseInt(xmlhttp.responseText, 10)
