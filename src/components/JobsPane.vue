@@ -1,6 +1,6 @@
 <template>
   <div class="jobs-pane">
-    <div id="jobsContainer" class="civSection">
+    <div id="jobsContainer">
       <h3>Jobs</h3>
       <p id="customJobQuantity">
         Custom Quantity <input id="homeCustomQty" type="number" min="1" step="1" value="1" />
@@ -11,7 +11,7 @@
       Trader offers 1 gold for <span id="tradeRequested">0</span> <span id="tradeType">food</span><br>
       <button id="trader" onmousedown="trade()">Trade</button>
     </div>
-    <div id="eventsContainer" class="civSection">
+    <div id="eventsContainer">
       <h3>Events</h3>
       <table id="logTable">
         <tr id="log0">

@@ -1,6 +1,6 @@
 <template>
   <div class="stats-pane">
-    <div id="statsContainer" class="civSection">
+    <div id="statsContainer">
       <h3>Stats</h3> Resource clicks: <span id="clicks">0</span><br> Total Land: <span id="totalLand">1000</span><br> Total Buildings: <span id="totalBuildings">0</span><br> Enemies Slain: <span data-action="display" data-target="enemySlain">0</span><br> Unburied
       Corpses: <span data-action="display" data-target="corpses">0</span><br>
       <span id="graveTotal">Unfilled Graves: <span data-action="display" data-target="grave">0</span><br>

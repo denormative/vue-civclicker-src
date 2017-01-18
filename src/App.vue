@@ -6,7 +6,7 @@
 
 <script>
 import Hello from './components/Hello'
-import Root from './components/Root'
+import Root from './Root'
 
 export default {
   name: 'app',

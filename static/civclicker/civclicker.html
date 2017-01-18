@@ -62,11 +62,11 @@
 
   <div class="mainContent">
     <div id="leftColumn" class="civColumn">
-      <div id="basicResourcesContainer" class="civSection">
+      <div id="basicResourcesContainer">
         <h3>Basic Resources</h3>
         <table id="basicResources"></table>
       </div>
-      <div id="specialResourcesContainer" class="civSection">
+      <div id="specialResourcesContainer">
         <h3>Special Resources</h3>
         <table>
           <tr>
@@ -101,7 +101,7 @@
           </tr>
         </table>
       </div>
-      <div id="panesSelectors" class="civSection">
+      <div id="panesSelectors">
         <div id="selectors">
           <div id="buildingsSelect" class="paneSelector selected" data-target="buildingsPane" onclick="paneSelect(this)">Buildings</div>
           <div id="upgradesSelect" class="paneSelector" data-target="upgradesPane" onclick="paneSelect(this)">Upgrades</div>
@@ -321,7 +321,7 @@
       </div>
     </div>
     <div id="rightColumn" class="civColumn">
-      <div id="populationContainer" class="civSection">
+      <div id="populationContainer">
         <h3>Population</h3>
         <div id="populationNumbers">
           <table>
@@ -354,7 +354,7 @@
           </div>
         </div>
       </div>
-      <div id="jobsContainer" class="civSection">
+      <div id="jobsContainer">
         <h3>Jobs</h3>
         <p id="customJobQuantity">
           Custom Quantity <input id="homeCustomQty" type="number" min="1" step="1" value="1" />
@@ -365,7 +365,7 @@
         Trader offers 1 gold for <span id="tradeRequested">0</span> <span id="tradeType">food</span><br>
         <button id="trader" onmousedown="trade()">Trade</button>
       </div>
-      <div id="eventsContainer" class="civSection">
+      <div id="eventsContainer">
         <h3>Events</h3>
         <table id="logTable">
           <tr id="log0">
@@ -392,7 +392,7 @@
             <tr id="log9"><td colspan="3"></td></tr> -->
         </table>
       </div>
-      <div id="deityContainer" class="civSection">
+      <div id="deityContainer">
         <h3>Current Deity</h3>
         <table id="activeDeity">
           <tr>
@@ -400,7 +400,7 @@
           </tr>
         </table>
       </div>
-      <div id="wondersContainer" class="civSection">
+      <div id="wondersContainer">
         <h3>Wonders</h3>
         <span id="startWonderLine"><button id="startWonder" onmousedown="startWonder()">Start Building Wonder</button></span>
         <div id="wonderInProgress">
@@ -421,7 +421,7 @@
           </tr>
         </table>
       </div>
-      <div id="statsContainer" class="civSection">
+      <div id="statsContainer">
         <h3>Stats</h3>
         Resource clicks: <span id="clicks">0</span><br>
         Total Land: <span id="totalLand">1000</span><br>

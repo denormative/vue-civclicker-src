@@ -1,6 +1,6 @@
 <template>
 <div class="wonders-pane">
-  <div id="wondersContainer" class="civSection">
+  <div id="wondersContainer">
     <h3>Wonders</h3>
     <span id="startWonderLine"><button id="startWonder" onmousedown="startWonder()">Start Building Wonder</button></span>
     <div id="wonderInProgress">

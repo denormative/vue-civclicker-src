@@ -1,6 +1,6 @@
 <template>
   <div class="current-deity-pane">
-    <div id="deityContainer" class="civSection">
+    <div id="deityContainer">
       <h3>Current Deity</h3>
       <table id="activeDeity">
         <tr>

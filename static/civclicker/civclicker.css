@@ -58,20 +58,20 @@ body {
   margin: 2px 0 -2px 0;
 }
 
-#header {
+/*#header {
   position: relative;
-}
+}*/
 
-h1 {
+/*h1 {
   float: left;
   bottom: 0;
-}
+}*/
 
 #ruler {
-  position: absolute;
-  float: left;
+  /*position: absolute;
+  float: left;*/
   padding-left: 1em;
-  bottom: 0;
+  /*bottom: 0;*/
 }
 
 #impexp {
@@ -124,11 +124,11 @@ h1 {
   padding-left: 1em;
 }
 
-h3 {
+/*h3 {
   clear: both;
-}
+}*/
 
-button {
+/*button {
   width: 190px;
   border: 2px solid black;
   background-color: #fff;
@@ -137,7 +137,7 @@ button {
   font-size: 1.0em;
   font-weight: 500;
   border-radius: 0.5em;
-}
+}*/
 
 button:hover:enabled {
   background-color: #eee;
@@ -148,39 +148,9 @@ button:disabled {
   font-weight: normal;
 }
 
-/* Use two columns on large displays */
-
-@media screen and (min-width: 800px) {
-  .mainContent {
-    /* Two-column display */
-    column-count: 2;
-    -moz-column-count: 2;
-  }
-}
-
-/* Don't allow column breaks inside sections */
-
-/*xxx Unfortunately, support for these properties is very sketchy. */
-
-.civColumn, .civSection {
-  break-inside: avoid;
-  -webkit-break-inside: avoid;
-  -moz-break-inside: avoid;
-  -webkit-column-break-inside: avoid;
-  -moz-column-break-inside: avoid;
-}
-
 /* Put the column breaks where we want them */
 
 /*xxx Unfortunately, support for these properties is very sketchy. */
-
-#rightColumn {
-  break-before: column;
-  -webkit-break-before: column;
-  -moz-break-before: column;
-  -webkit-column-break-before: always;
-  -moz-column-break-before: always;
-}
 
 .paneSelector {
   float: left;

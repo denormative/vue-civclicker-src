@@ -17,11 +17,6 @@
       <button id="impButton" onclick="load('import')">Import</button>
     </div>
 
-    <div id="header">
-      <h1>The <span id="civType">Thorp</span> of <span id="civName">Woodstock</span></h1>
-      <div id="ruler">Ruled by the <span id="appellation">mighty</span> <span id="rulerName">Orteil</span></div>
-      <div style="clear:both;"></div>
-    </div>
   </div>
 </template>
 

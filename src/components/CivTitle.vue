@@ -1,6 +1,13 @@
 <template>
   <div class="civ-title">
-    <h1>{{ msg }}</h1>
+    <div class="pos-f-t">
+        <div class="bg-inverse pt-3 px-3 pb-1">
+          <div id="header">
+            <h4 class="text-white mb-0">The <span id="civType">Thorp</span> of <span id="civName">Woodstock</span></h4>
+            <span id="ruler" class="lead text-muted">Ruled by the <span id="appellation">mighty</span> <span id="rulerName">Orteil</span></span>
+          </div>
+        </div>
+    </div>
   </title>
 </template>
 
@@ -9,12 +16,10 @@ export default {
   name: 'civ-title',
   data () {
     return {
-      msg: 'Welcome to Your Vue.js App'
     }
   }
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 </style>

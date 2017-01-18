@@ -1,6 +1,6 @@
 <template>
   <div class="basic-resources">
-    <div id="basicResourcesContainer" class="civSection">
+    <div id="basicResourcesContainer">
       <h3>Basic Resources</h3>
       <table id="basicResources"></table>
     </div>

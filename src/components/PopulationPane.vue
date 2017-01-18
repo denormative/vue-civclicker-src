@@ -1,6 +1,6 @@
 <template>
   <div class="population-pane">
-    <div id="populationContainer" class="civSection">
+    <div id="populationContainer">
       <h3>Population</h3>
       <div id="populationNumbers">
         <table>
