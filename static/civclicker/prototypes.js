@@ -1,5 +1,6 @@
 'use strict'
 
+/* global copyProps curCiv isValid civData */
 function VersionData(major, minor, sub, mod) {
   this.major = major
   this.minor = minor

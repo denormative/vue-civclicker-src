@@ -1,6 +1,10 @@
 'use strict'
 
-function civDataTable() {
+/* global Resource civData Building adjustMorale population digGraves Upgrade
+    updatePopulationUI updateResourceTotals updateUpgrades renameDeity Unit
+    playerCombatMods doSlaughter doLoot doHavoc Achievement curCiv civSizes
+    getCurDeityDomain */
+function civDataTable() { // eslint-disable-line no-unused-vars
   return [
     // Resources
     new Resource({ id: 'food',
@@ -872,10 +876,9 @@ function civDataTable() {
       // other
     new Achievement({id: 'neverclickAch', name: 'Never&shy;click', test: function() { return curCiv.curWonder.stage === 3 && curCiv.resourceClicks <= 22 }})
   ]
-
 }
 
-function augmentCivData() {
+function augmentCivData() { // eslint-disable-line no-unused-vars
   var i
   var testCivSizeAch = function() { return (this.id === civSizes.getCivSize(population.current).id + 'Ach') }
     // Add the civ size based achivements to the front of the data, so that they come first.

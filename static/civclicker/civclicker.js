@@ -18,10 +18,10 @@
     If it is not there, see <http://www.gnu.org/licenses/>.
 **/
 
-/* global indexArrayByAttr isValid copyProps valOf dataset setElemDisplay
+/* global indexArrayByAttr isValid valOf dataset setElemDisplay
     logSearchFn matchType calcArithSum localStorage deleteCookie rndRound
     prompt DOMException readCookie mergeObj LZString alert XMLHttpRequest
-    confirm
+    confirm VersionData civDataTable augmentCivData CivObj
     */
 
 // FIXME: need to severely lint this file then remove this.
@@ -100,8 +100,7 @@ function resetRaiding() {
             .forEach(function(elem) { elem.reset() })
 }
 
-function postLoad() {
-
+function postLoad() { // eslint-disable-line no-unused-vars
   version = 19 // This is an ordinal used to trigger reloads.
 
   versionData = new VersionData(1, 1, 59, 'alpha')
@@ -202,7 +201,7 @@ function postLoad() {
   wonderCount = {}
 
   // Initialize Data
-  civData = civDataTable();
+  civData = civDataTable()
   augmentCivData()
 
   // Create 'civData.foo' entries as aliases for the civData element with
@@ -342,7 +341,9 @@ function postLoad() {
   }, 1000) // updates once per second (1000 milliseconds)
 }
 
-function playerCombatMods() { return (0.01 * ((civData.riddle.owned) + (civData.weaponry.owned) + (civData.shields.owned))) }
+function playerCombatMods() { // eslint-disable-line no-unused-vars
+  return (0.01 * ((civData.riddle.owned) + (civData.weaponry.owned) + (civData.shields.owned)))
+}
 
 // Get an object's requirements in text form.
 // Pass it a cost object and optional quantity
@@ -1639,7 +1640,7 @@ function selectDeity(domain, force) {
   makeDeitiesTables()
 }
 
-function digGraves(num) {
+function digGraves(num) { // eslint-disable-line no-unused-vars
     // Creates new unfilled graves.
   curCiv.grave.owned += 100 * num
   updatePopulationUI() // Update page with grave numbers
@@ -2754,7 +2755,7 @@ function renameRuler(newName) {
 // Looks to see if the deity already exists.  If it does, that deity
 // is moved to the first slot, overwriting the current entry, and the
 // player's domain is automatically assigned to match (for free).
-function renameDeity(newName) {
+function renameDeity(newName) { // eslint-disable-line no-unused-vars
   var i = false
   while (!newName) {
         // Default to ruler's name.  Hey, despots tend to have big egos.
@@ -3149,7 +3150,7 @@ function doSack(attacker) {
   updatePopulation() // Limits might change
 }
 
-function doHavoc(attacker) {
+function doHavoc(attacker) { // eslint-disable-line no-unused-vars
   var havoc = Math.random() // barbarians do different things
   if (havoc < 0.3) { doSlaughter(attacker) }
   else if (havoc < 0.6) { doLoot(attacker) }
