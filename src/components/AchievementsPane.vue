@@ -1,22 +1,20 @@
 <template>
-  <div class="achievements-pane">
-    <div id="achievementsPane" class="selectPane">
-      <div id="achievements">
-        <h3>Achievements</h3>
-      </div>
-    </div>
+<div role="tabpanel" id="achievementsPane" class="achievements-pane tab-pane selectPane">
+  <div id="achievements">
+    <h3>Achievements</h3>
   </div>
+</div>
 </template>
 
 <script>
 export default {
   name: 'achievements-pane',
-  data () {
-    return {
-    }
+  data() {
+    return {}
   }
 }
 </script>
 
 <style scoped>
+
 </style>

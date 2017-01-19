@@ -1,20 +1,18 @@
 <template>
-  <div class="upgrades-pane">
-    <div id="upgradesPane" class="selectPane">
-      <table id="upgrades"></table>
-    </div>
-  </div>
+<div role="tabpanel" id="upgradesPane" class="upgrades-pane tab-pane selectPane">
+  <table id="upgrades"></table>
+</div>
 </template>
 
 <script>
 export default {
   name: 'upgrades-pane',
-  data () {
-    return {
-    }
+  data() {
+    return {}
   }
 }
 </script>
 
 <style scoped>
+
 </style>

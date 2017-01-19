@@ -1,34 +1,47 @@
 <template>
-  <div class="root">
-    <civ-title></civ-title>
-    <!-- built files will be auto injected -->
-    <!-- <button type="button" class="btn btn-lg btn-danger" data-toggle="popover" title="Popover title" data-content="And here's some amazing content. It's very engaging. Right?">Click to toggle popover</button>
+<div class="root">
+  <civ-title></civ-title>
+  <!-- built files will be auto injected -->
+  <!-- <button type="button" class="btn btn-lg btn-danger" data-toggle="popover" title="Popover title" data-content="And here's some amazing content. It's very engaging. Right?">Click to toggle popover</button>
   <script type="text/javascript">
   /* global $ */
   $(function () {
   $('[data-toggle="popover"]').popover()
   })
   </script> -->
-    <div class="container-fluid">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col">
+        <basic-resources></basic-resources>
+        <special-resources></special-resources>
 
-
-      <div class="row">
-        <div class="col">
-          <basic-resources></basic-resources>
-          <special-resources></special-resources>
-
-          <div>
-            <div id="selectors">
-              <div id="buildingsSelect" class="paneSelector selected" data-target="buildingsPane" onclick="paneSelect(this)">Buildings</div>
-              <div id="upgradesSelect" class="paneSelector" data-target="upgradesPane" onclick="paneSelect(this)">Upgrades</div>
-              <div id="deitySelect" class="paneSelector" data-target="deityPane" onclick="paneSelect(this)">Deity</div>
-              <div id="conquestSelect" class="paneSelector" data-target="conquestPane" onclick="paneSelect(this)">Conquest</div>
-              <div id="tradeSelect" class="paneSelector" data-target="tradePane" onclick="paneSelect(this)">Trade</div>
-              <div id="achievementsSelect" class="paneSelector" data-target="achievementsPane" onclick="paneSelect(this)">Achievements</div>
-              <div id="settingsSelect" class="paneSelector" data-target="settingsPane" onclick="paneSelect(this)">Settings</div>
-              <div style="clear:both;"></div>
+        <ul class="nav nav-tabs">
+          <li class="nav-item">
+            <a class="nav-link active" data-toggle="tab" href="#buildingsPane">Buildings</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="#upgradesPane">Upgrades</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="#deityPane">Deity</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="#conquestPane">Conquest</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="#tradePane">Trade</a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">=</a>
+            <div class="dropdown-menu">
+              <a class="dropdown-item" data-toggle="tab" href="#achievementsPane">Achievements</a>
+              <a class="dropdown-item" data-toggle="tab" href="#settingsPane">Settings</a>
             </div>
+          </li>
+        </ul>
 
+        <div class="container-fluid">
+          <div class="tab-content">
             <buildings-pane></buildings-pane>
             <upgrade-pane></upgrade-pane>
             <deity-pane></deity-pane>
@@ -38,16 +51,17 @@
             <settings-pane></settings-pane>
           </div>
         </div>
-        <div class="col">
-          <population-pane></population-pane>
-          <jobs-pane></jobs-pane>
-          <current-deity-pane></current-deity-pane>
-          <wonders-pane></wonders-pane>
-          <stats-pane></stats-pane>
-        </div>
+      </div>
+      <div class="col">
+        <population-pane></population-pane>
+        <jobs-pane></jobs-pane>
+        <current-deity-pane></current-deity-pane>
+        <wonders-pane></wonders-pane>
+        <stats-pane></stats-pane>
       </div>
     </div>
   </div>
+</div>
 </template>
 
 <script>
@@ -89,8 +103,7 @@ export default {
     StatsPane
   },
   data() {
-    return {
-    }
+    return {}
   },
   mounted: function() {
     window.postLoad()
