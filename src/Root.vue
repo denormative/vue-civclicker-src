@@ -11,7 +11,6 @@
   </script> -->
     <div class="container-fluid">
 
-      <menus></menus>
 
       <div class="row">
         <div class="col">
@@ -53,7 +52,6 @@
 
 <script>
 import CivTitle from './components/CivTitle'
-import Menus from './components/Menus'
 import BasicResources from './components/BasicResources'
 import SpecialResources from './components/SpecialResources'
 import BuildingsPane from './components/BuildingsPane'
@@ -74,7 +72,6 @@ export default {
   name: 'root',
   components: {
     CivTitle,
-    Menus,
     BasicResources,
     SpecialResources,
     BuildingsPane,

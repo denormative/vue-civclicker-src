@@ -1,25 +1,36 @@
 <template>
-  <div class="civ-title">
-    <div class="pos-f-t">
-        <div class="bg-inverse pt-3 px-3 pb-1">
-          <div id="header">
-            <h4 class="text-white mb-0">The <span id="civType">Thorp</span> of <span id="civName">Woodstock</span></h4>
-            <span id="ruler" class="lead text-muted">Ruled by the <span id="appellation">mighty</span> <span id="rulerName">Orteil</span></span>
-          </div>
-        </div>
+<div class="civ-title">
+  <div class="d-flex justify-content-end sticky-top py-1 px-2">
+    <div id="header" class="mr-auto">
+      <h4 class="mb-0 clearfix">The <span id="civType">Thorp</span> of <span id="civName">Woodstock</span></h4>
+      <span id="ruler" class="lead text-muted">Ruled by the <span id="appellation">mighty</span> <span id="rulerName">Orteil</span></span>
     </div>
-  </title>
+    <div class="btn-group align-self-center" role="group">
+      <button type="button" class="btn btn-secondary">I / E</button>
+    </div>
+    <!-- <a class="nav-item nav-link" href="civFAQ.html" target="_blank">FAQ / Instructions / Bugfixing</a>
+        <a class="nav-item nav-link" href="civUpdates.html" target="_blank">Game Updates Log</a>
+        <a class="nav-item nav-link" href="#" onclick="impExp()">Import/Export Save</a>
+        <span id="versionAlert"><span class="nav-item nav-link" id="newVersionText" onclick="location.reload()">New Version Available</span></span> -->
+    <menus></menus>
+  </div>
+</div>
 </template>
 
 <script>
+import Menus from './Menus'
+
 export default {
   name: 'civ-title',
-  data () {
-    return {
-    }
+  components: {
+    Menus
+  },
+  data() {
+    return {}
   }
 }
 </script>
 
 <style scoped>
+
 </style>

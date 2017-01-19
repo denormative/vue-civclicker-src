@@ -43,10 +43,6 @@ body {
   opacity: 0.18;
 }
 
-#strip {
-  text-shadow: none;
-}
-
 .icon-lg {
   height: 42px;
   width: 42px;
@@ -326,19 +322,6 @@ button:disabled {
 }
 
 #settings {}
-
-#strip {
-  width: 100%;
-  height: 1.5em;
-  margin-bottom: -2em;
-  text-align: right;
-}
-
-#stripInner {
-  position: relative;
-  z-index: 1;
-  width: 100%;
-}
 
 .achievement {
   display: block;
