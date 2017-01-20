@@ -1,5 +1,5 @@
 <template>
-<div role="tabpanel" id="tradePane" class="trade-pane tab-pane selectPane">
+<div role="tabpanel" id="tradePane" class="trade-pane tab-pane">
   <span id="tradeRow"></span>
   <div id="tradeUpgradeContainer">
     <span id="currencyRow"></span>

@@ -1,5 +1,5 @@
 <template>
-<div role="tabpanel" id="upgradesPane" class="upgrades-pane tab-pane selectPane">
+<div role="tabpanel" id="upgradesPane" class="upgrades-pane tab-pane">
   <table id="upgrades"></table>
 </div>
 </template>

@@ -17,15 +17,6 @@
     If it is not there, see <http://www.gnu.org/licenses/>.
 **/
 
-@import url('fonts/OpenSans-CondLight.css');
-body {
-  font-family: sans-serif;
-  /*font-weight:600;*/
-  /*text-shadow: 3px 0 0 #fff, -3px 0 0 #fff, 0 3px 0 #fff, 0 -3px 0 #fff, 2px 2px 0 #fff, -2px -2px 0 #fff, 2px -2px 0 #fff, -2px 2px 0 #fff;*/
-  text-shadow: none;
-}
-
-
 /* You can't easily apply opacity to a background image.  This does it by
  * placing the background image on a layer beneath the item, and setting
  * opacity on the entire layer. */
@@ -52,22 +43,6 @@ body {
   height: 16px;
   width: 16px;
   margin: 2px 0 -2px 0;
-}
-
-/*#header {
-  position: relative;
-}*/
-
-/*h1 {
-  float: left;
-  bottom: 0;
-}*/
-
-#ruler {
-  /*position: absolute;
-  float: left;*/
-  padding-left: 1em;
-  /*bottom: 0;*/
 }
 
 #impexp {
@@ -120,21 +95,6 @@ body {
   padding-left: 1em;
 }
 
-/*h3 {
-  clear: both;
-}*/
-
-/*button {
-  width: 190px;
-  border: 2px solid black;
-  background-color: #fff;
-  margin-right: 0.8em;
-  padding: 0.1em;
-  font-size: 1.0em;
-  font-weight: 500;
-  border-radius: 0.5em;
-}*/
-
 button:hover:enabled {
   background-color: #eee;
 }
@@ -181,16 +141,6 @@ button:disabled {
   text-decoration: none;
   cursor: auto;
   text-shadow: 2px 0 0 #000, -2px 0 0 #000, 0 2px 0 #000, 0 -2px 0 #000, 1px 1px #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000;
-}
-
-.selectPane {
-  display: none;
-}
-
-.selectPane.selected {
-  /* Note that this will cause a problem for non-block elements */
-  /* We should use 'default', but it's not sufficiently supported yet */
-  display: block;
 }
 
 .devcost {

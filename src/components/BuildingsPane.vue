@@ -1,5 +1,5 @@
 <template>
-<div role="tabpanel" id="buildingsPane" class="buildings-pane tab-pane active selectPane selected">
+<div role="tabpanel" id="buildingsPane" class="buildings-pane tab-pane active">
   <p id="customBuildQuantity">
     Custom Quantity <input id="buildingCustomQty" type="number" min="1" step="1" value="1" />
   </p>

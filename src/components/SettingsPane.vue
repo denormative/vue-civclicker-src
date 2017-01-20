@@ -1,5 +1,5 @@
 <template>
-<div role="tabpanel" id="settingsPane" class="settings-pane tab-pane selectPane">
+<div role="tabpanel" id="settingsPane" class="settings-pane tab-pane">
   <div id="settings">
     <h3>Settings</h3>
     <button onmousedown="save('manual')" title="Save your current stats">Manual Save</button><br>

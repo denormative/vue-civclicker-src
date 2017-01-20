@@ -1,5 +1,5 @@
 <template>
-<div role="tabpanel" id="deityPane" class="deity-pane tab-pane selectPane">
+<div role="tabpanel" id="deityPane" class="deity-pane tab-pane">
   <span id="worshipRow"></span>
   <div id="deityDomains">
     <span id="battleRow" class="purchaseRow" data-target="battle"> <span class="upgradetrue" data-quantity="true">

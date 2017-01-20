@@ -1,5 +1,5 @@
 <template>
-<div role="tabpanel" id="conquestPane" class="conquest-pane tab-pane selectPane">
+<div role="tabpanel" id="conquestPane" class="conquest-pane tab-pane">
   <span id="standardRow"></span>
   <div id="conquest">
     <h4>Army</h4>

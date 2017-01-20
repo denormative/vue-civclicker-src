@@ -1,5 +1,5 @@
 <template>
-<div role="tabpanel" id="achievementsPane" class="achievements-pane tab-pane selectPane">
+<div role="tabpanel" id="achievementsPane" class="achievements-pane tab-pane">
   <div id="achievements">
     <h3>Achievements</h3>
   </div>

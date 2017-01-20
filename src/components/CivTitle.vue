@@ -2,10 +2,11 @@
 <div class="civ-title">
   <div class="d-flex justify-content-end sticky-top py-1 px-2">
     <div id="header" class="mr-auto">
-      <h4 class="mb-0 clearfix">The <span id="civType">Thorp</span> of <span id="civName">Woodstock</span></h4>
-      <span id="ruler" class="lead text-muted">Ruled by the <span id="appellation">mighty</span> <span id="rulerName">Orteil</span></span>
+      <h4> The <span id="civType">Thorp</span> of <span id="civName">Woodstock</span><br>
+        <small id="ruler" class="text-muted">Ruled by the <span id="appellation">mighty</span> <span id="rulerName">Orteil</span></small>
+      </h4>
     </div>
-    <div class="btn-group align-self-center" role="group">
+    <div class="btn-group align-items-end" role="group">
       <button type="button" class="btn btn-secondary">I / E</button>
     </div>
     <!-- <a class="nav-item nav-link" href="civFAQ.html" target="_blank">FAQ / Instructions / Bugfixing</a>
@@ -32,5 +33,7 @@ export default {
 </script>
 
 <style scoped>
-
+#ruler {
+  padding-left: 1em;
+}
 </style>
