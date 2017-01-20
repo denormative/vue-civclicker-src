@@ -46,5 +46,16 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
+#customSpawnQuantity {
+  display: none;
+}
+
+#zombieWorkers {
+  display: none;
+}
+
+#morale {
+  color: #0d0;
+}
 </style>

@@ -20,5 +20,12 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
+#graveTotal {
+  display: none;
+}
+
+#walkGroup {
+  display: none;
+}
 </style>

@@ -31,6 +31,20 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
+#conquest {
+  display: none;
+}
 
+#customPartyQuantity {
+  display: none;
+}
+
+#victoryGroup {
+  display: none;
+}
+
+#gloryGroup {
+  display: none;
+}
 </style>

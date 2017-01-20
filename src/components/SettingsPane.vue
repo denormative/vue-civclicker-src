@@ -35,5 +35,7 @@ export default {
 </script>
 
 <style scoped>
-
+#resetNote, #resetDeity, #resetBoth, #resetWonder {
+  display: none;
+}
 </style>

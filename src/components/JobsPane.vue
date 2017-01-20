@@ -51,5 +51,26 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
+#customJobQuantity {
+  display: none;
+}
+
+#logTable td {
+  padding-right: 20px;
+}
+
+#tradeContainer {
+  display: none;
+  padding: 0.3em 0 0.5em 0;
+  margin: 0.5em 0;
+  text-align: center;
+  background-color: #9d9;
+  border-radius: 1.5em;
+}
+
+#trader {
+  height: 2em;
+  width: 70%;
+}
 </style>

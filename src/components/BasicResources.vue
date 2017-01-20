@@ -17,5 +17,16 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
+#basicResources button {
+  text-transform: capitalize;
+}
+
+#basicResources {
+  margin-left: 0.3em;
+}
+
+#basicResources button {
+  padding: 0.3em;
+}
 </style>

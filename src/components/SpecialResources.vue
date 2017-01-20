@@ -48,5 +48,20 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
+#goldRow {
+  display: none;
+}
+
+#specialResourcesContainer {
+  margin-bottom: 0.3em;
+}
+
+#specialResourcesContainer .number {
+  padding: 0 0.3em 0.3em 0.3em;
+}
+
+#specialResourcesContainer img {
+  padding-right: 5em;
+}
 </style>

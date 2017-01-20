@@ -36,4 +36,17 @@ export default {
 #ruler {
   padding-left: 1em;
 }
+
+#versionAlert {
+  display: none;
+}
+
+#newVersionText {
+  color: #f00;
+  text-decoration: underline;
+}
+
+#newVersionText:hover {
+  cursor: pointer;
+}
 </style>

@@ -26,6 +26,8 @@ export default {
 }
 </script>
 
-<style scoped>
-
+<style>
+#tradeUpgradeContainer {
+  display: none;
+}
 </style>

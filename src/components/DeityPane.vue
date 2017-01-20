@@ -137,6 +137,42 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
+#oldDeities {
+  display: none;
+}
 
+#oldDeities td {
+  padding-right: 1em;
+}
+
+#deityDomains {
+  display: none;
+}
+
+#deityDomains .purchaseRow {
+  /* We control the display of these through #deityDomains, so */
+  /*   suppress the usual .purchaseRow display:none */
+  display: inline;
+}
+
+#battleUpgrades, #fieldsUpgrades, #underworldUpgrades, #catsUpgrades {
+  display: none;
+}
+
+#iconoclasmGroup {
+  display: none;
+}
+
+#iconoclasmList {
+  padding-left: 2em;
+}
+
+#purchasedPantheon {
+  margin-left: 1em;
+}
+
+#purchasedPantheon * {
+  line-height: 1.5em;
+}
 </style>

@@ -33,6 +33,58 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
+#wondersContainer {
+  display: none;
+  padding-bottom: 0.3em;
+}
 
+#startWonderLine {
+  display: none;
+}
+
+#pastWonders td {
+  padding-right: 1em;
+}
+
+.wonderTitle {
+  font-weight: bold;
+  margin-bottom: 1em;
+}
+
+#renameWonder {
+  width: 5em;
+}
+
+#progressContainer {
+  border: 1px solid black;
+}
+
+#progressBar {
+  height: 1em;
+  background-color: green;
+  width: 0%;
+}
+
+#wonderInProgress {
+  display: none;
+}
+
+#speedWonderGroup {
+  display: none;
+}
+
+#wonderCompleted {
+  padding-top: 1em;
+  display: none;
+}
+
+.wonderCompleted button {
+  width: 5em;
+}
+
+#lowResources {
+  display: none;
+  color: red;
+}
 </style>

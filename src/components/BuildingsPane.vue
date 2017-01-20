@@ -16,6 +16,9 @@ export default {
 }
 </script>
 
-<style scoped>
-
+<style>
+#customBuildQuantity {
+  display: none;
+  margin-left: 1em;
+}
 </style>
