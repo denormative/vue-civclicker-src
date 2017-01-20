@@ -22,13 +22,13 @@
           <li class="nav-item">
             <a class="nav-link" data-toggle="tab" href="#upgradesPane">Upgrades</a>
           </li>
-          <li class="nav-item">
+          <li class="nav-item" id="deitySelect">
             <a class="nav-link" data-toggle="tab" href="#deityPane">Deity</a>
           </li>
-          <li class="nav-item">
+          <li class="nav-item" id="conquestSelect">
             <a class="nav-link" data-toggle="tab" href="#conquestPane">Conquest</a>
           </li>
-          <li class="nav-item">
+          <li class="nav-item" id="tradeSelect">
             <a class="nav-link" data-toggle="tab" href="#tradePane">Trade</a>
           </li>
           <li class="nav-item dropdown">
@@ -112,5 +112,7 @@ export default {
 </script>
 
 <style scoped>
-
+#deitySelect, #conquestSelect, #tradeSelect {
+  display: none;
+}
 </style>

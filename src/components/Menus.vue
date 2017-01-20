@@ -31,5 +31,49 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+#impexp {
+  display: none;
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 40%;
+  border: 1px solid black;
+  background-color: #fff;
+  z-index: 1;
+}
 
+#impexpField {
+  display: block;
+  width: 90%;
+  height: 10em;
+  margin: 1em auto;
+}
+
+#expButton {
+  width: 7em;
+  float: left;
+  margin-left: 5%;
+  margin-bottom: 1em;
+}
+
+#expSelect {
+  width: 7em;
+  float: left;
+  margin-left: 1em;
+  margin-bottom: 1em;
+}
+
+#impButton {
+  width: 7em;
+  float: right;
+  margin-right: 1em;
+  margin-bottom: 1em;
+}
+
+#impexpClose {
+  width: 7em;
+  float: right;
+  margin-right: 5%;
+  margin-bottom: 1em;
+}
 </style>
