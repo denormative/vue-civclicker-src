@@ -156,7 +156,10 @@ export default {
   display: inline;
 }
 
-#battleUpgrades, #fieldsUpgrades, #underworldUpgrades, #catsUpgrades {
+#battleUpgrades,
+#fieldsUpgrades,
+#underworldUpgrades,
+#catsUpgrades {
   display: none;
 }
 
