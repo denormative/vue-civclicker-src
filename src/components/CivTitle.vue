@@ -2,7 +2,7 @@
 <div class="civ-title">
   <div class="d-flex justify-content-end sticky-top py-1 px-2">
     <div id="header" class="mr-auto">
-      <h4> The <span id="civType">Thorp</span> of <span id="civName">Woodstock</span><br>
+      <h4> The <span id="civType">Thorp</span> of <span id="civName">{{civName}}</span><br>
         <small id="ruler" class="text-muted">Ruled by the <span id="appellation">mighty</span> <span id="rulerName">Orteil</span></small>
       </h4>
     </div>
@@ -27,7 +27,9 @@ export default {
     Menus
   },
   data() {
-    return {}
+    return {
+      civName: window.curCiv.civName
+    }
   }
 }
 </script>

@@ -105,6 +105,9 @@ export default {
   data() {
     return {}
   },
+  beforeCreate: function() {
+    window.preLoad()
+  },
   mounted: function() {
     window.postLoad()
   }

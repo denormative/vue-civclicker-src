@@ -100,7 +100,7 @@ function resetRaiding() {
             .forEach(function(elem) { elem.reset() })
 }
 
-function postLoad() { // eslint-disable-line no-unused-vars
+function preLoad() { // eslint-disable-line no-unused-vars
   version = 19 // This is an ordinal used to trigger reloads.
 
   versionData = new VersionData(1, 1, 59, 'alpha')
@@ -199,7 +199,9 @@ function postLoad() { // eslint-disable-line no-unused-vars
 
   // Caches the total number of each wonder, so that we don't have to recount repeatedly.
   wonderCount = {}
+}
 
+function postLoad() { // eslint-disable-line no-unused-vars
   // Initialize Data
   civData = civDataTable()
   augmentCivData()
@@ -2153,7 +2155,8 @@ function load(loadType) {
     mergeObj(curCiv, loadVar.curCiv)
   }
   else {
-    curCiv = loadVar.curCiv // No need to merge if the versions match; this is quicker.
+    mergeObj(curCiv, loadVar.curCiv)
+    // curCiv = loadVar.curCiv // No need to merge if the versions match; this is quicker.
   }
 
   console.log('Loaded save game version ' + saveVersion.major +
@@ -2180,7 +2183,7 @@ function load(loadType) {
   updateWonder()
   updateWonderCount()
   document.getElementById('clicks').innerHTML = prettify(Math.round(curCiv.resourceClicks))
-  document.getElementById('civName').innerHTML = curCiv.civName
+  // document.getElementById('civName').innerHTML = curCiv.civName
   document.getElementById('rulerName').innerHTML = curCiv.rulerName
   document.getElementById('wonderNameP').innerHTML = curCiv.curWonder.name
   document.getElementById('wonderNameC').innerHTML = curCiv.curWonder.name
@@ -2296,7 +2299,7 @@ function renameCiv(newName) {
   }
 
   curCiv.civName = newName
-  document.getElementById('civName').innerHTML = curCiv.civName
+  // document.getElementById('civName').innerHTML = curCiv.civName
 }
 
 // Note:  Returns the index (which could be 0), or 'false'.
