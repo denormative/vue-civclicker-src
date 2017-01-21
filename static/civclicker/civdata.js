@@ -2,7 +2,7 @@
 
 /* global Resource civData Building adjustMorale population digGraves Upgrade
     updatePopulationUI updateResourceTotals updateUpgrades renameDeity Unit
-    playerCombatMods doSlaughter doLoot doHavoc Achievement curCiv civSizes
+    playerCombatMods doSlaughter doLoot doHavoc Achievement window.vm.curCiv civSizes
     getCurDeityDomain */
 function civDataTable() { // eslint-disable-line no-unused-vars
   return [
@@ -600,7 +600,7 @@ function civDataTable() { // eslint-disable-line no-unused-vars
       name: 'Grace',
       subType: 'prayer',
       prereqs: { deity: 'cats', devotion: 40 },
-      require: { piety: 1000 }, // xxx This is not fixed; see curCiv.graceCost
+      require: { piety: 1000 }, // xxx This is not fixed; see window.vm.curCiv.graceCost
       init: function(fullInit) { Upgrade.prototype.init.call(this, fullInit); this.cost = 1000 },
       get cost() { return this.data.cost }, // Increasing cost to use Grace to increase morale.
       set cost(value) { this.data.cost = value },
@@ -843,14 +843,14 @@ function civDataTable() { // eslint-disable-line no-unused-vars
       effectText: 'Reduce enemy casualties'}),
   // Achievements
       // conquest
-    new Achievement({id: 'raiderAch', name: 'Raider', test: function() { return curCiv.raid.victory }}),
+    new Achievement({id: 'raiderAch', name: 'Raider', test: function() { return window.vm.curCiv.raid.victory }}),
       // xxx Technically this also gives credit for capturing a siege engine.
     new Achievement({id: 'engineerAch', name: 'Engi&shy;neer', test: function() { return civData.siege.owned > 0 }}),
       // If we beat the largest possible opponent, grant bonus achievement.
-    new Achievement({id: 'dominationAch', name: 'Domi&shy;nation', test: function() { return curCiv.raid.victory && (curCiv.raid.last === civSizes[civSizes.length - 1].id) }}),
+    new Achievement({id: 'dominationAch', name: 'Domi&shy;nation', test: function() { return window.vm.curCiv.raid.victory && (window.vm.curCiv.raid.last === civSizes[civSizes.length - 1].id) }}),
       // Morale
-    new Achievement({id: 'hatedAch', name: 'Hated', test: function() { return curCiv.morale.efficiency <= 0.5 }}),
-    new Achievement({id: 'lovedAch', name: 'Loved', test: function() { return curCiv.morale.efficiency >= 1.5 }}),
+    new Achievement({id: 'hatedAch', name: 'Hated', test: function() { return window.vm.curCiv.morale.efficiency <= 0.5 }}),
+    new Achievement({id: 'lovedAch', name: 'Loved', test: function() { return window.vm.curCiv.morale.efficiency >= 1.5 }}),
       // cats
     new Achievement({id: 'catAch', name: 'Cat!', test: function() { return civData.cat.owned >= 1 }}),
     new Achievement({id: 'glaringAch', name: 'Glaring', test: function() { return civData.cat.owned >= 10 }}),
@@ -868,13 +868,13 @@ function civDataTable() { // eslint-disable-line no-unused-vars
       // xxx It might be better if this checked for all domains in the Pantheon at once (no iconoclasming old ones away).
     new Achievement({id: 'fullHouseAch', name: 'Full House', test: function() { return civData.battleAch.owned && civData.fieldsAch.owned && civData.underworldAch.owned && civData.catsAch.owned }}),
       // wonders
-    new Achievement({id: 'wonderAch', name: 'Wonder', test: function() { return curCiv.curWonder.stage === 3 }}),
-    new Achievement({id: 'sevenAch', name: 'Seven!', test: function() { return curCiv.wonders.length >= 7 }}),
+    new Achievement({id: 'wonderAch', name: 'Wonder', test: function() { return window.vm.curCiv.curWonder.stage === 3 }}),
+    new Achievement({id: 'sevenAch', name: 'Seven!', test: function() { return window.vm.curCiv.wonders.length >= 7 }}),
       // trading
     new Achievement({id: 'merchantAch', name: 'Merch&shy;ant', test: function() { return civData.gold.owned > 0 }}),
-    new Achievement({id: 'rushedAch', name: 'Rushed', test: function() { return curCiv.curWonder.rushed }}),
+    new Achievement({id: 'rushedAch', name: 'Rushed', test: function() { return window.vm.curCiv.curWonder.rushed }}),
       // other
-    new Achievement({id: 'neverclickAch', name: 'Never&shy;click', test: function() { return curCiv.curWonder.stage === 3 && curCiv.resourceClicks <= 22 }})
+    new Achievement({id: 'neverclickAch', name: 'Never&shy;click', test: function() { return window.vm.curCiv.curWonder.stage === 3 && window.vm.curCiv.resourceClicks <= 22 }})
   ]
 }
 

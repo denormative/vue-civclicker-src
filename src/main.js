@@ -9,7 +9,19 @@ Vue.use(Vuex)
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
-  template: '<App/>',
+  template: '<App :curCiv="curCiv"/>',
+  data() {
+    return {
+      curCiv: {}
+    }
+  },
+  created: function() {
+    window.vm = this
+    window.preLoad()
+  },
+  mounted: function() {
+    window.postLoad()
+  },
   components: {
     App
   }

@@ -1,6 +1,6 @@
 <template>
 <div class="root">
-  <civ-title></civ-title>
+  <civ-title :curCiv="curCiv"></civ-title>
   <!-- built files will be auto injected -->
   <!-- <button type="button" class="btn btn-lg btn-danger" data-toggle="popover" title="Popover title" data-content="And here's some amazing content. It's very engaging. Right?">Click to toggle popover</button>
   <script type="text/javascript">
@@ -84,6 +84,7 @@ import StatsPane from './components/StatsPane'
 
 export default {
   name: 'root',
+  props: ['curCiv'],
   components: {
     CivTitle,
     BasicResources,
@@ -104,12 +105,6 @@ export default {
   },
   data() {
     return {}
-  },
-  created: function() {
-    window.preLoad()
-  },
-  mounted: function() {
-    window.postLoad()
   }
 }
 </script>
