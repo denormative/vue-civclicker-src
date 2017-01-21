@@ -56,7 +56,7 @@
         <population-pane></population-pane>
         <jobs-pane></jobs-pane>
         <current-deity-pane></current-deity-pane>
-        <wonders-pane :curCiv="curCiv"></wonders-pane>
+        <wonders-pane :curCiv="curCiv" :wonderInProgress="wonderInProgress"></wonders-pane>
         <stats-pane :curCiv="curCiv"></stats-pane>
       </div>
     </div>
@@ -105,6 +105,11 @@ export default {
   },
   data() {
     return {}
+  },
+  computed: {
+    wonderInProgress: function() {
+      return this.curCiv.curWonder.stage === 1
+    }
   }
 }
 </script>

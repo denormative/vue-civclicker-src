@@ -1244,13 +1244,7 @@ function updateWonder() {
 
     // Construction in progress; show/hide building area and labourers
   setElemDisplay('labourerRow', (window.vm.curCiv.curWonder.stage === 1))
-  setElemDisplay('wonderInProgress', (window.vm.curCiv.curWonder.stage === 1))
-  setElemDisplay('speedWonderGroup', (window.vm.curCiv.curWonder.stage === 1))
   document.getElementById('speedWonder').disabled = (window.vm.curCiv.curWonder.stage !== 1 || !canAfford({ gold: 100 }))
-  if (window.vm.curCiv.curWonder.stage === 1) {
-    document.getElementById('progressBar').style.width = window.vm.curCiv.curWonder.progress.toFixed(2) + '%'
-    document.getElementById('progressNumber').innerHTML = window.vm.curCiv.curWonder.progress.toFixed(2)
-  }
 
     // Finished, but haven't picked the resource yet.
   setElemDisplay('wonderCompleted', (window.vm.curCiv.curWonder.stage === 2))
@@ -1938,8 +1932,6 @@ function renameWonder() {
   var n = prompt('Please name your Wonder:', window.vm.curCiv.curWonder.name)
   if (!n) { return }
   window.vm.curCiv.curWonder.name = n
-  var wp = document.getElementById('wonderNameP')
-  if (wp) { wp.innerHTML = window.vm.curCiv.curWonder.name }
   var wc = document.getElementById('wonderNameC')
   if (wc) { wc.innerHTML = window.vm.curCiv.curWonder.name }
 }
@@ -2183,7 +2175,6 @@ function load(loadType) {
   updateWonder()
   updateWonderCount()
   document.getElementById('clicks').innerHTML = prettify(Math.round(window.vm.curCiv.resourceClicks))
-  document.getElementById('wonderNameP').innerHTML = window.vm.curCiv.curWonder.name
   document.getElementById('wonderNameC').innerHTML = window.vm.curCiv.curWonder.name
 
   return true

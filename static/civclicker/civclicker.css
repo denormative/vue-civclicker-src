@@ -50,15 +50,6 @@
   padding-left: 1em;
 }
 
-button:hover:enabled {
-  background-color: #eee;
-}
-
-button:disabled {
-  border-color: #ccc;
-  font-weight: normal;
-}
-
 /* Put the column breaks where we want them */
 
 /*xxx Unfortunately, support for these properties is very sketchy. */
