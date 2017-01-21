@@ -2183,7 +2183,6 @@ function load(loadType) {
   updateWonder()
   updateWonderCount()
   document.getElementById('clicks').innerHTML = prettify(Math.round(window.vm.curCiv.resourceClicks))
-  // document.getElementById('civName').innerHTML = window.vm.curCiv.civName
   document.getElementById('rulerName').innerHTML = window.vm.curCiv.rulerName
   document.getElementById('wonderNameP').innerHTML = window.vm.curCiv.curWonder.name
   document.getElementById('wonderNameC').innerHTML = window.vm.curCiv.curWonder.name
@@ -2299,7 +2298,6 @@ function renameCiv(newName) {
   }
 
   window.vm.curCiv.civName = newName
-  // document.getElementById('civName').innerHTML = window.vm.curCiv.civName
 }
 
 // Note:  Returns the index (which could be 0), or 'false'.

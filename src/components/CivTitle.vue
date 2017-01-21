@@ -2,7 +2,7 @@
 <div class="civ-title">
   <div class="d-flex justify-content-end sticky-top py-1 px-2">
     <div id="header" class="mr-auto">
-      <h4> The <span id="civType">Thorp</span> of <span id="civName">{{curCiv.civName}}</span><br>
+      <h4> The <span id="civType">Thorp</span> of {{curCiv.civName}}<br>
         <small id="ruler" class="text-muted">Ruled by the <span id="appellation">mighty</span> <span id="rulerName">Orteil</span></small>
       </h4>
     </div>
