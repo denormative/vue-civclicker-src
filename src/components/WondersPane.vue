@@ -27,6 +27,7 @@
 <script>
 export default {
   name: 'wonders-pane',
+  props: ['curCiv'],
   data() {
     return {}
   }

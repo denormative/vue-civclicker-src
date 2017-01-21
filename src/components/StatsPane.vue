@@ -13,6 +13,7 @@
 <script>
 export default {
   name: 'stats-pane',
+  props: ['curCiv'],
   data () {
     return {
     }

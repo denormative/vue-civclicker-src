@@ -56,8 +56,8 @@
         <population-pane></population-pane>
         <jobs-pane></jobs-pane>
         <current-deity-pane></current-deity-pane>
-        <wonders-pane></wonders-pane>
-        <stats-pane></stats-pane>
+        <wonders-pane :curCiv="curCiv"></wonders-pane>
+        <stats-pane :curCiv="curCiv"></stats-pane>
       </div>
     </div>
   </div>
