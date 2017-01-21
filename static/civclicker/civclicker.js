@@ -2183,7 +2183,6 @@ function load(loadType) {
   updateWonder()
   updateWonderCount()
   document.getElementById('clicks').innerHTML = prettify(Math.round(window.vm.curCiv.resourceClicks))
-  document.getElementById('rulerName').innerHTML = window.vm.curCiv.rulerName
   document.getElementById('wonderNameP').innerHTML = window.vm.curCiv.curWonder.name
   document.getElementById('wonderNameC').innerHTML = window.vm.curCiv.curWonder.name
 
@@ -2323,8 +2322,6 @@ function renameRuler(newName) {
   }
 
   window.vm.curCiv.rulerName = newName
-
-  document.getElementById('rulerName').innerHTML = window.vm.curCiv.rulerName
 }
 
 // Looks to see if the deity already exists.  If it does, that deity

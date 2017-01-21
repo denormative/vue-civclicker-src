@@ -3,7 +3,7 @@
   <div class="d-flex justify-content-end sticky-top py-1 px-2">
     <div id="header" class="mr-auto">
       <h4> The <span id="civType">Thorp</span> of {{curCiv.civName}}<br>
-        <small id="ruler" class="text-muted">Ruled by the <span id="appellation">mighty</span> <span id="rulerName">Orteil</span></small>
+        <small id="ruler" class="text-muted">Ruled by the {{appellation}} {{curCiv.rulerName}}</small>
       </h4>
     </div>
     <div class="btn-group align-items-end" role="group">
@@ -28,7 +28,9 @@ export default {
     Menus
   },
   data() {
-    return {}
+    return {
+      appellation: 'mighty'
+    }
   }
 }
 </script>
