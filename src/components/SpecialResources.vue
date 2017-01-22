@@ -1,8 +1,8 @@
 <template>
-  <div class="special-resources">
-    <div id="specialResourcesContainer">
-      <h3>Special Resources</h3>
-      <table>
+  <div class="special-resources card">
+    <h4 class="card-header">Special Resources</h4>
+    <div id="specialResourcesContainer" class="card-block">
+      <table class="table-sm">
         <tr>
           <td>Skins: </td>
           <td class="number"><span data-action="display" data-target="skins">0</span></td>

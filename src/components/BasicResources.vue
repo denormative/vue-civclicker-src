@@ -1,8 +1,8 @@
 <template>
-  <div class="basic-resources">
-    <div id="basicResourcesContainer">
-      <h3>Basic Resources</h3>
-      <table id="basicResources"></table>
+  <div class="basic-resources card">
+    <h4 class="card-header">Basic Resources</h4>
+    <div class="card-block">
+      <table id="basicResources" class="table-sm"></table>
     </div>
   </div>
 </template>
@@ -20,13 +20,5 @@ export default {
 <style>
 #basicResources button {
   text-transform: capitalize;
-}
-
-#basicResources {
-  margin-left: 0.3em;
-}
-
-#basicResources button {
-  padding: 0.3em;
 }
 </style>

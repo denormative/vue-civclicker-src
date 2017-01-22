@@ -5,7 +5,7 @@
     <p v-show="customJobQuantity">
       Custom Quantity <input id="homeCustomQty" type="number" min="1" step="1" value="1" />
     </p>
-    <table id="jobs"></table>
+    <table id="jobs" class="table-sm"></table>
   </div>
 </div>
 </template>
