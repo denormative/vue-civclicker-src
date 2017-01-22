@@ -1,11 +1,39 @@
 <template>
-  <div class="stats-pane">
-    <div id="statsContainer">
-      <h3>Stats</h3> Resource clicks: <span id="clicks">0</span><br> Total Land: <span id="totalLand">1000</span><br> Total Buildings: <span id="totalBuildings">0</span><br> Enemies Slain: <span data-action="display" data-target="enemySlain">0</span><br> Unburied
-      Corpses: <span data-action="display" data-target="corpses">0</span><br>
-      <span id="graveTotal">Unfilled Graves: <span data-action="display" data-target="grave">0</span><br>
-      </span>
-      <span id="walkGroup"><br>Walk: <span id="walkStat">0</span> workers per second<br></span>
+  <div class="stats-pane card">
+    <h4 class="card-header">Stats</h4>
+    <div class="card-block">
+      <table class="table-sm">
+        <tbody>
+          <tr>
+            <th scope="row">Resource clicks</th>
+            <td><span id="clicks">0</span></td>
+          </tr>
+          <tr>
+            <th scope="row">Total Land</th>
+            <td><span id="totalLand">1000</span></td>
+          </tr>
+          <tr>
+            <th scope="row">Total Buildings</th>
+            <td><span id="totalBuildings">0</span></td>
+          </tr>
+          <tr>
+            <th scope="row">Enemies Slain</th>
+            <td><span data-action="display" data-target="enemySlain">0</span></td>
+          </tr>
+          <tr>
+            <th scope="row">Unburied Corpses</th>
+            <td><span data-action="display" data-target="corpses">0</span></td>
+          </tr>
+          <tr id="graveTotal">
+            <th scope="row">Unfilled Graves</th>
+            <td><span data-action="display" data-target="grave">0</span></td>
+          </tr>
+          <tr id="walkGroup">
+            <th scope="row">Walk</th>
+            <td><span id="walkStat">0</span> workers per second</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </div>
 </template>
