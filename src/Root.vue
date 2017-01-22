@@ -48,6 +48,8 @@
       <div class="col">
         <population-pane></population-pane>
         <jobs-pane></jobs-pane>
+        <current-trade-pane></current-trade-pane>
+        <events-pane></events-pane>
         <current-deity-pane :curCiv="curCiv"></current-deity-pane>
         <wonders-pane :curCiv="curCiv" :wonderInProgress="wonderInProgress" :wonderCompleted="wonderCompleted"></wonders-pane>
         <stats-pane :curCiv="curCiv" :settings="settings"></stats-pane>
@@ -70,6 +72,7 @@ import AchievementsPane from './components/AchievementsPane'
 import SettingsPane from './components/SettingsPane'
 import PopulationPane from './components/PopulationPane'
 import JobsPane from './components/JobsPane'
+import CurrentTradePane from './components/CurrentTradePane'
 import EventsPane from './components/EventsPane'
 import CurrentDeityPane from './components/CurrentDeityPane'
 import WondersPane from './components/WondersPane'
@@ -91,6 +94,7 @@ export default {
     SettingsPane,
     PopulationPane,
     JobsPane,
+    CurrentTradePane,
     EventsPane,
     CurrentDeityPane,
     WondersPane,
