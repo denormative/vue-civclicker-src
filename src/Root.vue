@@ -2,13 +2,6 @@
 <div class="root">
   <civ-title :curCiv="curCiv"></civ-title>
   <!-- built files will be auto injected -->
-  <!-- <button type="button" class="btn btn-lg btn-danger" data-toggle="popover" title="Popover title" data-content="And here's some amazing content. It's very engaging. Right?">Click to toggle popover</button>
-  <script type="text/javascript">
-  /* global $ */
-  $(function () {
-  $('[data-toggle="popover"]').popover()
-  })
-  </script> -->
   <div class="container-fluid">
     <div class="row">
       <div class="col">
