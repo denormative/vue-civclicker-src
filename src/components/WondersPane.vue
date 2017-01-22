@@ -9,9 +9,11 @@
   </h4>
   <div class="card-block">
     <div class="row">
-      <span id="startWonderLine" class="col">
-        <button id="startWonder" onmousedown="startWonder()">Start Building Wonder</button>
-      </span>
+      <div id="startWonderLine" class="col" align="center">
+        <button id="startWonder" class="btn btn-success btn-lg" onmousedown="startWonder()">
+          Start Building Wonder
+        </button>
+      </div>
       <div id="wonderCompleted" v-show="wonderCompleted" class="col">
         <h5 class="text-success text-center"><b><span id="wonderNameC">Wonder</span></b> Completed!</h5>
         <div>Choose Bonus:</div>
