@@ -65,8 +65,6 @@ var normalUpgrades = null // All upgrades to be listed in the normal upgrades ar
 
 var wonderResources = null
 
-var settings = null
-
 var body = null
 
 function getCurDeityDomain() { return (window.vm.curCiv.deities.length > 0) ? window.vm.curCiv.deities[0].domain : undefined }
@@ -199,6 +197,20 @@ function preLoad() { // eslint-disable-line no-unused-vars
 
   // Caches the total number of each wonder, so that we don't have to recount repeatedly.
   wonderCount = {}
+
+  // These are settings that should probably be tied to the browser.
+  window.vm.settings = {
+    autosave: true,
+    autosaveCounter: 1,
+    autosaveTime: 60, // Currently autosave is every minute. Might change to 5 mins in future.
+    customIncr: false,
+    fontSize: 1.0,
+    delimiters: true,
+    textShadow: false,
+    notes: true,
+    worksafe: false,
+    useIcons: true
+  }
 }
 
 function postLoad() { // eslint-disable-line no-unused-vars
@@ -260,20 +272,6 @@ function postLoad() { // eslint-disable-line no-unused-vars
   // The resources that Wonders consume, and can give bonuses for.
   wonderResources = [civData.food, civData.wood, civData.stone, civData.skins, civData.herbs, civData.ore,
     civData.leather, civData.metal, civData.piety]
-
-  // These are settings that should probably be tied to the browser.
-  settings = {
-    autosave: true,
-    autosaveCounter: 1,
-    autosaveTime: 60, // Currently autosave is every minute. Might change to 5 mins in future.
-    customIncr: false,
-    fontSize: 1.0,
-    delimiters: true,
-    textShadow: false,
-    notes: true,
-    worksafe: false,
-    useIcons: true
-  }
 
   body = document.getElementsByTagName('body')[0]
 
@@ -923,46 +921,46 @@ function updatePopulationUI() {
     // Unlocking interface elements as population increases to reduce unnecessary clicking
     // xxx These should be reset in reset()
   if (population.current + window.vm.curCiv.zombie.owned >= 10) {
-    if (!settings.customIncr) {
+    if (!window.vm.settings.customIncr) {
       elems = document.getElementsByClassName('unit10')
       for (i = 0; i < elems.length; i++) {
-        setElemDisplay(elems[i], !settings.customincr)
+        setElemDisplay(elems[i], !window.vm.settings.customincr)
       }
     }
   }
   if (population.current + window.vm.curCiv.zombie.owned >= 100) {
-    if (!settings.customIncr) {
+    if (!window.vm.settings.customIncr) {
       elems = document.getElementsByClassName('building10')
       for (i = 0; i < elems.length; i++) {
-        setElemDisplay(elems[i], !settings.customincr)
+        setElemDisplay(elems[i], !window.vm.settings.customincr)
       }
       elems = document.getElementsByClassName('unit100')
       for (i = 0; i < elems.length; i++) {
-        setElemDisplay(elems[i], !settings.customincr)
+        setElemDisplay(elems[i], !window.vm.settings.customincr)
       }
     }
   }
   if (population.current + window.vm.curCiv.zombie.owned >= 1000) {
-    if (!settings.customIncr) {
+    if (!window.vm.settings.customIncr) {
       elems = document.getElementsByClassName('building100')
       for (i = 0; i < elems.length; i++) {
-        setElemDisplay(elems[i], !settings.customincr)
+        setElemDisplay(elems[i], !window.vm.settings.customincr)
       }
       elems = document.getElementsByClassName('unit1000')
       for (i = 0; i < elems.length; i++) {
-        setElemDisplay(elems[i], !settings.customincr)
+        setElemDisplay(elems[i], !window.vm.settings.customincr)
       }
       elems = document.getElementsByClassName('unitInfinity')
       for (i = 0; i < elems.length; i++) {
-        setElemDisplay(elems[i], !settings.customincr)
+        setElemDisplay(elems[i], !window.vm.settings.customincr)
       }
     }
   }
   if (population.current + window.vm.curCiv.zombie.owned >= 10000) {
-    if (!settings.customIncr) {
+    if (!window.vm.settings.customIncr) {
       elems = document.getElementsByClassName('building1000')
       for (i = 0; i < elems.length; i++) {
-        setElemDisplay(elems[i], !settings.customincr)
+        setElemDisplay(elems[i], !window.vm.settings.customincr)
       }
     }
   }
@@ -1358,7 +1356,7 @@ function increment(objId) {
     // Checks to see that resources are not exceeding their limits
   if (purchaseObj.owned > purchaseObj.limit) { purchaseObj.owned = purchaseObj.limit }
 
-  document.getElementById('clicks').innerHTML = prettify(Math.round(++window.vm.curCiv.resourceClicks))
+  ++window.vm.curCiv.resourceClicks
   updateResourceTotals() // Update the page with totals
 }
 function onIncrement(control) {
@@ -2154,7 +2152,7 @@ function load(loadType) {
   console.log('Loaded save game version ' + saveVersion.major +
         '.' + saveVersion.minor + '.' + saveVersion.sub + '(' + saveVersion.mod + ').')
 
-  if (isValid(settingsVar)) { settings = mergeObj(settings, settingsVar) }
+  if (isValid(settingsVar)) { window.vm.settings = mergeObj(window.vm.settings, settingsVar) }
 
   adjustMorale(0)
   updateRequirements(civData.mill)
@@ -2174,7 +2172,6 @@ function load(loadType) {
   updateMorale()
   updateWonder()
   updateWonderCount()
-  document.getElementById('clicks').innerHTML = prettify(Math.round(window.vm.curCiv.resourceClicks))
   document.getElementById('wonderNameC').innerHTML = window.vm.curCiv.curWonder.name
 
   return true
@@ -2190,7 +2187,7 @@ function save(savetype) {
     curCiv: window.vm.curCiv // Game data
   }
 
-  var settingsVar = settings // UI Settings are saved separately.
+  var settingsVar = window.vm.settings // UI Settings are saved separately.
 
     // //////////////////////////////////////////////////
 
@@ -2452,10 +2449,10 @@ function reset() { // eslint-disable-line no-unused-vars
 }
 
 function tickAutosave() {
-  if (settings.autosave && (++settings.autosaveCounter >= settings.autosaveTime)) {
-    settings.autosaveCounter = 0
+  if (window.vm.settings.autosave && (++window.vm.settings.autosaveCounter >= window.vm.settings.autosaveTime)) {
+    window.vm.settings.autosaveCounter = 0
         // If autosave fails, disable it.
-    if (!save('auto')) { settings.autosave = false }
+    if (!save('auto')) { window.vm.settings.autosave = false }
   }
 }
 
@@ -3003,12 +3000,12 @@ function versionAlert() {
 
 function prettify(input) {
     // xxx TODO: Add appropriate format options
-  return (settings.delimiters) ? Number(input).toLocaleString() : input.toString()
+  return (window.vm.settings.delimiters) ? Number(input).toLocaleString() : input.toString()
 }
 
 function setAutosave(value) {
-  if (value !== undefined) { settings.autosave = value }
-  document.getElementById('toggleAutosave').checked = settings.autosave
+  if (value !== undefined) { window.vm.settings.autosave = value }
+  document.getElementById('toggleAutosave').checked = window.vm.settings.autosave
 }
 function onToggleAutosave(control) { // eslint-disable-line no-unused-vars
   return setAutosave(control.checked)
@@ -3019,40 +3016,40 @@ function setCustomQuantities(value) {
   var elems
   var curPop = population.current + window.vm.curCiv.zombie.owned
 
-  if (value !== undefined) { settings.customIncr = value }
-  document.getElementById('toggleCustomQuantities').checked = settings.customIncr
+  if (value !== undefined) { window.vm.settings.customIncr = value }
+  document.getElementById('toggleCustomQuantities').checked = window.vm.settings.customIncr
 
-  setElemDisplay('customJobQuantity', settings.customIncr)
-  setElemDisplay('customPartyQuantity', settings.customIncr)
-  setElemDisplay('customBuildQuantity', settings.customIncr)
-  setElemDisplay('customSpawnQuantity', settings.customIncr)
+  setElemDisplay('customJobQuantity', window.vm.settings.customIncr)
+  setElemDisplay('customPartyQuantity', window.vm.settings.customIncr)
+  setElemDisplay('customBuildQuantity', window.vm.settings.customIncr)
+  setElemDisplay('customSpawnQuantity', window.vm.settings.customIncr)
 
   elems = document.getElementsByClassName('unit10')
-  for (i = 0; i < elems.length; ++i) { setElemDisplay(elems[i], !settings.customIncr && (curPop >= 10)) }
+  for (i = 0; i < elems.length; ++i) { setElemDisplay(elems[i], !window.vm.settings.customIncr && (curPop >= 10)) }
 
   elems = document.getElementsByClassName('unit100')
-  for (i = 0; i < elems.length; ++i) { setElemDisplay(elems[i], !settings.customIncr && (curPop >= 100)) }
+  for (i = 0; i < elems.length; ++i) { setElemDisplay(elems[i], !window.vm.settings.customIncr && (curPop >= 100)) }
 
   elems = document.getElementsByClassName('unit1000')
-  for (i = 0; i < elems.length; ++i) { setElemDisplay(elems[i], !settings.customIncr && (curPop >= 1000)) }
+  for (i = 0; i < elems.length; ++i) { setElemDisplay(elems[i], !window.vm.settings.customIncr && (curPop >= 1000)) }
 
   elems = document.getElementsByClassName('unitInfinity')
-  for (i = 0; i < elems.length; ++i) { setElemDisplay(elems[i], !settings.customIncr && (curPop >= 1000)) }
+  for (i = 0; i < elems.length; ++i) { setElemDisplay(elems[i], !window.vm.settings.customIncr && (curPop >= 1000)) }
 
   elems = document.getElementsByClassName('building10')
-  for (i = 0; i < elems.length; ++i) { setElemDisplay(elems[i], !settings.customIncr && (curPop >= 100)) }
+  for (i = 0; i < elems.length; ++i) { setElemDisplay(elems[i], !window.vm.settings.customIncr && (curPop >= 100)) }
 
   elems = document.getElementsByClassName('building100')
-  for (i = 0; i < elems.length; ++i) { setElemDisplay(elems[i], !settings.customIncr && (curPop >= 1000)) }
+  for (i = 0; i < elems.length; ++i) { setElemDisplay(elems[i], !window.vm.settings.customIncr && (curPop >= 1000)) }
 
   elems = document.getElementsByClassName('building1000')
-  for (i = 0; i < elems.length; ++i) { setElemDisplay(elems[i], !settings.customIncr && (curPop >= 10000)) }
+  for (i = 0; i < elems.length; ++i) { setElemDisplay(elems[i], !window.vm.settings.customIncr && (curPop >= 10000)) }
 
   elems = document.getElementsByClassName('buildingInfinity')
-  for (i = 0; i < elems.length; ++i) { setElemDisplay(elems[i], !settings.customIncr && (curPop >= 10000)) }
+  for (i = 0; i < elems.length; ++i) { setElemDisplay(elems[i], !window.vm.settings.customIncr && (curPop >= 10000)) }
 
   elems = document.getElementsByClassName('buycustom')
-  for (i = 0; i < elems.length; ++i) { setElemDisplay(elems[i], settings.customIncr) }
+  for (i = 0; i < elems.length; ++i) { setElemDisplay(elems[i], window.vm.settings.customIncr) }
 }
 function onToggleCustomQuantities(control) { // eslint-disable-line no-unused-vars
   return setCustomQuantities(control.checked)
@@ -3060,13 +3057,13 @@ function onToggleCustomQuantities(control) { // eslint-disable-line no-unused-va
 
 // Toggles the display of the .notes class
 function setNotes(value) {
-  if (value !== undefined) { settings.notes = value }
-  document.getElementById('toggleNotes').checked = settings.notes
+  if (value !== undefined) { window.vm.settings.notes = value }
+  document.getElementById('toggleNotes').checked = window.vm.settings.notes
 
   var i
   var elems = document.getElementsByClassName('note')
   for (i = 0; i < elems.length; ++i) {
-    setElemDisplay(elems[i], settings.notes)
+    setElemDisplay(elems[i], window.vm.settings.notes)
   }
 }
 function onToggleNotes(control) { // eslint-disable-line no-unused-vars
@@ -3075,19 +3072,19 @@ function onToggleNotes(control) { // eslint-disable-line no-unused-vars
 
 // value is the desired change in 0.1em units.
 function textSize(value) {
-  if (value !== undefined) { settings.fontSize += 0.1 * value }
-  document.getElementById('smallerText').disabled = (settings.fontSize <= 0.5)
+  if (value !== undefined) { window.vm.settings.fontSize += 0.1 * value }
+  document.getElementById('smallerText').disabled = (window.vm.settings.fontSize <= 0.5)
 
     // xxx Should this be applied to the document instead of the body?
-  body.style.fontSize = settings.fontSize + 'em'
+  body.style.fontSize = window.vm.settings.fontSize + 'em'
 }
 
 function setShadow(value) {
-  if (value !== undefined) { settings.textShadow = value }
-  document.getElementById('toggleShadow').checked = settings.textShadow
+  if (value !== undefined) { window.vm.settings.textShadow = value }
+  document.getElementById('toggleShadow').checked = window.vm.settings.textShadow
   var shadowStyle = '3px 0 0 #fff, -3px 0 0 #fff, 0 3px 0 #fff, 0 -3px 0 #fff' +
                     ', 2px 2px 0 #fff, -2px -2px 0 #fff, 2px -2px 0 #fff, -2px 2px 0 #fff'
-  body.style.textShadow = settings.textShadow ? shadowStyle : 'none'
+  body.style.textShadow = window.vm.settings.textShadow ? shadowStyle : 'none'
 }
 function onToggleShadow(control) { // eslint-disable-line no-unused-vars
   return setShadow(control.checked)
@@ -3096,14 +3093,14 @@ function onToggleShadow(control) { // eslint-disable-line no-unused-vars
 // Does nothing yet, will probably toggle display for "icon" and "word" classes
 // as that's probably the simplest way to do this.
 function setIcons(value) {
-  if (value !== undefined) { settings.useIcons = value }
-  document.getElementById('toggleIcons').checked = settings.useIcons
+  if (value !== undefined) { window.vm.settings.useIcons = value }
+  document.getElementById('toggleIcons').checked = window.vm.settings.useIcons
 
   var i
   var elems = document.getElementsByClassName('icon')
   for (i = 0; i < elems.length; ++i) {
         // Worksafe implies no icons.
-    elems[i].style.visibility = (settings.useIcons && !settings.worksafe) ? 'visible' : 'hidden'
+    elems[i].style.visibility = (window.vm.settings.useIcons && !window.vm.settings.worksafe) ? 'visible' : 'hidden'
   }
 }
 function onToggleIcons(control) { // eslint-disable-line no-unused-vars
@@ -3111,8 +3108,8 @@ function onToggleIcons(control) { // eslint-disable-line no-unused-vars
 }
 
 function setDelimiters(value) {
-  if (value !== undefined) { settings.delimiters = value }
-  document.getElementById('toggleDelimiters').checked = settings.delimiters
+  if (value !== undefined) { window.vm.settings.delimiters = value }
+  document.getElementById('toggleDelimiters').checked = window.vm.settings.delimiters
   updateResourceTotals()
 }
 function onToggleDelimiters(control) { // eslint-disable-line no-unused-vars
@@ -3120,11 +3117,11 @@ function onToggleDelimiters(control) { // eslint-disable-line no-unused-vars
 }
 
 function setWorksafe(value) {
-  if (value !== undefined) { settings.worksafe = value }
-  document.getElementById('toggleWorksafe').checked = settings.worksafe
+  if (value !== undefined) { window.vm.settings.worksafe = value }
+  document.getElementById('toggleWorksafe').checked = window.vm.settings.worksafe
 
     // xxx Should this be applied to the document instead of the body?
-  if (settings.worksafe) {
+  if (window.vm.settings.worksafe) {
     body.classList.remove('hasBackground')
   }
   else {

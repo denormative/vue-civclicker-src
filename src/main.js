@@ -9,10 +9,11 @@ Vue.use(Vuex)
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
-  template: '<App :curCiv="curCiv"/>',
+  template: '<App :curCiv="curCiv" :settings="settings"/>',
   data() {
     return {
-      curCiv: {}
+      curCiv: {},
+      settings: {}
     }
   },
   created: function() {

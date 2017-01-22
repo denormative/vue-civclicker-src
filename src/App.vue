@@ -1,6 +1,6 @@
 <template>
 <div id="app">
-  <root :curCiv="curCiv"></root>
+  <root :curCiv="curCiv" :settings="settings"></root>
 </div>
 </template>
 
@@ -10,7 +10,7 @@ import Root from './Root'
 
 export default {
   name: 'app',
-  props: ['curCiv'],
+  props: ['curCiv', 'settings'],
   components: {
     Hello,
     Root

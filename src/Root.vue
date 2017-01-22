@@ -50,7 +50,7 @@
         <jobs-pane></jobs-pane>
         <current-deity-pane></current-deity-pane>
         <wonders-pane :curCiv="curCiv" :wonderInProgress="wonderInProgress" :wonderCompleted="wonderCompleted"></wonders-pane>
-        <stats-pane :curCiv="curCiv"></stats-pane>
+        <stats-pane :curCiv="curCiv" :settings="settings"></stats-pane>
       </div>
     </div>
   </div>
@@ -77,7 +77,7 @@ import StatsPane from './components/StatsPane'
 
 export default {
   name: 'root',
-  props: ['curCiv'],
+  props: ['curCiv', 'settings'],
   components: {
     CivTitle,
     BasicResources,

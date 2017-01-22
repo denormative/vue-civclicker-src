@@ -6,7 +6,7 @@
         <tbody>
           <tr>
             <th scope="row">Resource clicks</th>
-            <td><span id="clicks">0</span></td>
+            <td>{{curCiv.resourceClicks | prettyint(settings)}}</td>
           </tr>
           <tr>
             <th scope="row">Total Land</th>
@@ -41,9 +41,18 @@
 <script>
 export default {
   name: 'stats-pane',
-  props: ['curCiv'],
+  props: ['curCiv', 'settings'],
   data () {
     return {
+    }
+  },
+  filters: {
+    prettyify: function (v) {
+      return (this.settings.delimiters) ? Number(v).toLocaleString() : v.toString()
+    },
+    prettyint: function (v, settings) {
+      let vv = Math.round(v)
+      return (settings.delimiters) ? Number(vv).toLocaleString() : vv.toString()
     }
   }
 }
