@@ -8,13 +8,14 @@
     </div>
   </h4>
   <div class="card-block">
-    <span id="startWonderLine">
-      <button id="startWonder" onmousedown="startWonder()">Start Building Wonder</button>
-    </span>
-    <div id="wonderCompleted">
-      <div class="wonderTitle"><span id="wonderNameC">Wonder</span> Completed! Choose Bonus:</div>
-    </div>
     <div class="row">
+      <span id="startWonderLine" class="col">
+        <button id="startWonder" onmousedown="startWonder()">Start Building Wonder</button>
+      </span>
+      <div id="wonderCompleted" v-show="wonderCompleted" class="col">
+        <h5 class="text-success text-center"><b><span id="wonderNameC">Wonder</span></b> Completed!</h5>
+        <div>Choose Bonus:</div>
+      </div>
       <div v-show="wonderInProgress" class="col">
         <!-- FIXME: really should be v-if not v-show -->
         <div class="">Progress on <b>{{curCiv.curWonder.name}}</b></div>
@@ -40,7 +41,7 @@
 <script>
 export default {
   name: 'wonders-pane',
-  props: ['curCiv', 'wonderInProgress'],
+  props: ['curCiv', 'wonderInProgress', 'wonderCompleted'],
   data() {
     return {}
   },
@@ -73,11 +74,6 @@ export default {
 
 #pastWonders td {
   padding-right: 1em;
-}
-
-#wonderCompleted {
-  padding-top: 1em;
-  display: none;
 }
 
 .wonderCompleted button {
