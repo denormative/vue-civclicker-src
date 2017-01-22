@@ -47,7 +47,7 @@
       </div>
       <div class="col">
         <population-pane></population-pane>
-        <jobs-pane></jobs-pane>
+        <jobs-pane :settings="settings"></jobs-pane>
         <current-trade-pane></current-trade-pane>
         <events-pane></events-pane>
         <current-deity-pane :curCiv="curCiv"></current-deity-pane>

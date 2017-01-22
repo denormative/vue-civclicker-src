@@ -3017,7 +3017,6 @@ function setCustomQuantities(value) {
   if (value !== undefined) { window.vm.settings.customIncr = value }
   document.getElementById('toggleCustomQuantities').checked = window.vm.settings.customIncr
 
-  setElemDisplay('customJobQuantity', window.vm.settings.customIncr)
   setElemDisplay('customPartyQuantity', window.vm.settings.customIncr)
   setElemDisplay('customBuildQuantity', window.vm.settings.customIncr)
   setElemDisplay('customSpawnQuantity', window.vm.settings.customIncr)
