@@ -48,7 +48,7 @@
       <div class="col">
         <population-pane></population-pane>
         <jobs-pane></jobs-pane>
-        <current-deity-pane></current-deity-pane>
+        <current-deity-pane :curCiv="curCiv"></current-deity-pane>
         <wonders-pane :curCiv="curCiv" :wonderInProgress="wonderInProgress" :wonderCompleted="wonderCompleted"></wonders-pane>
         <stats-pane :curCiv="curCiv" :settings="settings"></stats-pane>
       </div>

@@ -1,25 +1,31 @@
 <template>
-  <div class="current-deity-pane">
-    <div id="deityContainer">
-      <h3>Current Deity</h3>
-      <table id="activeDeity">
-        <tr>
-          <td></td>
-        </tr>
-      </table>
-    </div>
+<div class="current-deity-pane card" v-show="hasDeity">
+  <h4 class="card-header">Current Deity</h4>
+  <div class="card-block">
+    <table id="activeDeity">
+      <tr>
+        <td></td>
+      </tr>
+    </table>
   </div>
+</div>
 </template>
 
 <script>
 export default {
   name: 'current-deity-pane',
-  data () {
-    return {
+  props: ['curCiv'],
+  data() {
+    return {}
+  },
+  computed: {
+    hasDeity: function() {
+      return this.curCiv.deities[0].name
     }
   }
 }
 </script>
 
 <style scoped>
+
 </style>

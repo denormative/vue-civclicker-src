@@ -1046,8 +1046,6 @@ function updateDeity() {
   document.getElementById('deityADevotion').innerHTML = civData.devotion.owned
 
     // Display if we have an active deity, or any old ones.
-  setElemDisplay('deityContainer', (window.vm.curCiv.deities[0].name))
-  setElemDisplay('activeDeity', (window.vm.curCiv.deities[0].name))
   setElemDisplay('oldDeities', (window.vm.curCiv.deities[0].name || window.vm.curCiv.deities.length > 1))
   setElemDisplay('iconoclasmGroup', (window.vm.curCiv.deities.length > 1))
 }
