@@ -12,6 +12,7 @@ new Vue({
   template: '<App :curCiv="curCiv" :settings="settings"/>',
   data() {
     return {
+      civSizes: [],
       curCiv: {},
       settings: {}
     }

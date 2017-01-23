@@ -35,10 +35,6 @@ var saveTag2 = null // For old saves.
 var saveSettingsTag = null
 var logRepeat = null
 
-var civSizes = null
-
-// var window.vm.curCiv = null
-
 var population = null
 
 // Caches the total number of each wonder, so that we don't have to recount repeatedly.
@@ -109,7 +105,7 @@ function preLoad() { // eslint-disable-line no-unused-vars
   logRepeat = 1
 
 // Civ size category minimums
-  civSizes = [
+  window.vm.civSizes = [
     { min_pop: 0, name: 'Thorp', id: 'thorp' },
     { min_pop: 20, name: 'Hamlet', id: 'hamlet' },
     { min_pop: 60, name: 'Village', id: 'village' },
@@ -124,15 +120,15 @@ function preLoad() { // eslint-disable-line no-unused-vars
     { min_pop: 200000, name: 'Large Nation', id: 'largeNation' },
     { min_pop: 500000, name: 'Empire', id: 'empire' }
   ]
-  indexArrayByAttr(civSizes, 'id')
+  indexArrayByAttr(window.vm.civSizes, 'id')
 
   // Annotate with max population and index.
-  civSizes.forEach(function(elem, i, arr) {
+  window.vm.civSizes.forEach(function(elem, i, arr) {
     elem.max_pop = (i + 1 < arr.length) ? (arr[i + 1].min_pop - 1) : Infinity
     elem.idx = i
   })
 
-  civSizes.getCivSize = function(popcnt) {
+  window.vm.civSizes.getCivSize = function(popcnt) {
     var i
     for (i = 0; i < this.length; ++i) {
       if (popcnt <= this[i].max_pop) { return this[i] }
@@ -166,7 +162,7 @@ function preLoad() { // eslint-disable-line no-unused-vars
       epop: 0,  // Population of enemy we're raiding.
       plunderLoot: {}, // Loot we get if we win.
       last: '',
-      targetMax: civSizes[0].id // Largest target allowed
+      targetMax: window.vm.civSizes[0].id // Largest target allowed
     },
 
     curWonder: {
@@ -909,7 +905,7 @@ function updatePopulationUI() {
 
     // As population increases, various things change
     // Update our civ type name
-  var civType = civSizes.getCivSize(population.current).name
+  var civType = window.vm.civSizes.getCivSize(population.current).name
   if (population.current === 0 && population.limit >= 1000) {
     civType = 'Ghost Town'
   }
@@ -1153,7 +1149,7 @@ function testAchievements() {
 // Dynamically add the raid buttons for the various civ sizes.
 function addRaidRows() {
   var s = ''
-  civSizes.forEach(function(elem) {
+  window.vm.civSizes.forEach(function(elem) {
     s += "<button class='btn btn-secondary btn-sm raid' data-action='raid' data-target='" + elem.id + "' disabled='disabled'>" +
         'Raid ' + elem.name + '</button><br>' // xxxL10N
   })
@@ -1179,7 +1175,7 @@ function updateTargets() {
     for (i = 0; i < raidButtons.length; ++i) {
             // Disable if we have no standard, no army, or they are too big a target.
       curElem = raidButtons[i]
-      curElem.disabled = (!civData.standard.owned || !haveArmy || (civSizes[dataset(curElem, 'target')].idx > civSizes[window.vm.curCiv.raid.targetMax].idx))
+      curElem.disabled = (!civData.standard.owned || !haveArmy || (window.vm.civSizes[dataset(curElem, 'target')].idx > window.vm.civSizes[window.vm.curCiv.raid.targetMax].idx))
     }
   }
 }
@@ -1822,9 +1818,9 @@ function invade(ecivtype) {
   window.vm.curCiv.raid.raiding = true
   window.vm.curCiv.raid.last = ecivtype
 
-  window.vm.curCiv.raid.epop = civSizes[ecivtype].max_pop + 1
+  window.vm.curCiv.raid.epop = window.vm.civSizes[ecivtype].max_pop + 1
     // If no max pop, use 2x min pop.
-  if (window.vm.curCiv.raid.epop === Infinity) { window.vm.curCiv.raid.epop = civSizes[ecivtype].min_pop * 2 }
+  if (window.vm.curCiv.raid.epop === Infinity) { window.vm.curCiv.raid.epop = window.vm.civSizes[ecivtype].min_pop * 2 }
   if (civData.glory.timer > 0) { window.vm.curCiv.raid.epop *= 2 } // doubles soldiers fought
 
     // 5-25% of enemy population is soldiers.
@@ -1848,12 +1844,12 @@ function plunder() { // eslint-disable-line no-unused-vars
   var plunderMsg = ''
 
     // If we fought our largest eligible foe, but not the largest possible, raise the limit.
-  if ((window.vm.curCiv.raid.targetMax !== civSizes[civSizes.length - 1].id) && window.vm.curCiv.raid.last === window.vm.curCiv.raid.targetMax) {
-    window.vm.curCiv.raid.targetMax = civSizes[civSizes[window.vm.curCiv.raid.targetMax].idx + 1].id
+  if ((window.vm.curCiv.raid.targetMax !== window.vm.civSizes[window.vm.civSizes.length - 1].id) && window.vm.curCiv.raid.last === window.vm.curCiv.raid.targetMax) {
+    window.vm.curCiv.raid.targetMax = window.vm.civSizes[window.vm.civSizes[window.vm.curCiv.raid.targetMax].idx + 1].id
   }
 
     // Improve morale based on size of defeated foe.
-  adjustMorale((civSizes[window.vm.curCiv.raid.last].idx + 1) / 100)
+  adjustMorale((window.vm.civSizes[window.vm.curCiv.raid.last].idx + 1) / 100)
 
     // Lamentation
   if (civData.lament.owned) { window.vm.curCiv.attackCounter -= Math.ceil(window.vm.curCiv.raid.epop / 2000) }
@@ -1862,7 +1858,7 @@ function plunder() { // eslint-disable-line no-unused-vars
   payFor(window.vm.curCiv.raid.plunderLoot, -1)  // We pay for -1 of these to receive them.
 
     // Create message to notify player
-  plunderMsg = civSizes[window.vm.curCiv.raid.last].name + ' defeated! '
+  plunderMsg = window.vm.civSizes[window.vm.curCiv.raid.last].name + ' defeated! '
   plunderMsg += 'Plundered ' + getReqText(window.vm.curCiv.raid.plunderLoot) + '. '
   gameLog(plunderMsg)
 
@@ -2381,7 +2377,7 @@ function reset() { // eslint-disable-line no-unused-vars
   }
 
   resetRaiding()
-  window.vm.curCiv.raid.targetMax = civSizes[0].id
+  window.vm.curCiv.raid.targetMax = window.vm.civSizes[0].id
 
   window.vm.curCiv.trader.materialId = ''
   window.vm.curCiv.trader.requested = 0

@@ -2,7 +2,7 @@
 
 /* global Resource civData Building adjustMorale population digGraves Upgrade
     updatePopulationUI updateResourceTotals updateUpgrades renameDeity Unit
-    playerCombatMods doSlaughter doLoot doHavoc Achievement window.vm.curCiv civSizes
+    playerCombatMods doSlaughter doLoot doHavoc Achievement
     getCurDeityDomain */
 function civDataTable() { // eslint-disable-line no-unused-vars
   return [
@@ -847,7 +847,7 @@ function civDataTable() { // eslint-disable-line no-unused-vars
       // xxx Technically this also gives credit for capturing a siege engine.
     new Achievement({id: 'engineerAch', name: 'Engi&shy;neer', test: function() { return civData.siege.owned > 0 }}),
       // If we beat the largest possible opponent, grant bonus achievement.
-    new Achievement({id: 'dominationAch', name: 'Domi&shy;nation', test: function() { return window.vm.curCiv.raid.victory && (window.vm.curCiv.raid.last === civSizes[civSizes.length - 1].id) }}),
+    new Achievement({id: 'dominationAch', name: 'Domi&shy;nation', test: function() { return window.vm.curCiv.raid.victory && (window.vm.curCiv.raid.last === window.vm.civSizes[window.vm.civSizes.length - 1].id) }}),
       // Morale
     new Achievement({id: 'hatedAch', name: 'Hated', test: function() { return window.vm.curCiv.morale.efficiency <= 0.5 }}),
     new Achievement({id: 'lovedAch', name: 'Loved', test: function() { return window.vm.curCiv.morale.efficiency >= 1.5 }}),
@@ -880,10 +880,10 @@ function civDataTable() { // eslint-disable-line no-unused-vars
 
 function augmentCivData() { // eslint-disable-line no-unused-vars
   var i
-  var testCivSizeAch = function() { return (this.id === civSizes.getCivSize(population.current).id + 'Ach') }
+  var testCivSizeAch = function() { return (this.id === window.vm.civSizes.getCivSize(population.current).id + 'Ach') }
     // Add the civ size based achivements to the front of the data, so that they come first.
-  for (i = civSizes.length - 1; i > 0; --i) {
-    civData.unshift(new Achievement({id: civSizes[i].id + 'Ach', name: civSizes[i].name, test: testCivSizeAch}))
+  for (i = window.vm.civSizes.length - 1; i > 0; --i) {
+    civData.unshift(new Achievement({id: window.vm.civSizes[i].id + 'Ach', name: window.vm.civSizes[i].name, test: testCivSizeAch}))
   }
     // xxx TODO: Add deity domain based achievements here too.
 }
