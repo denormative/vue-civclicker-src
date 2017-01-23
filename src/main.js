@@ -14,6 +14,9 @@ new Vue({
     return {
       civSizes: [],
       curCiv: {},
+      population: {},
+      // Caches the total number of each wonder, so that we don't have to recount repeatedly.
+      wonderCount: {},
       settings: {}
     }
   },

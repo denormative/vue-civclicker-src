@@ -1,6 +1,6 @@
 'use strict'
 
-/* global Resource civData Building adjustMorale population digGraves Upgrade
+/* global Resource civData Building adjustMorale window.vm.population digGraves Upgrade
     updatePopulationUI updateResourceTotals updateUpgrades renameDeity Unit
     playerCombatMods doSlaughter doLoot doHavoc Achievement
     getCurDeityDomain */
@@ -129,8 +129,8 @@ function civDataTable() { // eslint-disable-line no-unused-vars
       require: { wood: 30, stone: 120 },
       effectText: 'allows 1 cleric',
       // If purchase was a temple and aesthetics has been activated, increase morale
-      // If population is large, temples have less effect.
-      onGain: function(num) { if (civData.aesthetics && civData.aesthetics.owned && num) { adjustMorale(num * 25 / population.current) } }}),
+      // If window.vm.population is large, temples have less effect.
+      onGain: function(num) { if (civData.aesthetics && civData.aesthetics.owned && num) { adjustMorale(num * 25 / window.vm.population.current) } }}),
     new Building({ id: 'barracks',
       name: 'barracks',
       prereqs: { masonry: true },
@@ -323,7 +323,7 @@ function civDataTable() { // eslint-disable-line no-unused-vars
       prereqs: { construction: true },
       require: { food: 200, wood: 500, stone: 500 },
       effectText: 'Houses support +2 workers',
-      onGain: function() { updatePopulationUI() } // due to population limits changing
+      onGain: function() { updatePopulationUI() } // due to window.vm.population limits changing
     }),
     new Upgrade({ id: 'slums',
       name: 'Slums',
@@ -331,7 +331,7 @@ function civDataTable() { // eslint-disable-line no-unused-vars
       prereqs: { architecture: true },
       require: { food: 500, wood: 1000, stone: 1000 },
       effectText: 'Houses support +2 workers',
-      onGain: function() { updatePopulationUI() } // due to population limits changing
+      onGain: function() { updatePopulationUI() } // due to window.vm.population limits changing
     }),
     new Upgrade({ id: 'granaries',
       name: 'Granaries',
@@ -614,8 +614,8 @@ function civDataTable() { // eslint-disable-line no-unused-vars
       require: undefined,  // Cannot be purchased.
       salable: false,  // Cannot be sold.
       // xxx This (alternate data location) could probably be cleaner.
-      get owned() { return population[this.id] },
-      set owned(value) { population[this.id] = value },
+      get owned() { return window.vm.population[this.id] },
+      set owned(value) { window.vm.population[this.id] = value },
       init: function() { this.owned = this.initOwned }, // xxx Verify this override is needed.
       effectText: 'Use healers and herbs to cure them' }),
     new Unit({ id: 'unemployed',
@@ -855,10 +855,10 @@ function civDataTable() { // eslint-disable-line no-unused-vars
     new Achievement({id: 'catAch', name: 'Cat!', test: function() { return civData.cat.owned >= 1 }}),
     new Achievement({id: 'glaringAch', name: 'Glaring', test: function() { return civData.cat.owned >= 10 }}),
     new Achievement({id: 'clowderAch', name: 'Clowder', test: function() { return civData.cat.owned >= 100 }}),
-      // other population
+      // other window.vm.population
       // Plagued achievement requires sick people to outnumber healthy
-    new Achievement({id: 'plaguedAch', name: 'Plagued', test: function() { return population.totalSick > population.healthy }}),
-    new Achievement({id: 'ghostTownAch', name: 'Ghost Town', test: function() { return (population.current === 0) && (population.limit >= 1000) }}),
+    new Achievement({id: 'plaguedAch', name: 'Plagued', test: function() { return window.vm.population.totalSick > window.vm.population.healthy }}),
+    new Achievement({id: 'ghostTownAch', name: 'Ghost Town', test: function() { return (window.vm.population.current === 0) && (window.vm.population.limit >= 1000) }}),
       // deities
       // xxx TODO: Should make this loop through the domains
     new Achievement({id: 'battleAch', name: 'Battle', test: function() { return getCurDeityDomain() === 'battle' }}),
@@ -880,7 +880,7 @@ function civDataTable() { // eslint-disable-line no-unused-vars
 
 function augmentCivData() { // eslint-disable-line no-unused-vars
   var i
-  var testCivSizeAch = function() { return (this.id === window.vm.civSizes.getCivSize(population.current).id + 'Ach') }
+  var testCivSizeAch = function() { return (this.id === window.vm.civSizes.getCivSize(window.vm.population.current).id + 'Ach') }
     // Add the civ size based achivements to the front of the data, so that they come first.
   for (i = window.vm.civSizes.length - 1; i > 0; --i) {
     civData.unshift(new Achievement({id: window.vm.civSizes[i].id + 'Ach', name: window.vm.civSizes[i].name, test: testCivSizeAch}))
