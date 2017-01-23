@@ -202,9 +202,7 @@ function preLoad() { // eslint-disable-line no-unused-vars
     worksafe: false,
     useIcons: true
   }
-}
 
-function postLoad() { // eslint-disable-line no-unused-vars
   // Initialize Data
   civData = civDataTable()
   augmentCivData()
@@ -263,13 +261,13 @@ function postLoad() { // eslint-disable-line no-unused-vars
   // The resources that Wonders consume, and can give bonuses for.
   wonderResources = [civData.food, civData.wood, civData.stone, civData.skins, civData.herbs, civData.ore,
     civData.leather, civData.metal, civData.piety]
+}
 
+function postLoad() { // eslint-disable-line no-unused-vars
   body = document.getElementsByTagName('body')[0]
 
   initCivclicker()
 
-  // This sets up the main game loop, which is scheduled to execute once per second.
-  console.log('running')
   window.setInterval(function() {
       // debugging - mark beginning of loop execution
       // var start = new Date().getTime();
@@ -330,6 +328,9 @@ function postLoad() { // eslint-disable-line no-unused-vars
       // var time = end - start;
       // console.log("Main loop execution time: " + time + "ms");
   }, 1000) // updates once per second (1000 milliseconds)
+
+  // This sets up the main game loop, which is scheduled to execute once per second.
+  console.log('running')
 }
 
 function playerCombatMods() { // eslint-disable-line no-unused-vars
