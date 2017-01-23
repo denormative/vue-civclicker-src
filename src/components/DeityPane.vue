@@ -3,16 +3,16 @@
   <span id="worshipRow"></span>
   <div id="deityDomains">
     <span id="battleRow" class="purchaseRow" data-target="battle"> <span class="upgradetrue" data-quantity="true">
-              <button id="battleDeity" class="xtrue" onmousedown="selectDeity('battle')">Battle</button></span>
+              <button id="battleDeity" class="btn btn-danger xtrue" onmousedown="selectDeity('battle')">Battle</button></span>
     <span><span id="battleCost" class="cost">500 piety</span><span id="battleNote" class="note">: (You can only pick one of these)</span></span><br></span>
     <span id="fieldsRow" class="purchaseRow" data-target="fields"> <span class="upgradetrue" data-quantity="true">
-              <button id="fieldsDeity" class="xtrue" onmousedown="selectDeity('fields')">Fields</button></span>
+              <button id="fieldsDeity" class="btn btn-warning xtrue" onmousedown="selectDeity('fields')">Fields</button></span>
     <span><span id="fieldsCost" class="cost">500 piety</span><span id="fieldsNote" class="note">: (You can only pick one of these)</span></span><br></span>
     <span id="underworldRow" class="purchaseRow" data-target="underworld"> <span class="upgradetrue" data-quantity="true">
-              <button id="underworldDeity" class="xtrue" onmousedown="selectDeity('underworld')">Underworld</button></span>
+              <button id="underworldDeity" class="btn btn-secondary xtrue" onmousedown="selectDeity('underworld')">Underworld</button></span>
     <span><span id="underworldCost" class="cost">500 piety</span><span id="underworldNote" class="note">: (You can only pick one of these)</span></span><br></span>
     <span id="catsRow" class="purchaseRow" data-target="cats"> <span class="upgradetrue" data-quantity="true">
-              <button id="catsDeity" class="xtrue" onmousedown="selectDeity('cats')">Cats</button></span>
+              <button id="catsDeity" class="btn btn-infoxtrue" onmousedown="selectDeity('cats')">Cats</button></span>
     <span><span id="catsCost" class="cost">500 piety</span><span id="catsNote" class="note">: (You can only pick one of these)</span></span><br></span>
   </div>
   <div id="battleUpgrades">
@@ -116,7 +116,7 @@
     </table>
   </div>
   <div id="iconoclasmGroup">
-    <button id="iconoclasm" onmousedown="iconoclasmList()">Iconoclasm</button>
+    <button class="btn btn-danger btn-sm" id="iconoclasm" onmousedown="iconoclasmList()">Iconoclasm</button>
     <span id="iconoclasmCost" class="cost">1,000 piety</span>
     <span id="iconoclasmNote" class="note">: Remove an old deity to gain gold</span><br>
     <div id="iconoclasmList"></div>

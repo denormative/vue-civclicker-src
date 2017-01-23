@@ -9,10 +9,10 @@
 
   <div id="impexp">
     <textarea id="impexpField"></textarea>
-    <button id="expButton" onclick="save('export')">Export</button>
-    <button id="expSelect" onclick="document.getElementById('impexpField').select();">Select All</button>
-    <button id="impexpClose" onclick="impExp()">Close</button>
-    <button id="impButton" onclick="load('import')">Import</button>
+    <button class="btn btn-primary btn-sm" id="expButton" onclick="save('export')">Export</button>
+    <button class="btn btn-secondary btn-sm" id="expSelect" onclick="document.getElementById('impexpField').select();">Select All</button>
+    <button class="btn btn-success btn-sm" id="impexpClose" onclick="impExp()">Close</button>
+    <button class="btn btn-warning btn-sm" id="impButton" onclick="load('import')">Import</button>
   </div>
 
 </div>

@@ -2,7 +2,7 @@
   <div class="current-trade-pane">
     <div id="tradeContainer" class="card-block">
       Trader offers 1 gold for <span id="tradeRequested">0</span> <span id="tradeType">food</span><br>
-      <button id="trader" onmousedown="trade()">Trade</button>
+      <button class="btn btn-primary" id="trader" onmousedown="trade()">Trade</button>
     </div>
   </div>
 </template>

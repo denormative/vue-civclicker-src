@@ -22,13 +22,13 @@
     </table>
     <br>
     <div id="populationCreate">
-      <div class="unit1"><button id="spawn1button" onmousedown="spawn(1)" disabled="disabled">Recruit Worker</button><span class="cost"><span id="workerCost">20</span>        food</span><span class="note">: Recruit a new worker</span><br></div>
-      <div class="unit10"><button id="spawn10button" onmousedown="spawn(10)">Recruit 10 Workers</button><span class="cost"><span id="workerCost10">200</span>        food</span><span class="note">: Recruit 10 new workers</span></div>
-      <div class="unit100"><button id="spawn100button" onmousedown="spawn(100)">Recruit 100 Workers</button><span class="cost"><span id="workerCost100">2000</span>        food</span><span class="note">: Recruit 100 new workers</span></div>
-      <div class="unit1000"><button id="spawn1000button" onmousedown="spawn(1000)">Recruit 1000 Workers</button><span class="cost"><span id="workerCost1000">20000</span>        food</span><span class="note">: Recruit 1000 new workers</span></div>
-      <div class="unitInfinity"><button id="spawnMaxbutton" onmousedown="spawn(Infinity)">Recruit <span id="workerNumMax">Max</span> Workers</button><span
+      <div class="unit1"><button class="btn btn-secondary btn-sm" id="spawn1button" onmousedown="spawn(1)" disabled="disabled">Recruit Worker</button><span class="cost"><span id="workerCost">20</span>        food</span><span class="note">: Recruit a new worker</span><br></div>
+      <div class="unit10"><button class="btn btn-secondary btn-sm" id="spawn10button" onmousedown="spawn(10)">Recruit 10 Workers</button><span class="cost"><span id="workerCost10">200</span>        food</span><span class="note">: Recruit 10 new workers</span></div>
+      <div class="unit100"><button class="btn btn-secondary btn-sm" id="spawn100button" onmousedown="spawn(100)">Recruit 100 Workers</button><span class="cost"><span id="workerCost100">2000</span>        food</span><span class="note">: Recruit 100 new workers</span></div>
+      <div class="unit1000"><button class="btn btn-secondary btn-sm" id="spawn1000button" onmousedown="spawn(1000)">Recruit 1000 Workers</button><span class="cost"><span id="workerCost1000">20000</span>        food</span><span class="note">: Recruit 1000 new workers</span></div>
+      <div class="unitInfinity"><button class="btn btn-secondary btn-sm" id="spawnMaxbutton" onmousedown="spawn(Infinity)">Recruit <span id="workerNumMax">Max</span> Workers</button><span
             class="cost"><span id="workerCostMax"></span> food</span><span class="note">: Recruit as many new workers as possible</span></div>
-      <div id="customSpawnQuantity"><button id="spawnCustomButton" onmousedown="spawn('custom')">Recruit Workers</button><input id="spawnCustomQty"
+      <div id="customSpawnQuantity"><button class="btn btn-secondary btn-sm" id="spawnCustomButton" onmousedown="spawn('custom')">Recruit Workers</button><input id="spawnCustomQty"
             type="number" min="1" step="1" value="1" />
       </div>
     </div>

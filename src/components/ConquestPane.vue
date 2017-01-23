@@ -16,7 +16,7 @@
     </div>
     <div id="victoryGroup">
       <h4>Victory!</h4>
-      <button id="plunder" onmousedown="plunder()">Plunder Resources</button><br>
+      <button id="btn btn-primary btn-lg plunder" onmousedown="plunder()">Plunder Resources</button><br>
     </div>
   </div>
 </div>

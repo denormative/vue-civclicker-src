@@ -522,7 +522,7 @@ function getResourceRowText(purchaseObj) {
   var objName = purchaseObj.getQtyName(0)
   var s = "<tr id='" + objId + "Row' class='purchaseRow' data-target='" + objId + "'>"
 
-  s += "<td><button data-action='increment'>" + purchaseObj.verb + ' ' + objName + '</button></td>'
+  s += "<td><button class='btn btn-secondary btn-sm' data-action='increment'>" + purchaseObj.verb + ' ' + objName + '</button></td>'
   s += "<td class='itemname'>" + objName + ': </td>'
   s += "<td class='number'><span data-action='display'>0</span></td>"
   s += "<td class='icon'><img src='/static/civclicker/images/" + objId + ".png' class='icon icon-lg' alt='" + objName + "'/></td>"
@@ -569,7 +569,7 @@ function getPurchaseCellText(purchaseObj, qty, inTable) {
 
   var s = '<' + tagName + " class='" + className + abs(qty) + "' data-quantity='" + qty + "' >"
   if (allowPurchase()) {
-    s += "<button class='x" + abs(qty) + "' data-action='purchase'" + " disabled='disabled'>" + fmtqty(qty) + '</button>'
+    s += "<button class='btn btn-secondary btn-sm x" + abs(qty) + "' data-action='purchase'" + " disabled='disabled'>" + fmtqty(qty) + '</button>'
   }
   s += '</' + tagName + '>'
   return s
@@ -710,7 +710,7 @@ function getPantheonUpgradeRowText(upgradeObj) {
   s += ((isValid(upgradeObj.prereqs) && isValid(upgradeObj.prereqs.devotion))
             ? (upgradeObj.prereqs.devotion + 'd&nbsp;') : '') + '</td>'
     // xxx The 'fooRow' id is added to make altars work, but should be redesigned.
-  s += "<td class='" + upgradeObj.type + "true'><button id='" + upgradeObj.id + "' class='xtrue'"
+  s += "<td class='" + upgradeObj.type + "true'><button id='" + upgradeObj.id + "' class='btn btn-secondary btn-sm xtrue'"
   s += " data-action='purchase' data-quantity='true' data-target=" + upgradeObj.id
   s += " disabled='disabled' onmousedown=\""
     // The event handler can take three forms, depending on whether this is
@@ -1154,7 +1154,7 @@ function testAchievements() {
 function addRaidRows() {
   var s = ''
   civSizes.forEach(function(elem) {
-    s += "<button class='raid' data-action='raid' data-target='" + elem.id + "' disabled='disabled'>" +
+    s += "<button class='btn btn-secondary btn-sm raid' data-action='raid' data-target='" + elem.id + "' disabled='disabled'>" +
         'Raid ' + elem.name + '</button><br>' // xxxL10N
   })
 
@@ -1219,7 +1219,7 @@ function addWonderSelectText() {
   if (!wcElem) { console.log('Error: No wonderCompleted element found.'); return }
   var s = wcElem.innerHTML
   wonderResources.forEach(function(elem, i, wr) {
-    s += "<button onmousedown='wonderSelect(\"" + elem.id + "\")'>" + elem.getQtyName(0) + '</button>'
+    s += "<button class='btn btn-secondary btn-sm' onmousedown='wonderSelect(\"" + elem.id + "\")'>" + elem.getQtyName(0) + '</button>'
         // Add newlines to group by threes (but no newline for the last one)
     if (!((i + 1) % 3) && (i !== wr.length - 1)) { s += '<br>' }
   })
@@ -1740,11 +1740,11 @@ function iconoclasmList() { // eslint-disable-line no-unused-vars
     document.getElementById('iconoclasm').disabled = true
     var append = '<br>'
     for (i = 1; i < window.vm.curCiv.deities.length; ++i) {
-      append += '<button onclick="iconoclasm(' + i + ')">'
+      append += '<button class="btn btn-danger btn-sm" onclick="iconoclasm(' + i + ')">'
       append += window.vm.curCiv.deities[i].name
       append += '</button><br>'
     }
-    append += '<br><button onclick=\'iconoclasm("cancel")\'>Cancel</button>'
+    append += '<br><button class="btn btn-primary btn-sm" onclick=\'iconoclasm("cancel")\'>Cancel</button>'
     document.getElementById('iconoclasmList').innerHTML = append
   }
 }
