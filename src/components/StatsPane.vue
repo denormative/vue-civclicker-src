@@ -1,5 +1,5 @@
 <template>
-<div class="stats-pane card">
+<div role="tabpanel" id="statsPane" class="stats-pane tab-pane card">
   <h4 class="card-header">Stats</h4>
   <div class="card-block">
     <table class="table-sm">

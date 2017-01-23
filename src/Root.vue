@@ -29,6 +29,7 @@
             <div class="dropdown-menu">
               <a class="dropdown-item" data-toggle="tab" href="#achievementsPane">Achievements</a>
               <a class="dropdown-item" data-toggle="tab" href="#settingsPane">Settings</a>
+              <a class="dropdown-item" data-toggle="tab" href="#statsPane">Stats</a>
             </div>
           </li>
         </ul>
@@ -42,6 +43,7 @@
             <trade-pane></trade-pane>
             <achievements-pane></achievements-pane>
             <settings-pane></settings-pane>
+            <stats-pane :curCiv="curCiv" :settings="settings"></stats-pane>
           </div>
         </div>
       </div>
@@ -52,7 +54,6 @@
         <events-pane></events-pane>
         <current-deity-pane :curCiv="curCiv"></current-deity-pane>
         <wonders-pane :curCiv="curCiv" :wonderInProgress="wonderInProgress" :wonderCompleted="wonderCompleted"></wonders-pane>
-        <stats-pane :curCiv="curCiv" :settings="settings"></stats-pane>
       </div>
     </div>
   </div>
