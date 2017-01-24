@@ -37,21 +37,6 @@ var logRepeat = null
 
 var civData = null
 
-// Build a variety of additional indices so that we can iterate over specific
-// subsets of our civ objects.
-var upgradeData = null // All upgrades
-var powerData = null // All 'powers' //xxx This needs refinement.
-var unitData = null // All units
-var achData = null // All achievements
-var sackable = null // All buildings that can be destroyed
-var lootable = null // All resources that can be stolen
-var killable = null // All units that can be destroyed
-var homeBuildings = null // All buildings to be displayed in the home area
-var homeUnits = null // All units to be displayed in the home area
-var armyUnits = null // All units to be displayed in the army area
-var basicResources = null // All basic (click-to-get) resources
-var normalUpgrades = null // All upgrades to be listed in the normal upgrades area
-
 var wonderResources = null
 
 var body = null
@@ -83,7 +68,7 @@ function resetRaiding() {
   window.vm.curCiv.raid.last = ''
 
     // Also reset the enemy party units.
-  unitData.filter(function(elem) { return ((elem.alignment === 'enemy') && (elem.place === 'party')) })
+  window.vm.unitData.filter(function(elem) { return ((elem.alignment === 'enemy') && (elem.place === 'party')) })
             .forEach(function(elem) { elem.reset() })
 }
 
@@ -210,45 +195,30 @@ function preLoad() { // eslint-disable-line no-unused-vars
   // Initialize our data. //xxx Should this move to initCivclicker()?
   civData.forEach(function(elem) { if (elem instanceof CivObj) { elem.init() } })
 
-  // Build a variety of additional indices so that we can iterate over specific
-  // subsets of our civ objects.
-  upgradeData = [] // All upgrades
-  powerData = [] // All 'powers' //xxx This needs refinement.
-  unitData = [] // All units
-  achData = [] // All achievements
-  sackable = [] // All buildings that can be destroyed
-  lootable = [] // All resources that can be stolen
-  killable = [] // All units that can be destroyed
-  homeBuildings = [] // All buildings to be displayed in the home area
-  homeUnits = [] // All units to be displayed in the home area
-  armyUnits = [] // All units to be displayed in the army area
-  basicResources = [] // All basic (click-to-get) resources
-  normalUpgrades = [] // All upgrades to be listed in the normal upgrades area
-
   civData.forEach(function(elem) {
     if (!(elem instanceof CivObj)) { return }  // Unknown type
     if (elem.type === 'resource') {
       window.vm.resourceData.push(elem)
-      if (elem.vulnerable === true) { lootable.push(elem) }
-      if (elem.subType === 'basic') { basicResources.push(elem) }
+      if (elem.vulnerable === true) { window.vm.lootable.push(elem) }
+      if (elem.subType === 'basic') { window.vm.basicResources.push(elem) }
     }
     if (elem.type === 'building') {
       window.vm.buildingData.push(elem)
-      if (elem.vulnerable === true) { sackable.push(elem) }
-      if (elem.subType === 'normal' || elem.subType === 'land') { homeBuildings.push(elem) }
+      if (elem.vulnerable === true) { window.vm.sackable.push(elem) }
+      if (elem.subType === 'normal' || elem.subType === 'land') { window.vm.homeBuildings.push(elem) }
     }
-    if (elem.subType === 'prayer') { powerData.push(elem) }
+    if (elem.subType === 'prayer') { window.vm.powerData.push(elem) }
     else if (elem.type === 'upgrade') {
-      upgradeData.push(elem)
-      if (elem.subType === 'upgrade') { normalUpgrades.push(elem) }
+      window.vm.upgradeData.push(elem)
+      if (elem.subType === 'upgrade') { window.vm.normalUpgrades.push(elem) }
     }
     if (elem.type === 'unit') {
-      unitData.push(elem)
-      if (elem.vulnerable === true) { killable.push(elem) }
-      if (elem.place === 'home') { homeUnits.push(elem) }
-      if (elem.place === 'party') { armyUnits.push(elem) }
+      window.vm.unitData.push(elem)
+      if (elem.vulnerable === true) { window.vm.killable.push(elem) }
+      if (elem.place === 'home') { window.vm.homeUnits.push(elem) }
+      if (elem.place === 'party') { window.vm.armyUnits.push(elem) }
     }
-    if (elem.type === 'achievement') { achData.push(elem) }
+    if (elem.type === 'achievement') { window.vm.achData.push(elem) }
   })
 
   // The resources that Wonders consume, and can give bonuses for.
@@ -655,14 +625,14 @@ function updatePurchaseRow(purchaseObj) {
 }
 
 // Only set up for the basic resources right now.
-function updateResourceRows() { basicResources.forEach(function(elem) { updatePurchaseRow(elem) }) }
+function updateResourceRows() { window.vm.basicResources.forEach(function(elem) { updatePurchaseRow(elem) }) }
 // Enables/disabled building buttons - calls each type of building in turn
 // Can't do altars; they're not in the proper format.
-function updateBuildingButtons() { homeBuildings.forEach(function(elem) { updatePurchaseRow(elem) }) }
+function updateBuildingButtons() { window.vm.homeBuildings.forEach(function(elem) { updatePurchaseRow(elem) }) }
 // Update the page with the latest worker distribution and stats
-function updateJobButtons() { homeUnits.forEach(function(elem) { updatePurchaseRow(elem) }) }
+function updateJobButtons() { window.vm.homeUnits.forEach(function(elem) { updatePurchaseRow(elem) }) }
 // Updates the party (and enemies)
-function updatePartyButtons() { armyUnits.forEach(function(elem) { updatePurchaseRow(elem) }) }
+function updatePartyButtons() { window.vm.armyUnits.forEach(function(elem) { updatePurchaseRow(elem) }) }
 
 // We have a separate row generation function for upgrades, because their
 // layout is differs greatly from buildings/units:
@@ -724,7 +694,7 @@ function addUpgradeRows() {
        '<h3>Purchased Upgrades</h3>' + "<div id='purchasedUpgrades'></div>"
 
     // Fill in any pre-existing stubs.
-  upgradeData.forEach(function(elem) {
+  window.vm.upgradeData.forEach(function(elem) {
     if (elem.subType === 'upgrade') { return } // Did these above.
     if (elem.subType === 'pantheon') { setPantheonUpgradeRowText(elem) }
     else { // One of the 'atypical' upgrades not displayed in the main upgrade list.
@@ -740,7 +710,7 @@ function addUpgradeRows() {
   window.vm.buildingData.forEach(function(elem) { if (elem.subType === 'altar') { setPantheonUpgradeRowText(elem) } })
 
     // Deity granted powers
-  powerData.forEach(function(elem) { if (elem.subType === 'prayer') { setPantheonUpgradeRowText(elem) } })
+  window.vm.powerData.forEach(function(elem) { if (elem.subType === 'prayer') { setPantheonUpgradeRowText(elem) } })
 
     // Dynamically create two lists for purchased upgrades.
     // One for regular upgrades, one for pantheon upgrades.
@@ -748,7 +718,7 @@ function addUpgradeRows() {
   var standardUpgStr = ''
   var pantheonUpgStr = ''
 
-  upgradeData.forEach(function(upgradeObj) {
+  window.vm.upgradeData.forEach(function(upgradeObj) {
     text = "<span id='P" + upgradeObj.id + "' class='Pupgrade'>" +
             '<strong>' + upgradeObj.getQtyName() + '</strong>' +
             ' &ndash; ' + upgradeObj.effectText + '<br></span>'
@@ -839,19 +809,19 @@ function updatePopulation() {
 
     // Update sick workers
   window.vm.population.totalSick = 0
-  unitData.forEach(function(elem) { if (elem.alignment === 'player') { window.vm.population.totalSick += (elem.ill || 0) } })
+  window.vm.unitData.forEach(function(elem) { if (elem.alignment === 'player') { window.vm.population.totalSick += (elem.ill || 0) } })
   setElemDisplay('totalSickRow', (window.vm.population.totalSick > 0))
 
     // Calculate healthy workers (excludes sick, zombies and deployed units)
-    // xxx Should this use 'killable'?
+    // xxx Should this use 'window.vm.killable'?
   window.vm.population.healthy = 0
-  unitData.forEach(function(elem) { if ((elem.vulnerable)) { window.vm.population.healthy += elem.owned } })
+  window.vm.unitData.forEach(function(elem) { if ((elem.vulnerable)) { window.vm.population.healthy += elem.owned } })
     // xxx Doesn't subtracting the zombies here throw off the calculations in randomHealthyWorker()?
   window.vm.population.healthy -= window.vm.curCiv.zombie.owned
 
     // Calculate housed/fed window.vm.population (excludes zombies)
   window.vm.population.current = window.vm.population.healthy + window.vm.population.totalSick
-  unitData.forEach(function(elem) {
+  window.vm.unitData.forEach(function(elem) {
     if ((elem.alignment === 'player') && (elem.subType === 'normal') && (elem.place === 'party')) {
       window.vm.population.current += elem.owned
     }
@@ -995,7 +965,7 @@ function updateUpgrades() {
   var deitySpecEnable
 
     // Update all of the upgrades
-  upgradeData.forEach(function(elem) {
+  window.vm.upgradeData.forEach(function(elem) {
     updatePurchaseRow(elem)  // Update the purchase row.
 
         // Show the already-purchased line if we've already bought it.
@@ -1078,7 +1048,7 @@ function updateDevotion() {
   })
 
     // Process activated powers
-  powerData.forEach(function(elem) {
+  window.vm.powerData.forEach(function(elem) {
     if (elem.subType === 'prayer') {
         // xxx raiseDead buttons updated by UpdatePopulationUI
       if (elem.id === 'raiseDead') { return }
@@ -1112,19 +1082,19 @@ function getAchRowText(achObj) {
 // Dynamically create the achievement display
 function addAchievementRows() {
   var s = ''
-  achData.forEach(function(elem) { s += getAchRowText(elem) })
+  window.vm.achData.forEach(function(elem) { s += getAchRowText(elem) })
   document.getElementById('achievements').innerHTML += s
 }
 
 // Displays achievements if they are unlocked
 function updateAchievements() {
-  achData.forEach(function(achObj) {
+  window.vm.achData.forEach(function(achObj) {
     setElemDisplay(achObj.id, achObj.owned)
   })
 }
 
 function testAchievements() {
-  achData.forEach(function(achObj) {
+  window.vm.achData.forEach(function(achObj) {
     if (civData[achObj.id].owned) { return true }
     if (isValid(achObj.test) && !achObj.test()) { return false }
     civData[achObj.id].owned = true
@@ -1311,7 +1281,7 @@ function increment(objId) {
   if (!purchaseObj) { console.log('Unknown purchase: ' + objId); return }
 
   var numArmy = 0
-  unitData.forEach(function(elem) {
+  window.vm.unitData.forEach(function(elem) {
     if ((elem.alignment === 'player') && (elem.species === 'human') &&
                                         (elem.combatType) && (elem.place === 'home')) {
       numArmy += elem.owned
@@ -1624,9 +1594,9 @@ function randomHealthyWorker() {
   var num = Math.random() * window.vm.population.healthy
   var chance = 0
   var i
-  for (i = 0; i < killable.length; ++i) {
-    chance += civData[killable[i].id].owned
-    if (chance > num) { return killable[i].id }
+  for (i = 0; i < window.vm.killable.length; ++i) {
+    chance += civData[window.vm.killable[i].id].owned
+    if (chance > num) { return window.vm.killable[i].id }
   }
 
   return ''
@@ -1644,8 +1614,8 @@ function wickerman() { // eslint-disable-line no-unused-vars
   --civData[job].owned
   updatePopulation() // Removes killed worker
 
-    // Select a random lootable resource
-  var rewardObj = lootable[Math.floor(Math.random() * lootable.length)]
+    // Select a random window.vm.lootable resource
+  var rewardObj = window.vm.lootable[Math.floor(Math.random() * window.vm.lootable.length)]
 
   var qty = Math.floor(Math.random() * 1000)
     // xxx Note that this presumes the price is 500 wood.
@@ -1822,7 +1792,7 @@ function invade(ecivtype) {
     // Set rewards of land and other random plunder.
     // xxx Maybe these should be partially proportionate to the actual number of defenders?
   window.vm.curCiv.raid.plunderLoot = { freeLand: Math.round(baseLoot * (1 + (civData.administration.owned))) }
-  lootable.forEach(function(elem) { window.vm.curCiv.raid.plunderLoot[elem.id] = Math.round(baseLoot * Math.random()) })
+  window.vm.lootable.forEach(function(elem) { window.vm.curCiv.raid.plunderLoot[elem.id] = Math.round(baseLoot * Math.random()) })
 
   updateTargets() // Hides raid buttons until the raid is finished
   updatePartyButtons()
@@ -2585,7 +2555,7 @@ function doCorpses() {
 
 // Returns all of the combatants present for a given place and alignment that.
 function getCombatants(place, alignment) {
-  return unitData.filter(function(elem) {
+  return window.vm.unitData.filter(function(elem) {
     return ((elem.alignment === alignment) && (elem.place === place) &&
              (elem.combatType) && (elem.owned > 0))
   })
@@ -2650,7 +2620,7 @@ function doSlaughter(attacker) {
 
 function doLoot(attacker) {
     // Select random resource, steal random amount of it.
-  var target = lootable[Math.floor(Math.random() * lootable.length)]
+  var target = window.vm.lootable[Math.floor(Math.random() * window.vm.lootable.length)]
   var stolenQty = Math.floor((Math.random() * 1000)) // Steal up to 1000.
   stolenQty = Math.min(stolenQty, target.owned)
   if (stolenQty > 0) {
@@ -2670,7 +2640,7 @@ function doLoot(attacker) {
 
 function doSack(attacker) {
     // Destroy buildings
-  var target = sackable[Math.floor(Math.random() * sackable.length)]
+  var target = window.vm.sackable[Math.floor(Math.random() * window.vm.sackable.length)]
 
     // Slightly different phrasing for fortifications
   var destroyVerb = 'burned'
@@ -2768,7 +2738,7 @@ function doRaid(place, attackerID, defenderID) {
   if (attackers.length && !defenders.length) { // Win check.
         // Slaughter any losing noncombatant units.
         // xxx Should give throne and corpses for any human ones?
-    unitData.filter(function(elem) { return ((elem.alignment === defenderID) && (elem.place === place)) })
+    window.vm.unitData.filter(function(elem) { return ((elem.alignment === defenderID) && (elem.place === place)) })
           .forEach(function(elem) { elem.owned = 0 })
 
     if (!window.vm.curCiv.raid.victory) { gameLog('Raid victorious!') } // Notify player on initial win.
@@ -2778,7 +2748,7 @@ function doRaid(place, attackerID, defenderID) {
   if (!attackers.length && defenders.length) { // Loss check.
         // Slaughter any losing noncombatant units.
         // xxx Should give throne and corpses for any human ones?
-    unitData.filter(function(elem) { return ((elem.alignment === attackerID) && (elem.place === place)) })
+    window.vm.unitData.filter(function(elem) { return ((elem.alignment === attackerID) && (elem.place === place)) })
           .forEach(function(elem) { elem.owned = 0 })
 
     gameLog('Raid defeated')  // Notify player
@@ -2924,12 +2894,12 @@ function tickGrace() {
 function initCivclicker() {
   document.title = 'CivClicker (' + versionData + ')' // xxx Not in XML DOM.
 
-  addUITable(basicResources, 'basicResources') // Dynamically create the basic resource table.
-  addUITable(homeBuildings, 'buildings') // Dynamically create the building controls table.
-  addUITable(homeUnits, 'jobs') // Dynamically create the job controls table.
-  addUITable(armyUnits, 'party') // Dynamically create the party controls table.
+  addUITable(window.vm.basicResources, 'basicResources') // Dynamically create the basic resource table.
+  addUITable(window.vm.homeBuildings, 'buildings') // Dynamically create the building controls table.
+  addUITable(window.vm.homeUnits, 'jobs') // Dynamically create the job controls table.
+  addUITable(window.vm.armyUnits, 'party') // Dynamically create the party controls table.
   addUpgradeRows() // This sets up the framework for the upgrade items.
-  addUITable(normalUpgrades, 'upgrades') // Place the stubs for most upgrades under the upgrades tab.
+  addUITable(window.vm.normalUpgrades, 'upgrades') // Place the stubs for most upgrades under the upgrades tab.
   addAchievementRows()
   addRaidRows()
   addWonderSelectText()
