@@ -1,6 +1,6 @@
 'use strict'
 
-/* global Resource civData Building adjustMorale window.vm.population digGraves Upgrade
+/* global Resource civData Building adjustMorale digGraves Upgrade
     updatePopulationUI updateResourceTotals updateUpgrades renameDeity Unit
     playerCombatMods doSlaughter doLoot doHavoc Achievement
     getCurDeityDomain */

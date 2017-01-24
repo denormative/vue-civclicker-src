@@ -35,9 +35,6 @@ var saveTag2 = null // For old saves.
 var saveSettingsTag = null
 var logRepeat = null
 
-// Caches the total number of each wonder, so that we don't have to recount repeatedly.
-var wonderCount = null
-
 var civData = null
 
 // Build a variety of additional indices so that we can iterate over specific
@@ -65,18 +62,18 @@ function getCurDeityDomain() { return (window.vm.curCiv.deities.length > 0) ? wi
 
 // Tallies the number of each wonder from the wonders array.
 function updateWonderCount() {
-  wonderCount = {}
+  window.vm.wonderCount = {}
   window.vm.curCiv.wonders.forEach(function(elem) {
     var resourceId = elem.resourceId
-    if (!isValid(wonderCount[resourceId])) { wonderCount[resourceId] = 0 }
-    ++wonderCount[resourceId]
+    if (!isValid(window.vm.wonderCount[resourceId])) { window.vm.wonderCount[resourceId] = 0 }
+    ++window.vm.wonderCount[resourceId]
   })
 }
 
 // Return the production multiplier from wonders for a resource.
 function getWonderBonus(resourceObj) {
   if (!resourceObj) { return 1 }
-  return (1 + (wonderCount[resourceObj.id] || 0) / 10)
+  return (1 + (window.vm.wonderCount[resourceObj.id] || 0) / 10)
 }
 
 // Reset the raid data.
@@ -1993,7 +1990,7 @@ function buy(materialId) { // eslint-disable-line no-unused-vars
 function getWonderCostMultiplier() { // Based on the most wonders in any single resource.
   var i
   var mostWonders = 0
-  for (i in wonderCount) { if (wonderCount.hasOwnProperty(i)) { mostWonders = Math.max(mostWonders, wonderCount[i]) } }
+  for (i in window.vm.wonderCount) { if (window.vm.wonderCount.hasOwnProperty(i)) { mostWonders = Math.max(mostWonders, window.vm.wonderCount[i]) } }
   return Math.pow(1.5, mostWonders)
 }
 
