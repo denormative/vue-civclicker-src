@@ -39,7 +39,6 @@ var civData = null
 
 // Build a variety of additional indices so that we can iterate over specific
 // subsets of our civ objects.
-var resourceData = null // All resources
 var buildingData = null // All buildings
 var upgradeData = null // All upgrades
 var powerData = null // All 'powers' //xxx This needs refinement.
@@ -214,7 +213,6 @@ function preLoad() { // eslint-disable-line no-unused-vars
 
   // Build a variety of additional indices so that we can iterate over specific
   // subsets of our civ objects.
-  resourceData = [] // All resources
   buildingData = [] // All buildings
   upgradeData = [] // All upgrades
   powerData = [] // All 'powers' //xxx This needs refinement.
@@ -232,7 +230,7 @@ function preLoad() { // eslint-disable-line no-unused-vars
   civData.forEach(function(elem) {
     if (!(elem instanceof CivObj)) { return }  // Unknown type
     if (elem.type === 'resource') {
-      resourceData.push(elem)
+      window.vm.resourceData.push(elem)
       if (elem.vulnerable === true) { lootable.push(elem) }
       if (elem.subType === 'basic') { basicResources.push(elem) }
     }
@@ -285,7 +283,7 @@ function postLoad() { // eslint-disable-line no-unused-vars
 
       // Resources occasionally go above their caps.
       // Cull the excess /after/ other workers have taken their inputs.
-    resourceData.forEach(function(elem) { if (elem.owned > elem.limit) { elem.owned = elem.limit } })
+    window.vm.resourceData.forEach(function(elem) { if (elem.owned > elem.limit) { elem.owned = elem.limit } })
 
       // Timers - routines that do not occur every second
     doMobs()
