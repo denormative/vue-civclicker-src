@@ -39,7 +39,6 @@ var civData = null
 
 // Build a variety of additional indices so that we can iterate over specific
 // subsets of our civ objects.
-var buildingData = null // All buildings
 var upgradeData = null // All upgrades
 var powerData = null // All 'powers' //xxx This needs refinement.
 var unitData = null // All units
@@ -213,7 +212,6 @@ function preLoad() { // eslint-disable-line no-unused-vars
 
   // Build a variety of additional indices so that we can iterate over specific
   // subsets of our civ objects.
-  buildingData = [] // All buildings
   upgradeData = [] // All upgrades
   powerData = [] // All 'powers' //xxx This needs refinement.
   unitData = [] // All units
@@ -235,7 +233,7 @@ function preLoad() { // eslint-disable-line no-unused-vars
       if (elem.subType === 'basic') { basicResources.push(elem) }
     }
     if (elem.type === 'building') {
-      buildingData.push(elem)
+      window.vm.buildingData.push(elem)
       if (elem.vulnerable === true) { sackable.push(elem) }
       if (elem.subType === 'normal' || elem.subType === 'land') { homeBuildings.push(elem) }
     }
@@ -739,7 +737,7 @@ function addUpgradeRows() {
   })
 
     // Altars
-  buildingData.forEach(function(elem) { if (elem.subType === 'altar') { setPantheonUpgradeRowText(elem) } })
+  window.vm.buildingData.forEach(function(elem) { if (elem.subType === 'altar') { setPantheonUpgradeRowText(elem) } })
 
     // Deity granted powers
   powerData.forEach(function(elem) { if (elem.subType === 'prayer') { setPantheonUpgradeRowText(elem) } })
@@ -810,7 +808,7 @@ function updateResourceTotals() {
     // Update land values
   var buildingCount = 0
   var landCount = 0
-  buildingData.forEach(function(elem) {
+  window.vm.buildingData.forEach(function(elem) {
     if (elem.subType === 'land') { landCount += elem.owned }
     else { buildingCount += elem.owned }
   })
@@ -1072,7 +1070,7 @@ function updateDevotion() {
   document.getElementById('deityA' + 'Devotion').innerHTML = civData.devotion.owned
 
     // Process altars
-  buildingData.forEach(function(elem) {
+  window.vm.buildingData.forEach(function(elem) {
     if (elem.subType === 'altar') {
       setElemDisplay((elem.id + 'Row'), meetsPrereqs(elem.prereqs))
       document.getElementById(elem.id).disabled = (!(meetsPrereqs(elem.prereqs) && canAfford(elem.require)))
