@@ -27,18 +27,6 @@
 // FIXME: need to severely lint this file then remove this.
 /* eslint operator-linebreak: [0] */
 
-var version = null
-var versionData = null
-
-var saveTag = null
-var saveTag2 = null // For old saves.
-var saveSettingsTag = null
-var logRepeat = null
-
-var wonderResources = null
-
-var body = null
-
 function getCurDeityDomain() { return (window.vm.curCiv.deities.length > 0) ? window.vm.curCiv.deities[0].domain : undefined }
 
 // Tallies the number of each wonder from the wonders array.
@@ -71,14 +59,14 @@ function resetRaiding() {
 }
 
 function preLoad() { // eslint-disable-line no-unused-vars
-  version = 19 // This is an ordinal used to trigger reloads.
+  window.vm.version = 19 // This is an ordinal used to trigger reloads.
 
-  versionData = new VersionData(1, 1, 59, 'alpha')
+  window.vm.versionData = new VersionData(1, 1, 59, 'alpha')
 
-  saveTag = 'civ'
-  saveTag2 = saveTag + '2' // For old saves.
-  saveSettingsTag = 'civSettings'
-  logRepeat = 1
+  window.vm.saveTag = 'civ'
+  window.vm.saveTag2 = window.vm.saveTag + '2' // For old saves.
+  window.vm.saveSettingsTag = 'civSettings'
+  window.vm.logRepeat = 1
 
 // Civ size category minimums
   window.vm.civSizes = [
@@ -211,12 +199,12 @@ function preLoad() { // eslint-disable-line no-unused-vars
   })
 
   // The resources that Wonders consume, and can give bonuses for.
-  wonderResources = [window.vm.civData.food, window.vm.civData.wood, window.vm.civData.stone, window.vm.civData.skins, window.vm.civData.herbs, window.vm.civData.ore,
+  window.vm.wonderResources = [window.vm.civData.food, window.vm.civData.wood, window.vm.civData.stone, window.vm.civData.skins, window.vm.civData.herbs, window.vm.civData.ore,
     window.vm.civData.leather, window.vm.civData.metal, window.vm.civData.piety]
 }
 
 function postLoad() { // eslint-disable-line no-unused-vars
-  body = document.getElementsByTagName('body')[0]
+  window.vm.body = document.getElementsByTagName('body')[0]
 
   initCivclicker()
 
@@ -1162,7 +1150,7 @@ function addWonderSelectText() {
   var wcElem = document.getElementById('wonderCompleted')
   if (!wcElem) { console.log('Error: No wonderCompleted element found.'); return }
   var s = wcElem.innerHTML
-  wonderResources.forEach(function(elem, i, wr) {
+  window.vm.wonderResources.forEach(function(elem, i, wr) {
     s += "<button class='btn btn-secondary btn-sm' onmousedown='wonderSelect(\"" + elem.id + "\")'>" + elem.getQtyName(0) + '</button>'
         // Add newlines to group by threes (but no newline for the last one)
     if (!((i + 1) % 3) && (i !== wr.length - 1)) { s += '<br>' }
@@ -1981,10 +1969,10 @@ function load(loadType) {
 
   if (loadType === 'cookie') {
         // check for cookies
-    if (readCookie(saveTag) && readCookie(saveTag2)) {
+    if (readCookie(window.vm.saveTag) && readCookie(window.vm.saveTag2)) {
             // set variables to load from
-      loadVar = readCookie(saveTag)
-      loadVar2 = readCookie(saveTag2)
+      loadVar = readCookie(window.vm.saveTag)
+      loadVar2 = readCookie(window.vm.saveTag2)
       loadVar = mergeObj(loadVar, loadVar2)
       loadVar2 = undefined
             // notify user
@@ -2003,9 +1991,9 @@ function load(loadType) {
     var string2
     var settingsString
     try {
-      settingsString = localStorage.getItem(saveSettingsTag)
-      string1 = localStorage.getItem(saveTag)
-      string2 = localStorage.getItem(saveTag2)
+      settingsString = localStorage.getItem(window.vm.saveSettingsTag)
+      string1 = localStorage.getItem(window.vm.saveTag)
+      string2 = localStorage.getItem(window.vm.saveTag2)
 
       if (!string1) {
         console.log('Unable to find variables in localStorage. Attempting to load cookie.')
@@ -2070,14 +2058,14 @@ function load(loadType) {
 
   var saveVersion = new VersionData(1, 0, 0, 'legacy')
   saveVersion = mergeObj(saveVersion, loadVar.versionData)
-  if (saveVersion.toNumber() > versionData.toNumber()) {
+  if (saveVersion.toNumber() > window.vm.versionData.toNumber()) {
         // Refuse to load saved games from future versions.
-    var alertStr = 'Cannot load; saved game version ' + saveVersion + ' is newer than game version ' + versionData
+    var alertStr = 'Cannot load; saved game version ' + saveVersion + ' is newer than game version ' + window.vm.versionData
     console.log(alertStr)
     alert(alertStr)
     return false
   }
-  if (saveVersion.toNumber() < versionData.toNumber()) {
+  if (saveVersion.toNumber() < window.vm.versionData.toNumber()) {
         // Migrate saved game data from older versions.
     var settingsVarReturn = { val: {} }
     migrateGameData(loadVar, settingsVarReturn)
@@ -2125,7 +2113,7 @@ function save(savetype) {
   var xmlhttp
 
   var saveVar = {
-    versionData: versionData, // Version information header
+    versionData: window.vm.versionData, // Version information header
     curCiv: window.vm.curCiv // Game data
   }
 
@@ -2146,13 +2134,13 @@ function save(savetype) {
     // set localstorage
   try {
         // Delete the old cookie-based save to avoid mismatched saves
-    deleteCookie(saveTag)
-    deleteCookie(saveTag2)
+    deleteCookie(window.vm.saveTag)
+    deleteCookie(window.vm.saveTag2)
 
-    localStorage.setItem(saveTag, JSON.stringify(saveVar))
+    localStorage.setItem(window.vm.saveTag, JSON.stringify(saveVar))
 
         // We always save the game settings.
-    localStorage.setItem(saveSettingsTag, JSON.stringify(settingsVar))
+    localStorage.setItem(window.vm.saveSettingsTag, JSON.stringify(settingsVar))
 
         // Update console for debugging, also the player depending on the type of save (manual/auto)
     if (savetype === 'auto') {
@@ -2187,7 +2175,7 @@ function save(savetype) {
     xmlhttp.onreadystatechange = function() {
       if (xmlhttp.readyState === 4) {
         var sVersion = parseInt(xmlhttp.responseText, 10)
-        if (version < sVersion) {
+        if (window.vm.version < sVersion) {
           versionAlert()
         }
       }
@@ -2206,11 +2194,11 @@ function deleteSave() { // eslint-disable-line no-unused-vars
   if (!confirm('Really delete save?')) { return } // Check the player really wanted to do that.
 
   try {
-    deleteCookie(saveTag)
-    deleteCookie(saveTag2)
-    localStorage.removeItem(saveTag)
-    localStorage.removeItem(saveTag2)
-    localStorage.removeItem(saveSettingsTag)
+    deleteCookie(window.vm.saveTag)
+    deleteCookie(window.vm.saveTag2)
+    localStorage.removeItem(window.vm.saveTag)
+    localStorage.removeItem(window.vm.saveTag2)
+    localStorage.removeItem(window.vm.saveSettingsTag)
     gameLog('Save Deleted')
   }
   catch (err) {
@@ -2774,10 +2762,10 @@ function doLabourers() {
 
         // First, check our labourers and other resources to see if we're limited.
     var num = window.vm.civData.labourer.owned
-    wonderResources.forEach(function(elem) { num = Math.min(num, elem.owned) })
+    window.vm.wonderResources.forEach(function(elem) { num = Math.min(num, elem.owned) })
 
         // remove resources
-    wonderResources.forEach(function(elem) { elem.owned -= num })
+    window.vm.wonderResources.forEach(function(elem) { elem.owned -= num })
 
         // increase progress
     window.vm.curCiv.curWonder.progress += num / (1000000 * getWonderCostMultiplier())
@@ -2787,8 +2775,8 @@ function doLabourers() {
 
     var lowItem = null
     var i = 0
-    for (i = 0; i < wonderResources.length; ++i) {
-      if (wonderResources[i].owned < 1) { lowItem = wonderResources[i]; break }
+    for (i = 0; i < window.vm.wonderResources.length; ++i) {
+      if (window.vm.wonderResources[i].owned < 1) { lowItem = window.vm.wonderResources[i]; break }
     }
     if (lowItem) { document.getElementById('limited').innerHTML = ' by low ' + lowItem.getQtyName() }
   }
@@ -2881,7 +2869,7 @@ function tickGrace() {
 
 // Start of init program code
 function initCivclicker() {
-  document.title = 'CivClicker (' + versionData + ')' // xxx Not in XML DOM.
+  document.title = 'CivClicker (' + window.vm.versionData + ')' // xxx Not in XML DOM.
 
   addUITable(window.vm.basicResources, 'basicResources') // Dynamically create the basic resource table.
   addUITable(window.vm.homeBuildings, 'buildings') // Dynamically create the building controls table.
@@ -3017,7 +3005,7 @@ function textSize(value) {
   document.getElementById('smallerText').disabled = (window.vm.settings.fontSize <= 0.5)
 
     // xxx Should this be applied to the document instead of the body?
-  body.style.fontSize = window.vm.settings.fontSize + 'em'
+  window.vm.body.style.fontSize = window.vm.settings.fontSize + 'em'
 }
 
 function setShadow(value) {
@@ -3025,7 +3013,7 @@ function setShadow(value) {
   document.getElementById('toggleShadow').checked = window.vm.settings.textShadow
   var shadowStyle = '3px 0 0 #fff, -3px 0 0 #fff, 0 3px 0 #fff, 0 -3px 0 #fff' +
                     ', 2px 2px 0 #fff, -2px -2px 0 #fff, 2px -2px 0 #fff, -2px 2px 0 #fff'
-  body.style.textShadow = window.vm.settings.textShadow ? shadowStyle : 'none'
+  window.vm.body.style.textShadow = window.vm.settings.textShadow ? shadowStyle : 'none'
 }
 function onToggleShadow(control) { // eslint-disable-line no-unused-vars
   return setShadow(control.checked)
@@ -3063,10 +3051,10 @@ function setWorksafe(value) {
 
     // xxx Should this be applied to the document instead of the body?
   if (window.vm.settings.worksafe) {
-    body.classList.remove('hasBackground')
+    window.vm.body.classList.remove('hasBackground')
   }
   else {
-    body.classList.add('hasBackground')
+    window.vm.body.classList.add('hasBackground')
   }
 
   setIcons() // Worksafe overrides icon settings.
@@ -3087,7 +3075,7 @@ function gameLog(message) {
 
     // Check to see if the last message was the same as this one, if so just increment the (xNumber) value
   if (document.getElementById('logL').innerHTML !== message) {
-    logRepeat = 0 // Reset the (xNumber) value
+    window.vm.logRepeat = 0 // Reset the (xNumber) value
 
         // Go through all the logs in order, moving them down one and successively overwriting them.
     var i = 5 // Number of lines of log to keep.
@@ -3099,7 +3087,7 @@ function gameLog(message) {
   }
     // Updates most recent line with new time, message, and xNumber.
   var s = "<td id='logT'>" + curTime + "</td><td id='logL'>" + message + "</td><td id='logR'>"
-  if (++logRepeat > 1) { s += '(x' + logRepeat + ')' } // Optional (xNumber)
+  if (++window.vm.logRepeat > 1) { s += '(x' + window.vm.logRepeat + ')' } // Optional (xNumber)
   s += '</td>'
   document.getElementById('log0').innerHTML = s
 }

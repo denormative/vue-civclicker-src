@@ -12,6 +12,12 @@ new Vue({
   template: '<App :curCiv="curCiv" :settings="settings"/>',
   data() {
     return {
+      version: 0, // This is an ordinal used to trigger reloads.
+      versionData: {},
+      saveTag: '',
+      saveTag2: '', // For old saves.
+      saveSettingsTag: '',
+      logRepeat: 0,
       civSizes: [],
       curCiv: {},
       population: {},
@@ -34,7 +40,10 @@ new Vue({
       homeUnits: [], // All units to be displayed in the home area
       armyUnits: [], // All units to be displayed in the army area
       basicResources: [], // All basic (click-to-get) resources
-      normalUpgrades: [] // All upgrades to be listed in the normal upgrades area
+      normalUpgrades: [], // All upgrades to be listed in the normal upgrades area
+      wonderResources: [],
+      body: {}
+
     }
   },
   created: function() {
