@@ -18,6 +18,7 @@ new Vue({
       // Caches the total number of each wonder, so that we don't have to recount repeatedly.
       wonderCount: {},
       settings: {},
+      civData: [],
       // Build a variety of additional indices so that we can iterate over specific
       // subsets of our civ objects.
       resourceData: [], // All resources
