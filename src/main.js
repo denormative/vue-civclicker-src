@@ -1,8 +1,8 @@
 // The Vue build version to load with the `import` command
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
-import App from './App'
 import Vuex from 'vuex'
+import App from './App'
 
 Vue.use(Vuex)
 
@@ -42,18 +42,18 @@ new Vue({
       basicResources: [], // All basic (click-to-get) resources
       normalUpgrades: [], // All upgrades to be listed in the normal upgrades area
       wonderResources: [],
-      body: {}
+      body: {},
 
     }
   },
-  created: function() {
+  created() {
     window.vm = this
     window.preLoad()
   },
-  mounted: function() {
+  mounted() {
     window.postLoad()
   },
   components: {
-    App
-  }
+    App,
+  },
 })

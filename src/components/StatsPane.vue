@@ -46,14 +46,14 @@ export default {
     return {}
   },
   filters: {
-    prettyify: function(v) {
+    prettyify(v) {
       return (this.settings.delimiters) ? Number(v).toLocaleString() : v.toString()
     },
-    prettyint: function(v, settings) {
-      let vv = Math.round(v)
+    prettyint(v, settings) {
+      const vv = Math.round(v)
       return (settings.delimiters) ? Number(vv).toLocaleString() : vv.toString()
-    }
-  }
+    },
+  },
 }
 </script>
 

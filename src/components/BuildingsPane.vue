@@ -12,7 +12,7 @@ export default {
   name: 'buildings-pane',
   data() {
     return {}
-  }
+  },
 }
 </script>
 

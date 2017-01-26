@@ -41,7 +41,7 @@ export default {
   name: 'population-pane',
   data() {
     return {}
-  }
+  },
 }
 </script>
 

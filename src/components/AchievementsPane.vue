@@ -11,7 +11,7 @@ export default {
   name: 'achievements-pane',
   data() {
     return {}
-  }
+  },
 }
 </script>
 

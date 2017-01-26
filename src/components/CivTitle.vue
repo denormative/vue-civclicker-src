@@ -25,13 +25,13 @@ export default {
   name: 'civ-title',
   props: ['curCiv'],
   components: {
-    Menus
+    Menus,
   },
   data() {
     return {
-      appellation: 'mighty'
+      appellation: 'mighty',
     }
-  }
+  },
 }
 </script>
 

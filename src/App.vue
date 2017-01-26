@@ -13,10 +13,10 @@ export default {
   props: ['curCiv', 'settings'],
   components: {
     Hello,
-    Root
+    Root,
   },
-  created: function() {
-    window.addEventListener('keydown', function(event) {
+  created() {
+    window.addEventListener('keydown', (event) => {
       switch (event.keyCode) {
         case 70: // f
           window.increment('food')
@@ -28,14 +28,13 @@ export default {
           window.increment('stone')
           break
         case 82: // r
-          console.log('recruit')
           window.spawn(Infinity)
           break
         default:
           break
       }
     })
-  }
+  },
 }
 </script>
 

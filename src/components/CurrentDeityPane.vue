@@ -19,10 +19,10 @@ export default {
     return {}
   },
   computed: {
-    hasDeity: function() {
+    hasDeity() {
       return this.curCiv.deities[0].name
-    }
-  }
+    },
+  },
 }
 </script>
 

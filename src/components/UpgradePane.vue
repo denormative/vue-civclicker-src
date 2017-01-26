@@ -9,7 +9,7 @@ export default {
   name: 'upgrades-pane',
   data() {
     return {}
-  }
+  },
 }
 </script>
 

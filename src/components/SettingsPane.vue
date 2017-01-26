@@ -30,7 +30,7 @@ export default {
   name: 'settings-pane',
   data() {
     return {}
-  }
+  },
 }
 </script>
 

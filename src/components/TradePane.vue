@@ -22,7 +22,7 @@ export default {
   name: 'trade-pane',
   data() {
     return {}
-  }
+  },
 }
 </script>
 

@@ -18,10 +18,10 @@ export default {
     return {}
   },
   computed: {
-    customJobQuantity: function() {
+    customJobQuantity() {
       return this.settings.customIncr
-    }
-  }
+    },
+  },
 }
 </script>
 

@@ -27,7 +27,7 @@ export default {
   name: 'conquest-pane',
   data() {
     return {}
-  }
+  },
 }
 </script>
 

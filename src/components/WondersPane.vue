@@ -47,21 +47,21 @@ export default {
   data() {
     return {}
   },
-  created: function() {
+  created() {
     this.$nextTick(() => {
       // window.$('[data-toggle="popover"]').popover()
       window.$('#speedWonder').popover({
         trigger: 'hover',
         placement: 'left',
-        html: true
+        html: true,
       })
     })
   },
   computed: {
-    progressDisplay: function() {
+    progressDisplay() {
       return this.curCiv.curWonder.progress.toFixed(2)
-    }
-  }
+    },
+  },
 }
 </script>
 

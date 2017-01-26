@@ -133,7 +133,7 @@ export default {
   name: 'deity-pane',
   data() {
     return {}
-  }
+  },
 }
 </script>
 

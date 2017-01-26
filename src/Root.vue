@@ -99,19 +99,19 @@ export default {
     EventsPane,
     CurrentDeityPane,
     WondersPane,
-    StatsPane
+    StatsPane,
   },
   data() {
     return {}
   },
   computed: {
-    wonderInProgress: function() {
+    wonderInProgress() {
       return this.curCiv.curWonder.stage === 1
     },
-    wonderCompleted: function() {
+    wonderCompleted() {
       return this.curCiv.curWonder.stage === 2
-    }
-  }
+    },
+  },
 }
 </script>
 
