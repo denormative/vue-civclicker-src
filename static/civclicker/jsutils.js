@@ -1,4 +1,6 @@
-'use strict'
+/* eslint no-underscore-dangle: "off" */
+/* eslint no-cond-assign: "off" */
+
 /**
     CivClicker
     Copyright (C) 2014; see the AUTHORS file for authorship.
@@ -28,18 +30,17 @@ function isValid(variable) {
 }
 
 // Returns the variable if it's valid, otherwise the default value (or "")
-function ifValid(variable, defVal) { // eslint-disable-line no-unused-vars
-  if (defVal === undefined) {
-    defVal = ''
-  }
-  return isValid(variable) ? variable : ''
+function ifValid(variable, defValArg) { // eslint-disable-line no-unused-vars
+  const defVal = defValArg === undefined ? '' : defValArg
+
+  return isValid(variable) ? variable : defVal
 }
 
-function _valOfArgs() {
-  var args = []
+function _valOfArgs(...argsArgs) {
+  const args = []
 
-  for (var i = 1; i < arguments.length; i++) {
-    args.push(arguments[i])
+  for (let i = 1; i < argsArgs.length; i++) {
+    args.push(argsArgs[i])
   }
 
   return args
@@ -48,21 +49,25 @@ function _valOfArgs() {
 // Evaluates and returns variable if it's a function, otherwise just returns it.
 // Passes surplus arguments on to the function.
 // xxx argument forwarding needs testing.
-function valOf(variable) { // eslint-disable-line no-unused-vars
+function valOf(variable, ...args) { // eslint-disable-line no-unused-vars
   return ((typeof variable === 'function') ?
-    variable.apply(this, _valOfArgs(arguments)) :
+    variable.apply(this, _valOfArgs(...args)) :
     variable)
 }
 
 function bakeCookie(name, value) { // eslint-disable-line no-unused-vars
-  var exdate = new Date()
+  const exdate = new Date()
   exdate.setDate(exdate.getDate() + 30)
-  var cookie = [name, '=', JSON.stringify(value), '; expires=.', exdate.toUTCString(), '; domain=.', window.location.host.toString(), '; path=/;'].join('')
+  const cookie = [
+    name, '=', JSON.stringify(value),
+    '; expires=.', exdate.toUTCString(),
+    '; domain=.', window.location.host.toString(),
+    '; path=/;'].join('')
   document.cookie = cookie
 }
 
 function readCookie(name) { // eslint-disable-line no-unused-vars
-  var result = document.cookie.match(new RegExp(name + '=([^;]+)'))
+  let result = document.cookie.match(new RegExp(`${name}=([^;]+)`))
   if (result) {
     result = JSON.parse(result[1])
   }
@@ -72,22 +77,21 @@ function readCookie(name) { // eslint-disable-line no-unused-vars
 
 // Calculates the summation of elements (n...m] of the arithmetic sequence
 // with increment "incr".
-function calcArithSum(incr, n, m) { // eslint-disable-line no-unused-vars
+function calcArithSum(incr, n, mArg) { // eslint-disable-line no-unused-vars
   // Default to just element n+1, if m isn't given.
-  if (m === undefined) {
-    m = n + 1
-  }
-  return (m - n) * ((n * incr) + ((m - 1) * incr)) / 2
+  const m = (mArg === undefined) ? n + 1 : mArg
+
+  return ((m - n) * ((n * incr) + ((m - 1) * incr))) / 2
 }
 
 // Search for the largest integer X that generates func(X) < limitY.
 // func should be a continuous increasing numeric function.
 // xxx This would probably be more elegant written recursively.
 function logSearchFn(func, limitY) { // eslint-disable-line no-unused-vars
-  var minX = 0
-  var maxX = 0
-  var curX = 0
-  var curY
+  let minX = 0
+  let maxX = 0
+  let curX = 0
+  let curY
 
   // First, find an upper bound.
   while ((curY = func(maxX)) <= limitY) {
@@ -115,7 +119,7 @@ function logSearchFn(func, limitY) { // eslint-disable-line no-unused-vars
 // Recursively merge the properties of one object into another.
 // Similar (though not identical) to jQuery.extend()
 function mergeObj(o1, o2) { // eslint-disable-line no-unused-vars
-  var i
+  let i
 
   if (o2 === undefined) {
     return o1
@@ -124,13 +128,13 @@ function mergeObj(o1, o2) { // eslint-disable-line no-unused-vars
   // If either one is a non-object, just clobber o1.
   if ((typeof (o2) !== 'object') || (o1 === null) ||
     (typeof (o1) !== 'object') || (o2 === null)) {
-    o1 = o2
+    o1 = o2 // eslint-disable-line no-param-reassign
     return o1
   }
 
   // Both are non-null objects.  Copy o2's properties to o1.
-  for (i in o2) {
-    if (o2.hasOwnProperty(i)) {
+  for (i in o2) { // eslint-disable-line no-restricted-syntax
+    if (Object.prototype.hasOwnProperty.call(o2, i)) {
       o1[i] = mergeObj(o1[i], o2[i])
     }
   }
@@ -148,7 +152,7 @@ function mergeObj(o1, o2) { // eslint-disable-line no-unused-vars
 function setElemDisplay(htmlElem, visible) { // eslint-disable-line no-unused-vars
   // If we're passed a string, assume it's the element ID.
   if (typeof htmlElem === 'string') {
-    htmlElem = document.getElementById(htmlElem)
+    htmlElem = document.getElementById(htmlElem) // eslint-disable-line no-param-reassign
   }
 
   if (!htmlElem) {
@@ -157,10 +161,10 @@ function setElemDisplay(htmlElem, visible) { // eslint-disable-line no-unused-va
 
   // If the visibility is unspecified, toggle it.
   if (visible === undefined) {
-    visible = (htmlElem.style.display === 'none')
+    visible = (htmlElem.style.display === 'none') // eslint-disable-line no-param-reassign
   }
 
-  var tagName = htmlElem.tagName.toUpperCase()
+  const tagName = htmlElem.tagName.toUpperCase()
 
   /* xxx This is disabled because browser support for visibility: collapse is too inconsistent.
       // If it's a <col> element, use visibility: collapse instead.
@@ -170,7 +174,7 @@ function setElemDisplay(htmlElem, visible) { // eslint-disable-line no-unused-va
       }
   */
 
-  var displayVal = (!visible) ? 'none' : 'initial'
+  let displayVal = (!visible) ? 'none' : 'initial'
   if (visible) {
     // Note that HTML comes in upper case, XML in lower.
     switch (tagName) {
@@ -211,7 +215,7 @@ function setElemDisplay(htmlElem, visible) { // eslint-disable-line no-unused-va
         displayVal = 'list-item'
         break
       default:
-        console.log('Unsupported tag <' + tagName + '> passed to setElemDisplay()')
+        console.error(`Unsupported tag <${tagName}> passed to setElemDisplay()`)
         break
     }
   }
@@ -226,15 +230,15 @@ function setElemDisplay(htmlElem, visible) { // eslint-disable-line no-unused-va
 // Returns "true" and "false" as actual booleans.
 function dataset(elem, attr, value) { // eslint-disable-line no-unused-vars
   if (value !== undefined) {
-    return elem.setAttribute('data-' + attr, value)
+    return elem.setAttribute(`data-${attr}`, value)
   }
 
-  var val = null
-  for (var i = elem; i; i = i.parentNode) {
+  let val = null
+  for (let i = elem; i; i = i.parentNode) {
     if (i.nodeType !== Node.ELEMENT_NODE) {
-      continue
+      continue // eslint-disable-line no-continue
     }
-    val = i.getAttribute('data-' + attr)
+    val = i.getAttribute(`data-${attr}`)
     if (val !== null) {
       break
     }
@@ -244,7 +248,7 @@ function dataset(elem, attr, value) { // eslint-disable-line no-unused-vars
 
 // Probabilistic rounding function
 function rndRound(num) { // eslint-disable-line no-unused-vars
-  var baseVal = Math.floor(num)
+  const baseVal = Math.floor(num)
   return baseVal + ((Math.random() < (num - baseVal)) ? 1 : 0)
 }
 
@@ -259,8 +263,8 @@ function copyProps(dest, src, names, deleteOld) { // eslint-disable-line no-unus
     deleteOld = false
   }
 
-  names.forEach(function(elem) {
-    if (!src.hasOwnProperty(elem)) {
+  names.forEach((elem) => {
+    if (!Object.prototype.hasOwnProperty.call(src, elem)) {
       return
     }
     // This syntax is needed to copy get/set properly; you can't just use '='.
@@ -273,7 +277,10 @@ function copyProps(dest, src, names, deleteOld) { // eslint-disable-line no-unus
 
 // Delete the specified named cookie
 function deleteCookie(cookieName) { // eslint-disable-line no-unused-vars
-  document.cookie = [cookieName, '=; expires=Thu, 01-Jan-1970 00:00:01 GMT; path=/; domain=.', window.location.host.toString()].join('')
+  document.cookie = [
+    cookieName, '=; expires=Thu, 01-Jan-1970 00:00:01 GMT; path=/; domain=.',
+    window.location.host.toString(),
+  ].join('')
 }
 
 // Get the fundamental object of the given type
@@ -303,16 +310,16 @@ function matchType(inVar, toMatch) { // eslint-disable-line no-unused-vars
 // Looks for the specified attribute in each array entry, and adds an alias for
 // it at the top level.
 function indexArrayByAttr(inArray, attr) { // eslint-disable-line no-unused-vars
-  inArray.forEach(function(elem, ignore, arr) {
+  inArray.forEach((elem, ignore, arr) => {
     // Add a named alias to each entry.
     if (isValid(elem[attr]) && !isValid(arr[elem[attr]])) {
       Object.defineProperty(arr, elem.id, {
         value: elem,
-        enumerable: false
+        enumerable: false,
       })
     }
     else {
-      console.log('Duplicate or missing ' + attr + ' attribute in array: ' + elem[attr])
+      console.error(`Duplicate or missing ${attr} attribute in array: ${elem[attr]}`)
     }
   })
 }

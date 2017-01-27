@@ -13,20 +13,18 @@
 
 if ('document' in self && !('classList' in document.createElement('_'))) {
   (function (view) {
-    'use strict'
-
     if (!('Element' in view)) return
 
-    var classListProp = 'classList'
-    var protoProp = 'prototype'
-    var elemCtrProto = view.Element[protoProp]
-    var objCtr = Object
-    var strTrim = String[protoProp].trim || function () {
+    const classListProp = 'classList'
+    const protoProp = 'prototype'
+    const elemCtrProto = view.Element[protoProp]
+    const objCtr = Object
+    const strTrim = String[protoProp].trim || function () {
       return this.replace(/^\s+|\s+$/g, '')
     }
-    var arrIndexOf = Array[protoProp].indexOf || function (item) {
-      var i = 0
-      var len = this.length
+    const arrIndexOf = Array[protoProp].indexOf || function (item) {
+      let i = 0
+      const len = this.length
 
       for (; i < len; i++) {
         if (i in this && this[i] === item) {
@@ -36,31 +34,31 @@ if ('document' in self && !('classList' in document.createElement('_'))) {
       return -1
     }
     // Vendors: please allow content code to instantiate DOMExceptions
-    var DOMEx = function (type, message) {
+    const DOMEx = function (type, message) {
       this.name = type
       this.code = DOMException[type]
       this.message = message
     }
-    var checkTokenAndGetIndex = function (classList, token) {
+    const checkTokenAndGetIndex = function (classList, token) {
       if (token === '') {
         throw new DOMEx(
                   'SYNTAX_ERR'
-                , 'An invalid or illegal string was specified'
+                , 'An invalid or illegal string was specified',
             )
       }
       if (/\s/.test(token)) {
         throw new DOMEx(
                   'INVALID_CHARACTER_ERR'
-                , 'String contains an invalid character'
+                , 'String contains an invalid character',
             )
       }
       return arrIndexOf.call(classList, token)
     }
-    var ClassList = function (elem) {
-      var trimmedClasses = strTrim.call(elem.getAttribute('class') || '')
-      var classes = trimmedClasses ? trimmedClasses.split(/\s+/) : []
-      var i = 0
-      var len = classes.length
+    const ClassList = function (elem) {
+      const trimmedClasses = strTrim.call(elem.getAttribute('class') || '')
+      const classes = trimmedClasses ? trimmedClasses.split(/\s+/) : []
+      let i = 0
+      const len = classes.length
 
       for (; i < len; i++) {
         this.push(classes[i])
@@ -69,8 +67,8 @@ if ('document' in self && !('classList' in document.createElement('_'))) {
         elem.setAttribute('class', this.toString())
       }
     }
-    var classListProto = ClassList[protoProp] = []
-    var classListGetter = function () {
+    const classListProto = ClassList[protoProp] = []
+    const classListGetter = function () {
       return new ClassList(this)
     }
 
@@ -85,14 +83,14 @@ if ('document' in self && !('classList' in document.createElement('_'))) {
       return checkTokenAndGetIndex(this, token) !== -1
     }
     classListProto.add = function () {
-      var tokens = arguments
-      var i = 0
-      var l = tokens.length
-      var token
-      var updated = false
+      const tokens = arguments
+      let i = 0
+      const l = tokens.length
+      let token
+      let updated = false
 
       do {
-        token = tokens[i] + ''
+        token = `${tokens[i]}`
         if (checkTokenAndGetIndex(this, token) === -1) {
           this.push(token)
           updated = true
@@ -105,15 +103,15 @@ if ('document' in self && !('classList' in document.createElement('_'))) {
       }
     }
     classListProto.remove = function () {
-      var tokens = arguments
-      var i = 0
-      var l = tokens.length
-      var token
-      var updated = false
+      const tokens = arguments
+      let i = 0
+      const l = tokens.length
+      let token
+      let updated = false
 
       do {
-        token = tokens[i] + ''
-        var index = checkTokenAndGetIndex(this, token)
+        token = `${tokens[i]}`
+        const index = checkTokenAndGetIndex(this, token)
         if (index !== -1) {
           this.splice(index, 1)
           updated = true
@@ -128,10 +126,10 @@ if ('document' in self && !('classList' in document.createElement('_'))) {
     classListProto.toggle = function (token, force) {
       token += ''
 
-      var result = this.contains(token)
-      var method = result
-          ? force !== true && 'remove'
-          : force !== false && 'add'
+      const result = this.contains(token)
+      const method = result ?
+          force !== true && 'remove' :
+          force !== false && 'add'
 
       if (method) {
         this[method](token)
@@ -144,10 +142,10 @@ if ('document' in self && !('classList' in document.createElement('_'))) {
     }
 
     if (objCtr.defineProperty) {
-      var classListPropDesc = {
+      const classListPropDesc = {
         get: classListGetter,
         enumerable: true,
-        configurable: true
+        configurable: true,
       }
       try {
         objCtr.defineProperty(elemCtrProto, classListProp, classListPropDesc)

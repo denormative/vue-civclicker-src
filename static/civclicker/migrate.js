@@ -1,4 +1,4 @@
-'use strict'
+
 
 /* global isValid */
 
@@ -104,7 +104,7 @@ function migrateGameData(loadVar, settingsVarReturn) { // eslint-disable-line no
       battleAltar: { owned: loadVar.battleAltar.total },
       fieldsAltar: { owned: loadVar.fieldsAltar.total },
       underworldAltar: { owned: loadVar.underworldAltar.total },
-      catAltar: { owned: loadVar.catAltar.total }
+      catAltar: { owned: loadVar.catAltar.total },
     }
         // Delete old values.
     delete loadVar.civName
@@ -302,7 +302,7 @@ function migrateGameData(loadVar, settingsVarReturn) { // eslint-disable-line no
     // v1.1.39: Migrate deities to use IDs.
   if (isValid(loadVar.deityArray)) {
     loadVar.curCiv.deities = []
-    loadVar.deityArray.forEach(function(row) {
+    loadVar.deityArray.forEach((row) => {
       loadVar.curCiv.deities.unshift({ name: row[1], domain: typeToId(row[2]), maxDev: row[3] })
     })
     delete loadVar.deityArray
@@ -390,9 +390,9 @@ function migrateGameData(loadVar, settingsVarReturn) { // eslint-disable-line no
   if (isValid(loadVar.wonder.array)) { // v1.1.59: wonder.array moved to curCiv.wonders
     if (!isValid(loadVar.curCiv.wonders)) {
       loadVar.curCiv.wonders = []
-      loadVar.wonder.array.forEach(function(elem) {
+      loadVar.wonder.array.forEach((elem) => {
                 // Format converted from [name,resourceId] to {name: name, resourceId: resourceId}
-        loadVar.curCiv.wonders.push({name: elem[0], resourceId: elem[1]})
+        loadVar.curCiv.wonders.push({ name: elem[0], resourceId: elem[1] })
       })
     }
     delete loadVar.wonder.array

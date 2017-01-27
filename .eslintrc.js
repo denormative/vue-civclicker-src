@@ -36,7 +36,13 @@ module.exports = {
       "js": "never",
       "vue": "never"
     }],
-    "import/no-unresolved":  ["off"] // TODO: fixme
+    'import/no-unresolved':  ["off"], // TODO: fixme
+    'no-plusplus': ["error", { "allowForLoopAfterthoughts": true }],
+    'no-use-before-define': ["error", { "functions": false }],
+    'max-len': ["warn", 132, 2],
+    'func-names': ["error", "as-needed"],
+    'no-param-reassign': ["error", { "props": false }],
+    'no-console': ["error", { allow: ["warn", "error"] }],
   },
   "settings": {
     "import/resolver": {

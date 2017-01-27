@@ -1,4 +1,4 @@
-'use strict'
+
 
 /* global copyProps isValid */
 function VersionData(major, minor, sub, mod) {
@@ -9,8 +9,8 @@ function VersionData(major, minor, sub, mod) {
 }
 VersionData.prototype.toNumber = function() { return this.major * 1000 + this.minor + this.sub / 1000 }
 VersionData.prototype.toString = function() {
-  return String(this.major) + '.' +
-    String(this.minor) + '.' + String(this.sub) + String(this.mod)
+  return `${String(this.major)}.${
+    String(this.minor)}.${String(this.sub)}${String(this.mod)}`
 }
 
 // xxxTODO: Create a mechanism to automate the creation of a class hierarchy,
@@ -18,7 +18,7 @@ VersionData.prototype.toString = function() {
 function CivObj(props, asProto) {
   if (!(this instanceof CivObj)) { return new CivObj(props) } // Prevent accidental namespace pollution
     // xxx Should these just be taken off the prototype's property names?
-  var names = asProto ? null : ['id', 'name', 'subType', 'owned', 'prereqs', 'require', 'salable', 'vulnerable', 'effectText',
+  const names = asProto ? null : ['id', 'name', 'subType', 'owned', 'prereqs', 'require', 'salable', 'vulnerable', 'effectText',
     'prestige', 'initOwned', 'init', 'reset', 'limit', 'hasVariableCost']
   Object.call(this, props)
   copyProps(this, props, names, true)
@@ -41,7 +41,7 @@ CivObj.prototype = {
   effectText: '',
   prestige: false,
   initOwned: 0,  // Override this to undefined to inhibit initialization.  Also determines the type of the 'owned' property.
-  init: function(fullInit) {
+  init(fullInit) {
     if (fullInit === undefined) { fullInit = true }
     if (fullInit || !this.prestige) {
       this.data = {}
@@ -49,20 +49,20 @@ CivObj.prototype = {
     }
     return true
   },
-  reset: function() { return this.init(false) }, // Default reset behavior is to re-init non-prestige items.
+  reset() { return this.init(false) }, // Default reset behavior is to re-init non-prestige items.
   get limit() {
-    return +((typeof this.initOwned === 'number') ? Infinity // Default is no limit for numbers
-                       : (typeof this.initOwned === 'boolean') ? true : 0)
+    return +((typeof this.initOwned === 'number') ? Infinity : // Default is no limit for numbers
+                       (typeof this.initOwned === 'boolean') ? true : 0)
   }, // true (1) for booleans, 0 otherwise.
   set limit(value) { return +this.limit }, // Only here for JSLint.
     // xxx This is a hack; it assumes that any CivObj with a getter for its
     // 'require' has a variable cost.  Which is currently true, but might not
     // always be.
-  hasVariableCost: function() {
-    var i
+  hasVariableCost() {
+    let i
         // If our requirements have a getter, assume variable.
         // xxx This won't work if it inherits a variable desc.
-    var requireDesc = Object.getOwnPropertyDescriptor(this, 'require')
+    const requireDesc = Object.getOwnPropertyDescriptor(this, 'require')
     if (!requireDesc) { return false } // Unpurchaseable
         // If our requirements contain a function, assume variable.
     for (i in this.require) { if (typeof this.require[i] === 'function') { return true } }
@@ -72,11 +72,11 @@ CivObj.prototype = {
     // Return the name for the given quantity of this object.
     // Specific 'singular' and 'plural' used if present and appropriate,
     // otherwise returns 'name'.
-  getQtyName: function(qty) {
+  getQtyName(qty) {
     if (qty === 1 && this.singular) { return this.singular }
     if (typeof qty === 'number' && this.plural) { return this.plural }
     return this.name || this.singular || '(UNNAMED)'
-  }
+  },
 }
 
 function Resource(props) { // props is an object containing the desired properties.
@@ -95,7 +95,7 @@ Resource.prototype = new CivObj({
   increment: 0,
   specialChance: 0,
   specialMaterial: '',
-  activity: 'gathering' // I18N
+  activity: 'gathering', // I18N
 }, true)
 
 function Building(props) { // props is an object containing the desired properties.
@@ -114,7 +114,7 @@ Building.prototype = new CivObj({
   place: 'home',
   get vulnerable() { return this.subType !== 'altar' }, // Altars can't be sacked.
   set vulnerable(value) { return this.vulnerable }, // Only here for JSLint.
-  customQtyId: 'buildingCustomQty'
+  customQtyId: 'buildingCustomQty',
 }, true)
 
 function Upgrade(props) { // props is an object containing the desired properties.
@@ -133,7 +133,7 @@ Upgrade.prototype = new CivObj({
   initOwned: false,
   vulnerable: false,
   get limit() { return +1 }, // Can't re-buy these.
-  set limit(value) { return +this.limit } // Only here for JSLint.
+  set limit(value) { return +this.limit }, // Only here for JSLint.
 }, true)
 
 function Unit(props) { // props is an object containing the desired properties.
@@ -150,16 +150,16 @@ Unit.prototype = new CivObj({
   constructor: Unit,
   type: 'unit',
   salable: true,
-  get customQtyId() { return this.place + 'CustomQty' },
+  get customQtyId() { return `${this.place}CustomQty` },
   set customQtyId(value) { return this.customQtyId }, // Only here for JSLint.
   alignment: 'player', // Also: "enemy"
   species: 'human', // Also:  "animal", "mechanical", "undead"
   place: 'home', // Also:  "party"
   combatType: '',  // Default noncombatant.  Also "infantry","cavalry","animal"
-  onWin: function() { return }, // Do nothing.
+  onWin() { }, // Do nothing.
   get vulnerable() { return ((this.place === 'home') && (this.alignment === 'player') && (this.subType === 'normal')) },
   set vulnerable(value) { return this.vulnerable }, // Only here for JSLint.
-  init: function(fullInit) {
+  init(fullInit) {
     CivObj.prototype.init.call(this, fullInit)
         // Right now, only vulnerable human units can get sick.
     if (this.vulnerable && (this.species === 'human')) {
@@ -170,25 +170,25 @@ Unit.prototype = new CivObj({
     // xxx Right now, ill numbers are being stored as a separate structure inside window.vm.curCiv.
     // It would probably be better to make it an actual 'ill' property of the Unit.
     // That will require migration code.
-  get illObj() { return window.vm.curCiv[this.id + 'Ill'] },
-  set illObj(value) { window.vm.curCiv[this.id + 'Ill'] = value },
+  get illObj() { return window.vm.curCiv[`${this.id}Ill`] },
+  set illObj(value) { window.vm.curCiv[`${this.id}Ill`] = value },
   get ill() { return isValid(this.illObj) ? this.illObj.owned : undefined },
   set ill(value) { if (isValid(this.illObj)) { this.illObj.owned = value } },
-  get partyObj() { return window.vm.civData[this.id + 'Party'] },
+  get partyObj() { return window.vm.civData[`${this.id}Party`] },
   set partyObj(value) { return this.partyObj }, // Only here for JSLint.
   get party() { return isValid(this.partyObj) ? this.partyObj.owned : undefined },
   set party(value) { if (isValid(this.partyObj)) { this.partyObj.owned = value } },
     // Is this unit just some other sort of unit in a different place (but in the same limit pool)?
-  isDest: function() { return (this.source !== undefined) && (window.vm.civData[this.source].partyObj === this) },
+  isDest() { return (this.source !== undefined) && (window.vm.civData[this.source].partyObj === this) },
   get limit() {
-    return +((this.isDest()) ? window.vm.civData[this.source].limit
-                                             : Object.getOwnPropertyDescriptor(CivObj.prototype, 'limit').get.call(this))
+    return +((this.isDest()) ? window.vm.civData[this.source].limit :
+                                             Object.getOwnPropertyDescriptor(CivObj.prototype, 'limit').get.call(this))
   },
   set limit(value) { return +this.limit }, // Only here for JSLint.
 
     // The total quantity of this unit, regardless of status or place.
   get total() { return (this.isDest()) ? window.vm.civData[this.source].total : (this.owned + (this.ill || 0) + (this.party || 0)) },
-  set total(value) { return this.total } // Only here for JSLint.
+  set total(value) { return this.total }, // Only here for JSLint.
 }, true)
 
 function Achievement(props) { // props is an object containing the desired properties.
@@ -206,5 +206,5 @@ Achievement.prototype = new CivObj({
   prestige: true, // Achievements are not lost on reset.
   vulnerable: false,
   get limit() { return +1 }, // Can't re-buy these.
-  set limit(value) { return +this.limit } // Only here for JSLint.
+  set limit(value) { return +this.limit }, // Only here for JSLint.
 }, true)
