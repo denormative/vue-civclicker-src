@@ -39,10 +39,11 @@ module.exports = {
     'import/no-unresolved':  ["off"], // TODO: fixme
     'no-plusplus': ["error", { "allowForLoopAfterthoughts": true }],
     'no-use-before-define': ["error", { "functions": false }],
-    'max-len': ["warn", 132, 2],
+    'max-len': ["warn", 132, 2, { "ignoreComments": true }],
     'func-names': ["error", "as-needed"],
     'no-param-reassign': ["error", { "props": false }],
     'no-console': ["error", { allow: ["warn", "error"] }],
+    'no-continue': "off",
   },
   "settings": {
     "import/resolver": {
