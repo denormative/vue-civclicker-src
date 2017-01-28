@@ -1906,7 +1906,7 @@ function summonShade() { // eslint-disable-line no-unused-vars
     return 0
   }
 
-  const num = Math.ceil(window.vm.curCiv.enemySlain.owned / 4 + (Math.random() * window.vm.curCiv.enemySlain.owned / 4))
+  const num = Math.ceil((window.vm.curCiv.enemySlain.owned / 4) + (Math.random() * (window.vm.curCiv.enemySlain.owned / 4)))
   window.vm.curCiv.enemySlain.owned -= num
   window.vm.civData.shade.owned += num
 
@@ -1965,7 +1965,7 @@ function wickerman() { // eslint-disable-line no-unused-vars
   if (!payFor(window.vm.civData.wickerman.require)) {
     return
   }
-  --window.vm.civData[job].owned
+  window.vm.civData[job].owned -= 1
   updatePopulation() // Removes killed worker
 
   // Select a random window.vm.lootable resource
@@ -2006,10 +2006,8 @@ function wickerman() { // eslint-disable-line no-unused-vars
   updatePopulationUI()
 }
 
-function walk(increment) { // eslint-disable-line no-unused-vars
-  if (increment === undefined) {
-    increment = 1
-  }
+function walk(incrementArg) { // eslint-disable-line no-unused-vars
+  let increment = (incrementArg === undefined) ? 1 : incrementArg
   if (increment === false) {
     increment = 0
     window.vm.civData.walk.rate = 0
@@ -2039,21 +2037,19 @@ function tickWalk() {
     if (!target) {
       break
     }
-    --window.vm.civData[target].owned
+    window.vm.civData[target].owned -= 1
       // We don't want to do UpdatePopulation() in a loop, so we just do the
       // relevent adjustments directly.
-    --window.vm.population.current
-    --window.vm.population.healthy
+    window.vm.population.current -= 1
+    window.vm.population.healthy -= 1
   }
   updatePopulation()
   updatePopulationUI()
 }
 
 // Give a temporary bonus based on the number of cats owned.
-function pestControl(length) { // eslint-disable-line no-unused-vars
-  if (length === undefined) {
-    length = 10
-  }
+function pestControl(lengthArg) { // eslint-disable-line no-unused-vars
+  const length = (lengthArg === undefined) ? 10 : lengthArg
   if (window.vm.civData.piety.owned < (10 * length)) {
     return
   }
@@ -2093,7 +2089,7 @@ function iconoclasm(index) { // eslint-disable-line no-unused-vars
   }
 
   // give gold
-  window.vm.civData.gold.owned += Math.floor(Math.pow(window.vm.curCiv.deities[index].maxDev, 1 / 1.25))
+  window.vm.civData.gold.owned += Math.floor((window.vm.curCiv.deities[index].maxDev ** (1 / 1.25)))
 
   // remove the deity
   window.vm.curCiv.deities.splice(index, 1)
@@ -2118,7 +2114,7 @@ function spawnMob(mobObj, num) {
 
   // Human mobs might bring siege engines.
   if (mobObj.species === 'human') {
-    numSge = Math.floor(Math.random() * num / 100)
+    numSge = Math.floor((Math.random() * num) / 100)
   }
 
   mobObj.owned += num
@@ -2232,10 +2228,8 @@ function plunder() { // eslint-disable-line no-unused-vars
   updateTargets()
 }
 
-function glory(time) { // eslint-disable-line no-unused-vars
-  if (time === undefined) {
-    time = 180
-  }
+function glory(timeArg) { // eslint-disable-line no-unused-vars
+  const time = (timeArg === undefined) ? 180 : timeArg
   if (!payFor(window.vm.civData.glory.require)) {
     return
   } // check it can be bought
@@ -2246,10 +2240,8 @@ function glory(time) { // eslint-disable-line no-unused-vars
   document.getElementById('gloryGroup').style.display = 'block'
 }
 
-function grace(delta) { // eslint-disable-line no-unused-vars
-  if (delta === undefined) {
-    delta = 0.1
-  }
+function grace(deltaArg) { // eslint-disable-line no-unused-vars
+  const delta = (deltaArg === undefined) ? 0.1 : deltaArg
   if (window.vm.civData.piety.owned >= window.vm.civData.grace.cost) {
     window.vm.civData.piety.owned -= window.vm.civData.grace.cost
     window.vm.civData.grace.cost = Math.floor(window.vm.civData.grace.cost * 1.2)
@@ -2285,7 +2277,7 @@ function startWonder() { // eslint-disable-line no-unused-vars
   if (window.vm.curCiv.curWonder.stage !== 0) {
     return
   }
-  ++window.vm.curCiv.curWonder.stage
+  window.vm.curCiv.curWonder.stage += 1
   renameWonder()
   updateWonder()
 }
@@ -2310,8 +2302,8 @@ function wonderSelect(resourceId) { // eslint-disable-line no-unused-vars
   if (window.vm.curCiv.curWonder.stage !== 2) {
     return
   }
-  ++window.vm.curCiv.curWonder.stage
-  ++window.vm.curCiv.curWonder[resourceId]
+  window.vm.curCiv.curWonder.stage += 1
+  window.vm.curCiv.curWonder[resourceId] += 1
   gameLog(`You now have a permanent bonus to ${resourceId} production.`)
   window.vm.curCiv.wonders.push({
     name: window.vm.curCiv.curWonder.name,
@@ -2387,7 +2379,7 @@ function trade() { // eslint-disable-line no-unused-vars
   const material = window.vm.civData[window.vm.curCiv.trader.materialId]
 
   material.owned -= window.vm.curCiv.trader.requested
-  ++window.vm.civData.gold.owned
+  window.vm.civData.gold.owned += 1
   updateResourceTotals()
   gameLog(`Traded ${window.vm.curCiv.trader.requested} ${material.getQtyName(window.vm.curCiv.trader.requested)}`)
 }
@@ -2397,7 +2389,7 @@ function buy(materialId) { // eslint-disable-line no-unused-vars
   if (window.vm.civData.gold.owned < 1) {
     return
   }
-  --window.vm.civData.gold.owned
+  window.vm.civData.gold.owned -= 1
 
   if (material === window.vm.civData.food || material === window.vm.civData.wood || material === window.vm.civData.stone) {
     material.owned += 5000
@@ -2420,7 +2412,7 @@ function getWonderCostMultiplier() { // Based on the most wonders in any single 
       mostWonders = Math.max(mostWonders, window.vm.wonderCount[i])
     }
   }
-  return Math.pow(1.5, mostWonders)
+  return (1.5 ** mostWonders)
 }
 
 function speedWonder() { // eslint-disable-line no-unused-vars
@@ -2737,7 +2729,8 @@ function haveDeity(name) {
   return false
 }
 
-function renameRuler(newName) {
+function renameRuler(newNameArg) {
+  let newName = newNameArg
   if (window.vm.curCiv.rulerName === 'Cheater') {
     return
   } // Reputations suck, don't they?
@@ -2759,7 +2752,8 @@ function renameRuler(newName) {
 // Looks to see if the deity already exists.  If it does, that deity
 // is moved to the first slot, overwriting the current entry, and the
 // player's domain is automatically assigned to match (for free).
-function renameDeity(newName) { // eslint-disable-line no-unused-vars
+function renameDeity(newNameArg) { // eslint-disable-line no-unused-vars
+  let newName = newNameArg
   let i = false
   while (!newName) {
     // Default to ruler's name.  Hey, despots tend to have big egos.
@@ -2926,12 +2920,12 @@ function doFarmers() {
   window.vm.civData.food.net = window.vm.civData.farmer.owned *
     (1 + (window.vm.civData.farmer.efficiency * window.vm.curCiv.morale.efficiency)) *
     ((window.vm.civData.pestControl.timer > 0) ? 1.01 : 1) * getWonderBonus(window.vm.civData.food) *
-    (1 + window.vm.civData.walk.rate / 120) * (1 + window.vm.civData.mill.owned * millMod / 200) // Farmers farm food
+    (1 + (window.vm.civData.walk.rate / 120)) * (1 + ((window.vm.civData.mill.owned * millMod) / 200)) // Farmers farm food
   window.vm.civData.food.net -= window.vm.population.current // The living window.vm.population eats food.
   window.vm.civData.food.owned += window.vm.civData.food.net
   if (window.vm.civData.skinning.owned && window.vm.civData.farmer.owned > 0) { // and sometimes get skins
     const numSkins = specialChance * (window.vm.civData.food.increment +
-      ((window.vm.civData.butchering.owned) * window.vm.civData.farmer.owned / 15.0)) * getWonderBonus(window.vm.civData.skins)
+      ((window.vm.civData.butchering.owned * window.vm.civData.farmer.owned) / 15.0)) * getWonderBonus(window.vm.civData.skins)
     window.vm.civData.skins.owned += rndRound(numSkins)
   }
 }
@@ -2943,7 +2937,7 @@ function doWoodcutters() {
   window.vm.civData.wood.owned += window.vm.civData.wood.net
   if (window.vm.civData.harvesting.owned && window.vm.civData.woodcutter.owned > 0) { // and sometimes get herbs
     const numHerbs = window.vm.civData.wood.specialChance * (window.vm.civData.wood.increment +
-      ((window.vm.civData.gardening.owned) * window.vm.civData.woodcutter.owned / 5.0)) * getWonderBonus(window.vm.civData.herbs)
+      ((window.vm.civData.gardening.owned * window.vm.civData.woodcutter.owned) / 5.0)) * getWonderBonus(window.vm.civData.herbs)
     window.vm.civData.herbs.owned += rndRound(numHerbs)
   }
 }
@@ -2955,7 +2949,7 @@ function doMiners() {
   window.vm.civData.stone.owned += window.vm.civData.stone.net
   if (window.vm.civData.prospecting.owned && window.vm.civData.miner.owned > 0) { // and sometimes get ore
     const numOre = specialChance * (window.vm.civData.stone.increment +
-        ((window.vm.civData.extraction.owned) * window.vm.civData.miner.owned / 5.0)) * getWonderBonus(window.vm.civData.ore)
+        ((window.vm.civData.extraction.owned * window.vm.civData.miner.owned) / 5.0)) * getWonderBonus(window.vm.civData.ore)
     window.vm.civData.ore.owned += rndRound(numOre)
   }
 }
@@ -2978,18 +2972,17 @@ function doClerics() {
   window.vm.civData.piety.owned += window.vm.civData.cleric.owned *
     (window.vm.civData.cleric.efficiency + (window.vm.civData.cleric.efficiency *
       (window.vm.civData.writing.owned))) * (1 + ((window.vm.civData.secrets.owned) *
-      (1 - 100 / (window.vm.civData.graveyard.owned + 100)))) * window.vm.curCiv.morale.efficiency *
+      (1 - (100 / (window.vm.civData.graveyard.owned + 100))))) * window.vm.curCiv.morale.efficiency *
         getWonderBonus(window.vm.civData.piety)
 }
 // Try to heal the specified number of people in the specified job
 // Makes them sick if the number is negative.
-function heal(job, num) {
+function heal(job, numArg) {
   if (!isValid(job) || !job) {
     return 0
   }
-  if (num === undefined) {
-    num = 1
-  } // default to 1
+  let num = (numArg === undefined) ? 1 : numArg
+
   num = Math.min(num, window.vm.civData[job].ill)
   num = Math.max(num, -window.vm.civData[job].owned)
   window.vm.civData[job].ill -= num
@@ -3048,9 +3041,9 @@ function doHealers() {
       break
     }
     heal(job)
-    --window.vm.civData.healer.cureCount
-    --window.vm.civData.herbs.owned
-    ++numHealed
+    window.vm.civData.healer.cureCount -= 1
+    window.vm.civData.herbs.owned -= 1
+    numHealed += 1
   }
 
   return numHealed
@@ -3083,7 +3076,7 @@ function doCorpses() {
   }
 
   // Infect up to 1% of the window.vm.population.
-  let num = Math.floor(window.vm.population.current / 100 * Math.random())
+  let num = Math.floor((window.vm.population.current / 100) * Math.random())
   if (num <= 0) {
     return
   }
@@ -3157,13 +3150,13 @@ function doSlaughter(attacker) {
   if (target) {
     // An attacker may disappear after killing
     if (Math.random() < attacker.killExhaustion) {
-      --attacker.owned
+      attacker.owned -= 1
     }
 
-    --window.vm.civData[target].owned
+    window.vm.civData[target].owned -= 1
 
     if (attacker.species !== 'animal') {
-      ++window.vm.civData.corpses.owned
+      window.vm.civData.corpses.owned += 1
     } // Animals will eat the corpse
     gameLog(`${window.vm.civData[target].getQtyName(1)} ${killVerb} by ${attacker.getQtyName(attacker.owned)}`)
   }
@@ -3207,8 +3200,8 @@ function doSack(attacker) {
   }
 
   if (target.owned > 0) {
-    --target.owned
-    ++window.vm.civData.freeLand.owned
+    target.owned -= 1
+    window.vm.civData.freeLand.owned += 1
     gameLog(`${target.getQtyName(1)} ${destroyVerb} by ${attacker.getQtyName(attacker.owned)}`)
   }
   else {
@@ -3292,12 +3285,12 @@ function doSiege(siegeObj, targetObj) {
   for (i = 0; i < firing; ++i) {
     hit = Math.random()
     if (hit > 0.95) {
-      --siegeObj.owned
+      siegeObj.owned -= 1
     } // misfire; destroys itself
     if (hit >= siegeObj.efficiency) {
       continue
     } // miss
-    ++hits // hit
+    hits += 1 // hit
     if (--targetObj.owned <= 0) {
       break
     }
@@ -3368,7 +3361,7 @@ function doLabourers() {
     // hide limited notice
     document.getElementById('lowResources').style.display = 'none'
       // then set wonder.stage so things will be updated appropriately
-    ++window.vm.curCiv.curWonder.stage
+    window.vm.curCiv.curWonder.stage += 1
   }
   else {
     // we're still building
@@ -3411,7 +3404,7 @@ function doMobs() {
   let mobType
   let choose
   if (window.vm.population.current + window.vm.curCiv.zombie.owned > 0) {
-    ++window.vm.curCiv.attackCounter
+    window.vm.curCiv.attackCounter += 1
   } // No attacks if deserted.
   if (window.vm.population.current + window.vm.curCiv.zombie.owned > 0 && window.vm.curCiv.attackCounter > (60 * 5)) { // Minimum 5 minutes
     if (600 * Math.random() < 1) {
@@ -3457,7 +3450,7 @@ function doMobs() {
 function tickTraders() {
   // traders occasionally show up
   if (window.vm.population.current + window.vm.curCiv.zombie.owned > 0) {
-    ++window.vm.curCiv.trader.counter
+    window.vm.curCiv.trader.counter += 1
   }
   const delayMult = 60 * (3 - ((window.vm.civData.currency.owned) + (window.vm.civData.commerce.owned)))
   let check
@@ -3480,7 +3473,7 @@ function tickTraders() {
 function doPestControl() {
   // Decrements the pestControl Timer
   if (window.vm.civData.pestControl.timer > 0) {
-    --window.vm.civData.pestControl.timer
+    window.vm.civData.pestControl.timer -= 1
   }
 }
 
