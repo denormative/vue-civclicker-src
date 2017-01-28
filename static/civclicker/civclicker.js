@@ -1952,6 +1952,29 @@ function randomHealthyWorker() {
   return ''
 }
 
+function getRewardMessage(rewardObj, qty) {
+  switch (rewardObj.id) {
+    case 'food':
+      return 'The crops are abundant!'
+    case 'wood':
+      return 'The trees grow stout!'
+    case 'stone':
+      return 'The stone splits easily!'
+    case 'skins':
+      return 'The animals are healthy!'
+    case 'herbs':
+      return 'The gardens flourish!'
+    case 'ore':
+      return 'A new vein is struck!'
+    case 'leather':
+      return 'The tanneries are productive!'
+    case 'metal':
+      return 'The steel runs pure.'
+    default:
+      return `You gain ${rewardObj.getQtyName(qty)}!`
+  }
+}
+
 // Selects a random worker, kills them, and then adds a random resource
 // xxx This should probably scale based on window.vm.population (and maybe devotion).
 function wickerman() { // eslint-disable-line no-unused-vars
@@ -1978,42 +2001,19 @@ function wickerman() { // eslint-disable-line no-unused-vars
   } // Guaranteed to at least restore initial cost.
   rewardObj.owned += qty
 
-  function getRewardMessage(rewardObj) {
-    switch (rewardObj.id) {
-      case 'food':
-        return 'The crops are abundant!'
-      case 'wood':
-        return 'The trees grow stout!'
-      case 'stone':
-        return 'The stone splits easily!'
-      case 'skins':
-        return 'The animals are healthy!'
-      case 'herbs':
-        return 'The gardens flourish!'
-      case 'ore':
-        return 'A new vein is struck!'
-      case 'leather':
-        return 'The tanneries are productive!'
-      case 'metal':
-        return 'The steel runs pure.'
-      default:
-        return `You gain ${rewardObj.getQtyName(qty)}!`
-    }
-  }
-
-  gameLog(`Burned a ${window.vm.civData[job].getQtyName(1)}. ${getRewardMessage(rewardObj)}`)
+  gameLog(`Burned a ${window.vm.civData[job].getQtyName(1)}. ${getRewardMessage(rewardObj, qty)}`)
   updateResourceTotals() // Adds new resources
   updatePopulationUI()
 }
 
 function walk(incrementArg) { // eslint-disable-line no-unused-vars
-  let increment = (incrementArg === undefined) ? 1 : incrementArg
-  if (increment === false) {
-    increment = 0
+  let inc = (incrementArg === undefined) ? 1 : incrementArg
+  if (inc === false) {
+    inc = 0
     window.vm.civData.walk.rate = 0
   }
 
-  window.vm.civData.walk.rate += increment
+  window.vm.civData.walk.rate += inc
 
   // xxx This needs to move into the main loop in case it's reloaded.
   document.getElementById('walkStat').innerHTML = prettify(window.vm.civData.walk.rate)
@@ -2099,7 +2099,8 @@ function iconoclasm(index) { // eslint-disable-line no-unused-vars
 
 /* Enemies */
 
-function spawnMob(mobObj, num) {
+function spawnMob(mobObj, numArg) {
+  let num = numArg
   let numSge = 0
   let msg = ''
 
@@ -2408,7 +2409,7 @@ function getWonderCostMultiplier() { // Based on the most wonders in any single 
   let i
   let mostWonders = 0
   for (i in window.vm.wonderCount) {
-    if (window.vm.wonderCount.hasOwnProperty(i)) {
+    if (Object.prototype.hasOwnProperty.call(window.vm.wonderCount, i)) {
       mostWonders = Math.max(mostWonders, window.vm.wonderCount[i])
     }
   }
@@ -2668,7 +2669,7 @@ function save(savetype) {
     xmlhttp = new XMLHttpRequest()
     xmlhttp.overrideMimeType('text/plain')
     xmlhttp.open('GET', `/static/civclicker/version.txt?r=${Math.random()}`, true)
-    xmlhttp.onreadystatechange = function() {
+    xmlhttp.onreadystatechange = function() { // eslint-disable-line func-names
       if (xmlhttp.readyState === 4) {
         const sVersion = parseInt(xmlhttp.responseText, 10)
         if (window.vm.version < sVersion) {
@@ -2901,7 +2902,7 @@ function reset() { // eslint-disable-line no-unused-vars
 }
 
 function tickAutosave() {
-  if (window.vm.settings.autosave && (++window.vm.settings.autosaveCounter >= window.vm.settings.autosaveTime)) {
+  if (window.vm.settings.autosave && (++window.vm.settings.autosaveCounter >= window.vm.settings.autosaveTime)) { // eslint-disable-line no-plusplus
     window.vm.settings.autosaveCounter = 0
     // If autosave fails, disable it.
     if (!save('auto')) {
@@ -3127,7 +3128,7 @@ function doFight(attacker, defender) {
   defender.owned -= defenderCas
 
   // Give player credit for kills.
-  const playerCredit = ((attacker.alignment === 'player') ? defenderCas :
+  const playerCredit = ((attacker.alignment === 'player') ? defenderCas : // eslint-disable-line no-nested-ternary
     (defender.alignment === 'player') ? attackerCas : 0)
 
   // Increments enemies slain, corpses, and piety
@@ -3183,7 +3184,7 @@ function doLoot(attacker) {
     attacker.owned -= leaving
   }
 
-  if (--attacker.owned < 0) {
+  if (--attacker.owned < 0) { // eslint-disable-line no-plusplus
     attacker.owned = 0
   } // Attackers leave after stealing something.
   updateResourceTotals()
@@ -3210,7 +3211,7 @@ function doSack(attacker) {
     attacker.owned -= leaving
   }
 
-  if (--attacker.owned < 0) {
+  if (--attacker.owned < 0) { // eslint-disable-line no-plusplus
     attacker.owned = 0
   } // Attackers leave after sacking something.
   updateRequirements(target)
@@ -3291,7 +3292,7 @@ function doSiege(siegeObj, targetObj) {
       continue
     } // miss
     hits += 1 // hit
-    if (--targetObj.owned <= 0) {
+    if (--targetObj.owned <= 0) { // eslint-disable-line no-plusplus
       break
     }
   }
@@ -3464,7 +3465,7 @@ function tickTraders() {
 
   // Trader stuff
   if (window.vm.curCiv.trader.timer > 0) {
-    if (--window.vm.curCiv.trader.timer <= 0) {
+    if (--window.vm.curCiv.trader.timer <= 0) { // eslint-disable-line no-plusplus
       setElemDisplay('tradeContainer', false)
     }
   }
@@ -3480,7 +3481,7 @@ function doPestControl() {
 function tickGlory() {
   // Handles the Glory bonus
   if (window.vm.civData.glory.timer > 0) {
-    document.getElementById('gloryTimer').innerHTML = window.vm.civData.glory.timer--
+    document.getElementById('gloryTimer').innerHTML = window.vm.civData.glory.timer-- // eslint-disable-line no-plusplus
   }
   else {
     document.getElementById('gloryGroup').style.display = 'none'
@@ -3498,7 +3499,7 @@ function doThrone() {
 
 function tickGrace() {
   if (window.vm.civData.grace.cost > 1000) {
-    window.vm.civData.grace.cost = Math.floor(--window.vm.civData.grace.cost)
+    window.vm.civData.grace.cost = Math.floor(--window.vm.civData.grace.cost) // eslint-disable-line no-plusplus
     document.getElementById('graceCost').innerHTML = prettify(window.vm.civData.grace.cost)
   }
 }
@@ -3764,7 +3765,7 @@ function gameLog(message) {
 
     // Go through all the logs in order, moving them down one and successively overwriting them.
     let i = 5 // Number of lines of log to keep.
-    while (--i > 1) {
+    while (--i > 1) { // eslint-disable-line no-plusplus
       document.getElementById(`log${i}`).innerHTML = document.getElementById(`log${i - 1}`).innerHTML
     }
     // Since ids need to be unique, log1 strips the ids from the log0 elements when copying the contents.
@@ -3774,7 +3775,7 @@ function gameLog(message) {
   }
   // Updates most recent line with new time, message, and xNumber.
   let s = `<td id='logT'>${curTime}</td><td id='logL'>${message}</td><td id='logR'>`
-  if (++window.vm.logRepeat > 1) {
+  if (++window.vm.logRepeat > 1) { // eslint-disable-line no-plusplus
     s += `(x${window.vm.logRepeat})`
   } // Optional (xNumber)
   s += '</td>'
