@@ -20,18 +20,6 @@
           <th scope="row">Enemies Slain</th>
           <td class="number"><span data-action="display" data-target="enemySlain">0</span></td>
         </tr>
-        <tr>
-          <th scope="row">Unburied Corpses</th>
-          <td class="number"><span data-action="display" data-target="corpses">0</span></td>
-        </tr>
-        <tr id="graveTotal">
-          <th scope="row">Unfilled Graves</th>
-          <td class="number"><span data-action="display" data-target="grave">0</span></td>
-        </tr>
-        <tr id="walkGroup">
-          <th scope="row">Walk</th>
-          <td class="number"><span id="walkStat">0</span> workers per second</td>
-        </tr>
       </tbody>
     </table>
   </div>
@@ -62,11 +50,4 @@ export default {
 </script>
 
 <style>
-#graveTotal {
-  display: none;
-}
-
-#walkGroup {
-  display: none;
-}
 </style>
