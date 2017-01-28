@@ -16,6 +16,8 @@ export default {
     Root,
   },
   created() {
+    document.title = `CivClicker (${window.vm.versionData})`
+
     window.addEventListener('keydown', (event) => {
       switch (event.keyCode) {
         case 70: // f

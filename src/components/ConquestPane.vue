@@ -32,7 +32,22 @@ export default {
   mounted() {
     this.$nextTick(() => {
       window.addUITable(window.vm.armyUnits, 'party') // Dynamically create the party controls table.
+      this.addRaidRows()
     })
+  },
+  methods: {
+    // Dynamically add the raid buttons for the various civ sizes.
+    addRaidRows() {
+      let s = ''
+      window.vm.civSizes.forEach((elem) => {
+        s += `<button class='btn btn-secondary btn-sm raid' data-action='raid' data-target='${elem.id}' disabled='disabled'>` +
+          `Raid ${elem.name}</button><br>` // xxxL10N
+      })
+
+      const group = document.getElementById('raidGroup')
+      group.innerHTML += s
+      group.onmousedown = window.onBulkEvent
+    },
   },
 }
 </script>

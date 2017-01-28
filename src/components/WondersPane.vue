@@ -59,11 +59,31 @@ export default {
   },
   mounted() {
     this.$nextTick(() => {
+      this.addWonderSelectText()
     })
   },
   computed: {
     progressDisplay() {
       return this.curCiv.curWonder.progress.toFixed(2)
+    },
+  },
+  methods: {
+    addWonderSelectText() {
+      const wcElem = document.getElementById('wonderCompleted')
+      if (!wcElem) {
+        console.error('Error: No wonderCompleted element found.')
+        return
+      }
+      let s = wcElem.innerHTML
+      window.vm.wonderResources.forEach((elem, i, wr) => {
+        s += `<button class='btn btn-secondary btn-sm' onmousedown='wonderSelect("${elem.id}")'>${elem.getQtyName(0)}</button>`
+        // Add newlines to group by threes (but no newline for the last one)
+        if (!((i + 1) % 3) && (i !== wr.length - 1)) {
+          s += '<br>'
+        }
+      })
+
+      wcElem.innerHTML = s
     },
   },
 }

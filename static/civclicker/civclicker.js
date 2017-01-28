@@ -260,8 +260,6 @@ function preLoad() { // eslint-disable-line no-unused-vars
 }
 
 function postLoad() { // eslint-disable-line no-unused-vars
-  window.vm.body = document.getElementsByTagName('body')[0]
-
   initCivclicker()
 
   // This sets up the main game loop, which is scheduled to execute once per second.
@@ -1310,30 +1308,6 @@ function updateDevotion() {
   document.getElementById('ceaseWalk').disabled = (window.vm.civData.walk.rate === 0)
 }
 
-// achObj can be:
-//   true:  Generate a line break
-//   false: Generate a gap
-//   An achievement (or civ size) object: Generate the display of that achievement
-function getAchRowText(achObj) {
-  if (achObj === true) {
-    return "<div style='clear:both;'><br></div>"
-  }
-  if (achObj === false) {
-    return "<div class='break'>&nbsp;</div>"
-  }
-  return `<div class='achievement' title='${achObj.getQtyName()}'>` +
-    `<div class='unlockedAch' id='${achObj.id}'>${achObj.getQtyName()}</div></div>`
-}
-
-// Dynamically create the achievement display
-function addAchievementRows() {
-  let s = ''
-  window.vm.achData.forEach((elem) => {
-    s += getAchRowText(elem)
-  })
-  document.getElementById('achievements').innerHTML += s
-}
-
 // Displays achievements if they are unlocked
 function updateAchievements() {
   window.vm.achData.forEach((achObj) => {
@@ -1355,19 +1329,6 @@ function testAchievements() {
   })
 
   updateAchievements()
-}
-
-// Dynamically add the raid buttons for the various civ sizes.
-function addRaidRows() {
-  let s = ''
-  window.vm.civSizes.forEach((elem) => {
-    s += `<button class='btn btn-secondary btn-sm raid' data-action='raid' data-target='${elem.id}' disabled='disabled'>` +
-      `Raid ${elem.name}</button><br>` // xxxL10N
-  })
-
-  const group = document.getElementById('raidGroup')
-  group.innerHTML += s
-  group.onmousedown = onBulkEvent
 }
 
 // Enable the raid buttons for eligible targets.
@@ -1427,24 +1388,6 @@ function updateMorale() {
   document.getElementById('morale').style.color = color
 }
 
-function addWonderSelectText() {
-  const wcElem = document.getElementById('wonderCompleted')
-  if (!wcElem) {
-    console.error('Error: No wonderCompleted element found.')
-    return
-  }
-  let s = wcElem.innerHTML
-  window.vm.wonderResources.forEach((elem, i, wr) => {
-    s += `<button class='btn btn-secondary btn-sm' onmousedown='wonderSelect("${elem.id}")'>${elem.getQtyName(0)}</button>`
-    // Add newlines to group by threes (but no newline for the last one)
-    if (!((i + 1) % 3) && (i !== wr.length - 1)) {
-      s += '<br>'
-    }
-  })
-
-  wcElem.innerHTML = s
-}
-
 // updates the display of wonders and wonder building
 function updateWonder() {
   const haveTech = (window.vm.civData.architecture.owned && window.vm.civData.civilservice.owned)
@@ -1492,19 +1435,6 @@ function updateReset() {
   setElemDisplay('resetDeity', (window.vm.civData.worship.owned))
   setElemDisplay('resetWonder', (window.vm.curCiv.curWonder.stage === 3))
   setElemDisplay('resetBoth', (window.vm.civData.worship.owned && window.vm.curCiv.curWonder.stage === 3))
-}
-
-function updateSettings() {
-  // Here, we ensure that UI is properly configured for our settings.
-  // Calling these with no parameter makes them update the UI for the current values.
-  setAutosave()
-  setCustomQuantities()
-  textSize(0)
-  setDelimiters()
-  setShadow()
-  setNotes()
-  setWorksafe()
-  setIcons()
 }
 
 function update() {
@@ -3506,11 +3436,6 @@ function tickGrace() {
 
 // Start of init program code
 function initCivclicker() {
-  document.title = `CivClicker (${window.vm.versionData})` // xxx Not in XML DOM.
-
-  addAchievementRows()
-  addRaidRows()
-  addWonderSelectText()
   makeDeitiesTables()
 
   if (!load('localStorage')) { // immediately attempts to load
@@ -3518,7 +3443,6 @@ function initCivclicker() {
     renameCiv()
     renameRuler()
   }
-  updateSettings()
 }
 
 /* UI functions */
@@ -3673,7 +3597,7 @@ function textSize(value) {
   document.getElementById('smallerText').disabled = (window.vm.settings.fontSize <= 0.5)
 
   // xxx Should this be applied to the document instead of the body?
-  window.vm.body.style.fontSize = `${window.vm.settings.fontSize}em`
+  document.getElementsByTagName('body')[0].style.fontSize = `${window.vm.settings.fontSize}em`
 }
 
 function setShadow(value) {
@@ -3683,7 +3607,7 @@ function setShadow(value) {
   document.getElementById('toggleShadow').checked = window.vm.settings.textShadow
   const shadowStyle = '3px 0 0 #fff, -3px 0 0 #fff, 0 3px 0 #fff, 0 -3px 0 #fff' +
     ', 2px 2px 0 #fff, -2px -2px 0 #fff, 2px -2px 0 #fff, -2px 2px 0 #fff'
-  window.vm.body.style.textShadow = window.vm.settings.textShadow ? shadowStyle : 'none'
+  document.getElementsByTagName('body')[0].style.textShadow = window.vm.settings.textShadow ? shadowStyle : 'none'
 }
 
 function onToggleShadow(control) { // eslint-disable-line no-unused-vars
@@ -3715,7 +3639,7 @@ function setDelimiters(value) {
     window.vm.settings.delimiters = value
   }
   document.getElementById('toggleDelimiters').checked = window.vm.settings.delimiters
-  updateResourceTotals()
+  // updateResourceTotals() // FIXME: re-enable later or just remove since they'll autoupdate
 }
 
 function onToggleDelimiters(control) { // eslint-disable-line no-unused-vars
@@ -3730,10 +3654,10 @@ function setWorksafe(value) {
 
   // xxx Should this be applied to the document instead of the body?
   if (window.vm.settings.worksafe) {
-    window.vm.body.classList.remove('hasBackground')
+    document.getElementsByTagName('body')[0].classList.remove('hasBackground')
   }
   else {
-    window.vm.body.classList.add('hasBackground')
+    document.getElementsByTagName('body')[0].classList.add('hasBackground')
   }
 
   setIcons() // Worksafe overrides icon settings.

@@ -33,7 +33,22 @@ export default {
   },
   mounted() {
     this.$nextTick(() => {
+      this.updateSettings()
     })
+  },
+  methods: {
+    updateSettings() {
+      // Here, we ensure that UI is properly configured for our settings.
+      // Calling these with no parameter makes them update the UI for the current values.
+      window.setAutosave()
+      window.setCustomQuantities()
+      window.textSize(0)
+      window.setDelimiters()
+      window.setShadow()
+      window.setNotes()
+      window.setWorksafe()
+      window.setIcons()
+    },
   },
 }
 </script>
