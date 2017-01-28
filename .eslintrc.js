@@ -9,16 +9,12 @@ module.exports = {
     "es6": true
   },
   // https://github.com/feross/standard/blob/master/RULES.md#javascript-standard-style
-  // extends: ['egoist-vue', 'airbnb-base'],
-  extends: ['vue', 'airbnb-base'],
-  // extends: ['egoist-vue', 'standard'],
+  extends: ['eslint:recommended', 'airbnb-base'],
   // extends: ['eslint:recommended', 'standard'],
   // extends: ['eslint:all', 'standard'],
   // required to lint *.vue files
   plugins: [
     'html',
-    'vue',
-    'import',
   ],
   // add your custom rules here
   'rules': {
@@ -52,7 +48,4 @@ module.exports = {
       }
     }
   },
-  // settings: {
-  //   'import/extensions': ['.js', '.vue']
-  // }
 }
