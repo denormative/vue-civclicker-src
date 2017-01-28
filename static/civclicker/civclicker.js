@@ -3589,17 +3589,6 @@ function onToggleNotes(control) { // eslint-disable-line no-unused-vars
   return setNotes(control.checked)
 }
 
-// value is the desired change in 0.1em units.
-function textSize(value) {
-  if (value !== undefined) {
-    window.vm.settings.fontSize += 0.1 * value
-  }
-  document.getElementById('smallerText').disabled = (window.vm.settings.fontSize <= 0.5)
-
-  // xxx Should this be applied to the document instead of the body?
-  document.getElementsByTagName('body')[0].style.fontSize = `${window.vm.settings.fontSize}em`
-}
-
 function setShadow(value) {
   if (value !== undefined) {
     window.vm.settings.textShadow = value

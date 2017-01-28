@@ -17,6 +17,8 @@ export default {
       window.addUITable(window.vm.normalUpgrades, 'upgrades') // Place the stubs for most upgrades under the upgrades tab.
     })
   },
+  methods: {
+  },
 }
 </script>
 

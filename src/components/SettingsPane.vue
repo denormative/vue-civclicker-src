@@ -42,12 +42,22 @@ export default {
       // Calling these with no parameter makes them update the UI for the current values.
       window.setAutosave()
       window.setCustomQuantities()
-      window.textSize(0)
+      this.textSize(0)
       window.setDelimiters()
       window.setShadow()
       window.setNotes()
       window.setWorksafe()
       window.setIcons()
+    },
+    // value is the desired change in 0.1em units.
+    textSize(value) {
+      if (value !== undefined) {
+        window.vm.settings.fontSize += 0.1 * value
+      }
+      document.getElementById('smallerText').disabled = (window.vm.settings.fontSize <= 0.5)
+
+      // xxx Should this be applied to the document instead of the body?
+      document.getElementsByTagName('body')[0].style.fontSize = `${window.vm.settings.fontSize}em`
     },
   },
 }
