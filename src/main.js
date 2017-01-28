@@ -9,7 +9,7 @@ Vue.use(Vuex)
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
-  template: '<App :curCiv="curCiv" :settings="settings" :basicResources="basicResources"/>',
+  template: '<App :curCiv="curCiv" :settings="settings" :basicResources="basicResources" :homeBuildings="homeBuildings" :homeUnits="homeUnits" :armyUnits="armyUnits" :normalUpgrades="normalUpgrades"/>', // eslint-disable-line max-len
   data() {
     return {
       version: 0, // This is an ordinal used to trigger reloads.

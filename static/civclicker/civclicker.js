@@ -3508,11 +3508,6 @@ function tickGrace() {
 function initCivclicker() {
   document.title = `CivClicker (${window.vm.versionData})` // xxx Not in XML DOM.
 
-  addUITable(window.vm.homeBuildings, 'buildings') // Dynamically create the building controls table.
-  addUITable(window.vm.homeUnits, 'jobs') // Dynamically create the job controls table.
-  addUITable(window.vm.armyUnits, 'party') // Dynamically create the party controls table.
-  addUpgradeRows() // This sets up the framework for the upgrade items.
-  addUITable(window.vm.normalUpgrades, 'upgrades') // Place the stubs for most upgrades under the upgrades tab.
   addAchievementRows()
   addRaidRows()
   addWonderSelectText()

@@ -18,6 +18,10 @@ export default {
   data() {
     return {}
   },
+  mounted() {
+    this.$nextTick(() => {
+    })
+  },
   computed: {
     hasDeity() {
       return this.curCiv.deities[0].name

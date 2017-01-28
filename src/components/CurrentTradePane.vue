@@ -14,6 +14,10 @@ export default {
     return {
     }
   },
+  mounted() {
+    this.$nextTick(() => {
+    })
+  },
 }
 </script>
 

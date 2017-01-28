@@ -13,9 +13,14 @@
 <script>
 export default {
   name: 'jobs-pane',
-  props: ['settings'],
+  props: ['settings', 'homeUnits'],
   data() {
     return {}
+  },
+  mounted() {
+    this.$nextTick(() => {
+      window.addUITable(window.vm.homeUnits, 'jobs') // Dynamically create the job controls table.
+    })
   },
   computed: {
     customJobQuantity() {

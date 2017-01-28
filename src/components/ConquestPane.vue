@@ -25,8 +25,14 @@
 <script>
 export default {
   name: 'conquest-pane',
+  props: ['armyUnits'],
   data() {
     return {}
+  },
+  mounted() {
+    this.$nextTick(() => {
+      window.addUITable(window.vm.armyUnits, 'party') // Dynamically create the party controls table.
+    })
   },
 }
 </script>

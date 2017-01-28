@@ -57,6 +57,10 @@ export default {
       })
     })
   },
+  mounted() {
+    this.$nextTick(() => {
+    })
+  },
   computed: {
     progressDisplay() {
       return this.curCiv.curWonder.progress.toFixed(2)

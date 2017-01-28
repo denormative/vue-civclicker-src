@@ -36,10 +36,10 @@
 
         <div class="container-fluid">
           <div class="tab-content">
-            <buildings-pane></buildings-pane>
-            <upgrade-pane></upgrade-pane>
+            <buildings-pane :homeBuildings="homeBuildings"></buildings-pane>
+            <upgrade-pane :normalUpgrades="normalUpgrades"></upgrade-pane>
             <deity-pane></deity-pane>
-            <conquest-pane></conquest-pane>
+            <conquest-pane :armyUnits="armyUnits"></conquest-pane>
             <trade-pane></trade-pane>
             <achievements-pane></achievements-pane>
             <settings-pane></settings-pane>
@@ -49,7 +49,7 @@
       </div>
       <div class="col">
         <population-pane></population-pane>
-        <jobs-pane :settings="settings"></jobs-pane>
+        <jobs-pane :settings="settings" :homeUnits="homeUnits"></jobs-pane>
         <current-trade-pane></current-trade-pane>
         <events-pane></events-pane>
         <current-deity-pane :curCiv="curCiv"></current-deity-pane>
@@ -81,7 +81,7 @@ import StatsPane from './components/StatsPane'
 
 export default {
   name: 'root',
-  props: ['curCiv', 'settings', 'basicResources'],
+  props: ['curCiv', 'settings', 'basicResources', 'homeBuildings', 'homeUnits', 'armyUnits', 'normalUpgrades'],
   components: {
     CivTitle,
     BasicResources,

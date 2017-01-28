@@ -45,6 +45,10 @@ export default {
   data() {
     return {}
   },
+  mounted() {
+    this.$nextTick(() => {
+    })
+  },
   filters: {
     prettyify(v) {
       return (this.settings.delimiters) ? Number(v).toLocaleString() : v.toString()

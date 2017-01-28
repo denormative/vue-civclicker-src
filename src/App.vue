@@ -10,7 +10,7 @@ import Root from './Root'
 
 export default {
   name: 'app',
-  props: ['curCiv', 'settings', 'basicResources'],
+  props: ['curCiv', 'settings', 'basicResources', 'homeBuildings', 'homeUnits', 'armyUnits', 'normalUpgrades'],
   components: {
     Hello,
     Root,
