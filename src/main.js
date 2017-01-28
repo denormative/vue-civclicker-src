@@ -9,7 +9,7 @@ Vue.use(Vuex)
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
-  template: '<App :curCiv="curCiv" :settings="settings"/>',
+  template: '<App :curCiv="curCiv" :settings="settings" :basicResources="basicResources"/>',
   data() {
     return {
       version: 0, // This is an ordinal used to trigger reloads.
@@ -51,7 +51,9 @@ new Vue({
     window.preLoad()
   },
   mounted() {
-    window.postLoad()
+    this.$nextTick(() => {
+      window.postLoad()
+    })
   },
   components: {
     App,

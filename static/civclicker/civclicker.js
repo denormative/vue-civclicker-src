@@ -3508,7 +3508,6 @@ function tickGrace() {
 function initCivclicker() {
   document.title = `CivClicker (${window.vm.versionData})` // xxx Not in XML DOM.
 
-  addUITable(window.vm.basicResources, 'basicResources') // Dynamically create the basic resource table.
   addUITable(window.vm.homeBuildings, 'buildings') // Dynamically create the building controls table.
   addUITable(window.vm.homeUnits, 'jobs') // Dynamically create the job controls table.
   addUITable(window.vm.armyUnits, 'party') // Dynamically create the party controls table.

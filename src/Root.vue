@@ -5,7 +5,7 @@
   <div class="container-fluid">
     <div class="row">
       <div class="col">
-        <basic-resources></basic-resources>
+        <basic-resources :basicResources="basicResources"></basic-resources>
         <special-resources></special-resources>
 
         <ul class="nav nav-tabs">
@@ -81,7 +81,7 @@ import StatsPane from './components/StatsPane'
 
 export default {
   name: 'root',
-  props: ['curCiv', 'settings'],
+  props: ['curCiv', 'settings', 'basicResources'],
   components: {
     CivTitle,
     BasicResources,

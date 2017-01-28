@@ -10,9 +10,15 @@
 <script>
 export default {
   name: 'basic-resources',
+  props: ['basicResources'],
   data () {
     return {
     }
+  },
+  mounted() {
+    this.$nextTick(() => {
+      window.addUITable(this.basicResources, 'basicResources') // Dynamically create the basic resource table.
+    })
   },
 }
 </script>
