@@ -4,6 +4,8 @@ import Vuex from 'vuex'
 Vue.use(Vuex)
 
 const storeState = {
+  settings: {
+  },
   notes: [],
   activeNote: {},
 }

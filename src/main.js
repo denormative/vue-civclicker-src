@@ -51,10 +51,81 @@ new Vue({
   },
   mounted() {
     this.$nextTick(() => {
-      window.postLoad()
+      this.postLoad()
     })
   },
   components: {
     App,
+  },
+  methods: {
+    postLoad() { // eslint-disable-line no-unused-vars
+      window.initCivclicker()
+
+      // This sets up the main game loop, which is scheduled to execute once per second.
+      window.setInterval(() => {
+        // debugging - mark beginning of loop execution
+        // var start = new Date().getTime();
+
+        window.tickAutosave()
+
+        // Production workers do their thing.
+        window.doFarmers()
+        window.doWoodcutters()
+        window.doMiners()
+        window.doBlacksmiths()
+        window.doTanners()
+        window.doClerics()
+
+        // Check for starvation
+        window.doStarve()
+        // xxx Need to kill workers who die from exposure.
+
+        // Resources occasionally go above their caps.
+        // Cull the excess /after/ other workers have taken their inputs.
+        window.vm.resourceData.forEach((elem) => {
+          if (elem.owned > elem.limit) {
+            elem.owned = elem.limit
+          }
+        })
+
+        // Timers - routines that do not occur every second
+        window.doMobs()
+        window.doPestControl()
+        window.tickGlory()
+        window.doShades()
+        window.doEsiege(window.vm.civData.esiege, window.vm.civData.fortification)
+        window.doRaid('party', 'player', 'enemy')
+
+        // Population-related
+        window.doGraveyards()
+        window.doHealers()
+        window.doCorpses()
+        window.doThrone()
+        window.tickGrace()
+        window.tickWalk()
+        window.doLabourers()
+        window.tickTraders()
+
+        window.updateResourceTotals() // This is the point where the page is updated with new resource totals
+        window.testAchievements()
+
+        // Data changes should be done; now update the UI.
+        window.updateUpgrades()
+        window.updateResourceRows() // Update resource display
+        window.updateBuildingButtons()
+        window.updateJobButtons()
+        window.updatePartyButtons()
+        window.updatePopulationUI()
+        window.updateTargets()
+        window.updateDevotion()
+        window.updateWonder()
+        window.updateReset()
+
+        // Debugging - mark end of main loop and calculate delta in milliseconds
+        // var end = new Date().getTime();
+        // var time = end - start;
+        // console.log("Main loop execution time: " + time + "ms");
+      }, 1000) // updates once per second (1000 milliseconds)
+    },
   },
 })
