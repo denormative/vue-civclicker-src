@@ -67,198 +67,6 @@ function resetRaiding() {
     })
 }
 
-function preLoad() { // eslint-disable-line no-unused-vars
-  window.vm.version = 19 // This is an ordinal used to trigger reloads.
-
-  window.vm.versionData = new VersionData(1, 1, 59, 'alpha')
-
-  window.vm.saveTag = 'civ'
-  window.vm.saveTag2 = `${window.vm.saveTag}2` // For old saves.
-  window.vm.saveSettingsTag = 'civSettings'
-  window.vm.logRepeat = 1
-
-  // Civ size category minimums
-  /* beautify preserve:start */
-  window.vm.civSizes = [
-    { min_pop: 0, name: 'Thorp', id: 'thorp' },
-    { min_pop: 20, name: 'Hamlet', id: 'hamlet' },
-    { min_pop: 60, name: 'Village', id: 'village' },
-    { min_pop: 200, name: 'Small Town', id: 'smallTown' },
-    // xxx This is a really big jump.  Reduce it.
-    { min_pop: 2000, name: 'Large Town', id: 'largeTown' },
-    { min_pop: 5000, name: 'Small City', id: 'smallCity' },
-    { min_pop: 10000, name: 'Large City', id: 'largeCity' },
-    { min_pop: 20000, name: 'Metro&shy;polis', id: 'metropolis' },
-    { min_pop: 50000, name: 'Small Nation', id: 'smallNation' },
-    { min_pop: 100000, name: 'Nation', id: 'nation' },
-    { min_pop: 200000, name: 'Large Nation', id: 'largeNation' },
-    { min_pop: 500000, name: 'Empire', id: 'empire' },
-  ]
-  /* beautify preserve:end */
-  indexArrayByAttr(window.vm.civSizes, 'id')
-
-  // Annotate with max window.vm.population and index.
-  window.vm.civSizes.forEach((elem, i, arr) => {
-    elem.max_pop = (i + 1 < arr.length) ? (arr[i + 1].min_pop - 1) : Infinity
-    elem.idx = i
-  })
-
-  window.vm.civSizes.getCivSize = function(popcnt) { // eslint-disable-line func-names
-    let i
-    for (i = 0; i < this.length; ++i) {
-      if (popcnt <= this[i].max_pop) {
-        return this[i]
-      }
-    }
-    return this[0]
-  }
-
-  // Declare variables here so they can be referenced later.
-  window.vm.curCiv = {
-    civName: 'Woodstock',
-    rulerName: 'Orteil',
-
-    zombie: {
-      owned: 0,
-    },
-    grave: {
-      owned: 0,
-    },
-    enemySlain: {
-      owned: 0,
-    },
-    morale: {
-      mod: 1.0,
-    },
-
-    resourceClicks: 0, // For NeverClick
-    attackCounter: 0, // How long since last attack?
-
-    trader: {
-      materialId: '',
-      requested: 0,
-      timer: 0,
-      counter: 0, // How long since last trader?
-    },
-
-    raid: {
-      raiding: false, // Are we in a raid right now?
-      victory: false, // Are we in a "raid succeeded" (Plunder-enabled) state right now?
-      epop: 0, // Population of enemy we're raiding.
-      plunderLoot: {}, // Loot we get if we win.
-      last: '',
-      targetMax: window.vm.civSizes[0].id, // Largest target allowed
-    },
-
-    curWonder: {
-      name: '',
-      stage: 0, // 0 = Not started, 1 = Building, 2 = Built, awaiting selection, 3 = Finished.
-      progress: 0, // Percentage completed.
-      rushed: false,
-    },
-    wonders: [], // Array of {name: name, resourceId: resourceId} for all wonders.
-
-    // Known deities.  The 0th element is the current game's deity.
-    // If the name is "", no deity has been created (can also check for worship upgrade)
-    // If the name is populated but the domain is not, the domain has not been selected.
-    deities: [{
-      name: '',
-      domain: '',
-      maxDev: 0,
-    }], // array of { name, domain, maxDev }
-
-    // xxx We're still accessing many of the properties put here by window.vm.civData
-    // elements without going through the window.vm.civData accessors.  That should
-    // change.
-  }
-
-  // These are not saved, but we need them up here for the asset data to init properly.
-  window.vm.population = {
-    current: 0,
-    limit: 0,
-    healthy: 0,
-    totalSick: 0,
-  }
-
-  // These are settings that should probably be tied to the browser.
-  window.vm.settings = {
-    autosave: true,
-    autosaveCounter: 1,
-    autosaveTime: 60, // Currently autosave is every minute. Might change to 5 mins in future.
-    customIncr: false,
-    fontSize: 1.0,
-    delimiters: true,
-    textShadow: false,
-    notes: true,
-    worksafe: false,
-    useIcons: true,
-  }
-
-  // Initialize Data
-  window.vm.civData = civDataTable()
-
-  window.vm.civData.forEach((elem) => {
-    if (!(elem instanceof CivObj)) {
-      return
-    } // Unknown type
-    if (elem.type === 'resource') {
-      window.vm.resourceData.push(elem)
-      if (elem.vulnerable === true) {
-        window.vm.lootable.push(elem)
-      }
-      if (elem.subType === 'basic') {
-        window.vm.basicResources.push(elem)
-      }
-    }
-    if (elem.type === 'building') {
-      window.vm.buildingData.push(elem)
-      if (elem.vulnerable === true) {
-        window.vm.sackable.push(elem)
-      }
-      if (elem.subType === 'normal' || elem.subType === 'land') {
-        window.vm.homeBuildings.push(elem)
-      }
-    }
-    if (elem.subType === 'prayer') {
-      window.vm.powerData.push(elem)
-    }
-    else if (elem.type === 'upgrade') {
-      window.vm.upgradeData.push(elem)
-      if (elem.subType === 'upgrade') {
-        window.vm.normalUpgrades.push(elem)
-      }
-    }
-    if (elem.type === 'unit') {
-      window.vm.unitData.push(elem)
-      if (elem.vulnerable === true) {
-        window.vm.killable.push(elem)
-      }
-      if (elem.place === 'home') {
-        window.vm.homeUnits.push(elem)
-      }
-      if (elem.place === 'party') {
-        window.vm.armyUnits.push(elem)
-      }
-    }
-    if (elem.type === 'achievement') {
-      window.vm.achData.push(elem)
-    }
-  })
-
-  // The resources that Wonders consume, and can give bonuses for.
-  window.vm.wonderResources = [
-    window.vm.civData.food,
-    window.vm.civData.wood,
-    window.vm.civData.stone,
-    window.vm.civData.skins,
-    window.vm.civData.herbs,
-    window.vm.civData.ore,
-    window.vm.civData.leather,
-    window.vm.civData.metal,
-    window.vm.civData.piety,
-  ]
-}
-
 function playerCombatMods() { // eslint-disable-line no-unused-vars
   return (0.01 * ((window.vm.civData.riddle.owned) + (window.vm.civData.weaponry.owned) + (window.vm.civData.shields.owned)))
 }
@@ -1241,7 +1049,7 @@ function updateAchievements() {
   })
 }
 
-function testAchievements() {
+function testAchievements() { // eslint-disable-line no-unused-vars
   window.vm.achData.forEach((achObj) => {
     if (window.vm.civData[achObj.id].owned) {
       return true
@@ -1683,7 +1491,7 @@ function starve(numArg) {
   return num
 }
 
-function doStarve() {
+function doStarve() { // eslint-disable-line no-unused-vars
   let corpsesEaten
   let numStarve
   if (window.vm.civData.food.owned < 0 && window.vm.civData.waste.owned) { // Workers eat corpses if needed
@@ -1877,7 +1685,7 @@ function walk(incrementArg) { // eslint-disable-line no-unused-vars
   setElemDisplay('walkGroup', (window.vm.civData.walk.rate > 0))
 }
 
-function tickWalk() {
+function tickWalk() { // eslint-disable-line no-unused-vars
   let i
   let target = ''
   if (window.vm.civData.walk.rate > window.vm.population.healthy) {
@@ -2757,7 +2565,7 @@ function reset() { // eslint-disable-line no-unused-vars
   return true
 }
 
-function tickAutosave() {
+function tickAutosave() { // eslint-disable-line no-unused-vars
   if (window.vm.settings.autosave && (++window.vm.settings.autosaveCounter >= window.vm.settings.autosaveTime)) { // eslint-disable-line no-plusplus
     window.vm.settings.autosaveCounter = 0
     // If autosave fails, disable it.
@@ -2768,7 +2576,7 @@ function tickAutosave() {
 }
 
 // xxx Need to improve 'net' handling.
-function doFarmers() {
+function doFarmers() { // eslint-disable-line no-unused-vars
   const specialChance = window.vm.civData.food.specialChance + (0.1 * window.vm.civData.flensing.owned)
   let millMod = 1
   if (window.vm.population.current > 0 || window.vm.curCiv.zombie.owned > 0) {
@@ -2787,7 +2595,7 @@ function doFarmers() {
   }
 }
 
-function doWoodcutters() {
+function doWoodcutters() { // eslint-disable-line no-unused-vars
   window.vm.civData.wood.net = window.vm.civData.woodcutter.owned *
     (window.vm.civData.woodcutter.efficiency * window.vm.curCiv.morale.efficiency) *
     getWonderBonus(window.vm.civData.wood) // Woodcutters cut wood
@@ -2799,7 +2607,7 @@ function doWoodcutters() {
   }
 }
 
-function doMiners() {
+function doMiners() { // eslint-disable-line no-unused-vars
   const specialChance = window.vm.civData.stone.specialChance + (window.vm.civData.macerating.owned ? 0.1 : 0)
   window.vm.civData.stone.net = window.vm.civData.miner.owned *
     (window.vm.civData.miner.efficiency * window.vm.curCiv.morale.efficiency) * getWonderBonus(window.vm.civData.stone) // Miners mine stone
@@ -2811,21 +2619,21 @@ function doMiners() {
   }
 }
 
-function doBlacksmiths() {
+function doBlacksmiths() { // eslint-disable-line no-unused-vars
   const numUsed = Math.min(window.vm.civData.ore.owned,
     (window.vm.civData.blacksmith.owned * window.vm.civData.blacksmith.efficiency * window.vm.curCiv.morale.efficiency))
   window.vm.civData.ore.owned -= numUsed
   window.vm.civData.metal.owned += numUsed * getWonderBonus(window.vm.civData.metal)
 }
 
-function doTanners() {
+function doTanners() { // eslint-disable-line no-unused-vars
   const numUsed = Math.min(window.vm.civData.skins.owned,
     (window.vm.civData.tanner.owned * window.vm.civData.tanner.efficiency * window.vm.curCiv.morale.efficiency))
   window.vm.civData.skins.owned -= numUsed
   window.vm.civData.leather.owned += numUsed * getWonderBonus(window.vm.civData.leather)
 }
 
-function doClerics() {
+function doClerics() { // eslint-disable-line no-unused-vars
   window.vm.civData.piety.owned += window.vm.civData.cleric.owned *
     (window.vm.civData.cleric.efficiency + (window.vm.civData.cleric.efficiency *
       (window.vm.civData.writing.owned))) * (1 + ((window.vm.civData.secrets.owned) *
@@ -2880,7 +2688,7 @@ function getNextPatient() {
   return ''
 }
 
-function doHealers() {
+function doHealers() { // eslint-disable-line no-unused-vars
   let job
   let numHealed = 0
   const numHealers = window.vm.civData.healer.owned + (window.vm.civData.cat.owned * (window.vm.civData.companion.owned))
@@ -2906,7 +2714,7 @@ function doHealers() {
   return numHealed
 }
 
-function doGraveyards() {
+function doGraveyards() { // eslint-disable-line no-unused-vars
   let i
   if (window.vm.civData.corpses.owned > 0 && window.vm.curCiv.grave.owned > 0) {
     // Clerics will bury corpses if there are graves to fill and corpses lying around
@@ -2920,7 +2728,7 @@ function doGraveyards() {
   }
 }
 
-function doCorpses() {
+function doCorpses() { // eslint-disable-line no-unused-vars
   if (window.vm.civData.corpses.owned <= 0) {
     return
   }
@@ -3088,7 +2896,7 @@ function doHavoc(attacker) { // eslint-disable-line no-unused-vars
   }
 }
 
-function doShades() {
+function doShades() { // eslint-disable-line no-unused-vars
   const defender = window.vm.civData.shade
   if (defender.owned <= 0) {
     return
@@ -3107,7 +2915,7 @@ function doShades() {
 }
 
 // Deals with potentially capturing enemy siege engines.
-function doEsiege(siegeObj, targetObj) {
+function doEsiege(siegeObj, targetObj) { // eslint-disable-line no-unused-vars
   if (siegeObj.owned <= 0) {
     return
   }
@@ -3157,7 +2965,7 @@ function doSiege(siegeObj, targetObj) {
 }
 
 // Handling raids
-function doRaid(place, attackerID, defenderID) {
+function doRaid(place, attackerID, defenderID) { // eslint-disable-line no-unused-vars
   if (!window.vm.curCiv.raid.raiding) {
     return
   } // We're not raiding right now.
@@ -3203,7 +3011,7 @@ function doRaid(place, attackerID, defenderID) {
   doSiege(window.vm.civData.siege, window.vm.civData.efort)
 }
 
-function doLabourers() {
+function doLabourers() { // eslint-disable-line no-unused-vars
   if (window.vm.curCiv.curWonder.stage !== 1) {
     return
   }
@@ -3255,7 +3063,7 @@ function doLabourers() {
   updateWonder()
 }
 
-function doMobs() {
+function doMobs() { // eslint-disable-line no-unused-vars
   // Checks when mobs will attack
   // xxx Perhaps this should go after the mobs attack, so we give 1 turn's warning?
   let mobType
@@ -3304,7 +3112,7 @@ function doMobs() {
   })
 }
 
-function tickTraders() {
+function tickTraders() { // eslint-disable-line no-unused-vars
   // traders occasionally show up
   if (window.vm.population.current + window.vm.curCiv.zombie.owned > 0) {
     window.vm.curCiv.trader.counter += 1
@@ -3327,14 +3135,14 @@ function tickTraders() {
   }
 }
 
-function doPestControl() {
+function doPestControl() { // eslint-disable-line no-unused-vars
   // Decrements the pestControl Timer
   if (window.vm.civData.pestControl.timer > 0) {
     window.vm.civData.pestControl.timer -= 1
   }
 }
 
-function tickGlory() {
+function tickGlory() { // eslint-disable-line no-unused-vars
   // Handles the Glory bonus
   if (window.vm.civData.glory.timer > 0) {
     document.getElementById('gloryTimer').innerHTML = window.vm.civData.glory.timer-- // eslint-disable-line no-plusplus
@@ -3344,7 +3152,7 @@ function tickGlory() {
   }
 }
 
-function doThrone() {
+function doThrone() { // eslint-disable-line no-unused-vars
   if (window.vm.civData.throne.count >= 100) {
     // If sufficient enemies have been slain, build new temples for free
     window.vm.civData.temple.owned += Math.floor(window.vm.civData.throne.count / 100)
@@ -3353,7 +3161,7 @@ function doThrone() {
   }
 }
 
-function tickGrace() {
+function tickGrace() { // eslint-disable-line no-unused-vars
   if (window.vm.civData.grace.cost > 1000) {
     window.vm.civData.grace.cost = Math.floor(--window.vm.civData.grace.cost) // eslint-disable-line no-plusplus
     document.getElementById('graceCost').innerHTML = prettify(window.vm.civData.grace.cost)
@@ -3361,7 +3169,7 @@ function tickGrace() {
 }
 
 // Start of init program code
-function initCivclicker() {
+function initCivclicker() { // eslint-disable-line no-unused-vars
   makeDeitiesTables()
 
   if (!load('localStorage')) { // immediately attempts to load
