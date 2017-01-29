@@ -697,7 +697,7 @@ function onBulkEvent(e) {
   }
 }
 
-function addUITable(civObjs, groupElemName) {
+function addUITable(civObjs, groupElemName) { // eslint-disable-line no-unused-vars
   let s = ''
   civObjs.forEach((elem) => {
     s += elem.type === 'resource' ? getResourceRowText(elem) : // eslint-disable-line no-nested-ternary
@@ -858,7 +858,7 @@ function setPantheonUpgradeRowText(upgradeObj) {
   return document.getElementById(`${upgradeObj.id}Row`) // Return replaced element
 }
 // Dynamically create the upgrade purchase buttons.
-function addUpgradeRows() {
+function addUpgradeRows() { // eslint-disable-line no-unused-vars
   document.getElementById('upgradesPane').innerHTML +=
     "<h3>Purchased Upgrades</h3><div id='purchasedUpgrades'></div>"
 
