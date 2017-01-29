@@ -1824,37 +1824,6 @@ function smite() { // eslint-disable-line no-unused-vars
 
 /* War Functions */
 
-function plunder() { // eslint-disable-line no-unused-vars
-  let plunderMsg = ''
-
-  // If we fought our largest eligible foe, but not the largest possible, raise the limit.
-  if ((window.vm.curCiv.raid.targetMax !== window.vm.civSizes[window.vm.civSizes.length - 1].id) &&
-      window.vm.curCiv.raid.last === window.vm.curCiv.raid.targetMax) {
-    window.vm.curCiv.raid.targetMax = window.vm.civSizes[window.vm.civSizes[window.vm.curCiv.raid.targetMax].idx + 1].id
-  }
-
-  // Improve morale based on size of defeated foe.
-  adjustMorale((window.vm.civSizes[window.vm.curCiv.raid.last].idx + 1) / 100)
-
-  // Lamentation
-  if (window.vm.civData.lament.owned) {
-    window.vm.curCiv.attackCounter -= Math.ceil(window.vm.curCiv.raid.epop / 2000)
-  }
-
-  // Collect loot
-  payFor(window.vm.curCiv.raid.plunderLoot, -1) // We pay for -1 of these to receive them.
-
-  // Create message to notify player
-  plunderMsg = `${window.vm.civSizes[window.vm.curCiv.raid.last].name} defeated! `
-  plunderMsg += `Plundered ${getReqText(window.vm.curCiv.raid.plunderLoot)}. `
-  gameLog(plunderMsg)
-
-  // Victory outcome has been handled, end raid
-  resetRaiding()
-  updateResourceTotals()
-  updateTargets()
-}
-
 function glory(timeArg) { // eslint-disable-line no-unused-vars
   const time = (timeArg === undefined) ? 180 : timeArg
   if (!payFor(window.vm.civData.glory.require)) {

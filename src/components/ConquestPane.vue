@@ -19,7 +19,7 @@
     </div>
     <div id="victoryGroup">
       <h4>Victory!</h4>
-      <button id="btn btn-primary btn-lg plunder" onmousedown="plunder()">Plunder Resources</button><br>
+      <button id="btn btn-primary btn-lg plunder" @click="plunder()">Plunder Resources</button><br>
     </div>
   </div>
 </div>
@@ -71,6 +71,38 @@ export default {
 
       window.updateTargets() // Hides raid buttons until the raid is finished
       window.updatePartyButtons()
+    },
+    plunder() { // eslint-disable-line no-unused-vars
+      let plunderMsg = ''
+
+      // If we fought our largest eligible foe, but not the largest possible, raise the limit.
+      if ((window.vm.curCiv.raid.targetMax !== window.vm.civSizes[window.vm.civSizes.length - 1].id) &&
+          window.vm.curCiv.raid.last === window.vm.curCiv.raid.targetMax) {
+        window.vm.curCiv.raid.targetMax = window.vm.civSizes[window.vm.civSizes[window.vm.curCiv.raid.targetMax].idx + 1].id
+      }
+
+      // Improve morale based on size of defeated foe.
+      window.adjustMorale((window.vm.civSizes[window.vm.curCiv.raid.last].idx + 1) / 100)
+
+      // Lamentation
+      if (window.vm.civData.lament.owned) {
+        window.vm.curCiv.attackCounter -= Math.ceil(window.vm.curCiv.raid.epop / 2000)
+      }
+
+      // Collect loot
+      window.payFor(window.vm.curCiv.raid.plunderLoot, -1) // We pay for -1 of these to receive them.
+
+      // Create message to notify player
+      plunderMsg = `
+        ${window.vm.civSizes[window.vm.curCiv.raid.last].name} defeated!
+        Plundered ${window.getReqText(window.vm.curCiv.raid.plunderLoot)}.
+      `
+      window.gameLog(plunderMsg)
+
+      // Victory outcome has been handled, end raid
+      window.resetRaiding()
+      window.updateResourceTotals()
+      window.updateTargets()
     },
   },
   actions: {},
