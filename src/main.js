@@ -9,7 +9,17 @@ import App from './App'
 new Vue({
   store,
   el: '#app',
-  template: '<App :curCiv="curCiv" :settings="settings" :basicResources="basicResources" :homeBuildings="homeBuildings" :homeUnits="homeUnits" :armyUnits="armyUnits" :normalUpgrades="normalUpgrades"/>', // eslint-disable-line max-len
+  template: `
+    <App
+      :curCiv="curCiv"
+      :settings="settings"
+      :basicResources="basicResources"
+      :homeBuildings="homeBuildings"
+      :homeUnits="homeUnits"
+      :armyUnits="armyUnits"
+      :normalUpgrades="normalUpgrades"
+      :civSizes="civSizes"
+    />`,
   data() {
     return {
       version: 0, // This is an ordinal used to trigger reloads.

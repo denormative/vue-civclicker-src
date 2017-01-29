@@ -429,7 +429,8 @@ function onBulkEvent(e) {
     case 'purchase':
       return onPurchase(e.target)
     case 'raid':
-      return onInvade(e.target)
+      console.error("onBulkEvent: can't happen")
+      return undefined
     default:
       return false
   }
@@ -1822,45 +1823,6 @@ function smite() { // eslint-disable-line no-unused-vars
 }
 
 /* War Functions */
-
-function invade(ecivtype) {
-  // invades a certain type of civilisation based on the button clicked
-  window.vm.curCiv.raid.raiding = true
-  window.vm.curCiv.raid.last = ecivtype
-
-  window.vm.curCiv.raid.epop = window.vm.civSizes[ecivtype].max_pop + 1
-  // If no max pop, use 2x min pop.
-  if (window.vm.curCiv.raid.epop === Infinity) {
-    window.vm.curCiv.raid.epop = window.vm.civSizes[ecivtype].min_pop * 2
-  }
-  if (window.vm.civData.glory.timer > 0) {
-    window.vm.curCiv.raid.epop *= 2
-  } // doubles soldiers fought
-
-  // 5-25% of enemy window.vm.population is soldiers.
-  window.vm.civData.esoldier.owned += (window.vm.curCiv.raid.epop / 20) +
-    Math.floor(Math.random() * (window.vm.curCiv.raid.epop / 5))
-  window.vm.civData.efort.owned += Math.floor(Math.random() * (window.vm.curCiv.raid.epop / 5000))
-
-  // Glory redoubles rewards (doubled here because doubled already above)
-  const baseLoot = window.vm.curCiv.raid.epop / (1 + (window.vm.civData.glory.timer <= 0))
-
-  // Set rewards of land and other random plunder.
-  // xxx Maybe these should be partially proportionate to the actual number of defenders?
-  window.vm.curCiv.raid.plunderLoot = {
-    freeLand: Math.round(baseLoot * (1 + (window.vm.civData.administration.owned))),
-  }
-  window.vm.lootable.forEach((elem) => {
-    window.vm.curCiv.raid.plunderLoot[elem.id] = Math.round(baseLoot * Math.random())
-  })
-
-  updateTargets() // Hides raid buttons until the raid is finished
-  updatePartyButtons()
-}
-
-function onInvade(control) {
-  return invade(dataset(control, 'target'))
-}
 
 function plunder() { // eslint-disable-line no-unused-vars
   let plunderMsg = ''
