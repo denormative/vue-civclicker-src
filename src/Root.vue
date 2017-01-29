@@ -48,7 +48,7 @@
         </div>
       </div>
       <div class="col">
-        <population-pane></population-pane>
+        <population-pane :curCiv="curCiv" :settings="settings"></population-pane>
         <jobs-pane :settings="settings" :homeUnits="homeUnits"></jobs-pane>
         <current-trade-pane></current-trade-pane>
         <events-pane></events-pane>

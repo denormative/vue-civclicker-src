@@ -1163,10 +1163,6 @@ function updatePopulationUI() {
 
   // Calculates and displays the cost of buying workers at the current window.vm.population.
   document.getElementById('raiseDeadCost').innerHTML = prettify(Math.round(calcZombieCost(1)))
-  document.getElementById('workerCost').innerHTML = prettify(Math.round(calcWorkerCost(1)))
-  document.getElementById('workerCost10').innerHTML = prettify(Math.round(calcWorkerCost(10)))
-  document.getElementById('workerCost100').innerHTML = prettify(Math.round(calcWorkerCost(100)))
-  document.getElementById('workerCost1000').innerHTML = prettify(Math.round(calcWorkerCost(1000)))
   document.getElementById('workerNumMax').innerHTML = prettify(Math.round(maxSpawn))
   document.getElementById('workerCostMax').innerHTML = prettify(Math.round(calcWorkerCost(maxSpawn)))
   updateJobButtons() // handles the display of units in the player's kingdom.

@@ -42,30 +42,70 @@
         </table>
       </div>
     </div>
-    <div id="populationCreate">
-      <div class="unit1"><button class="btn btn-secondary btn-sm" id="spawn1button" onmousedown="spawn(1)" disabled="disabled">Recruit Worker</button><span
-          class="cost"><span id="workerCost">20</span> food</span><span class="note">: Recruit a new worker</span><br></div>
-      <div class="unit10"><button class="btn btn-secondary btn-sm" id="spawn10button" onmousedown="spawn(10)">Recruit 10 Workers</button><span class="cost"><span id="workerCost10">200</span>        food</span><span class="note">: Recruit 10 new workers</span></div>
-      <div class="unit100"><button class="btn btn-secondary btn-sm" id="spawn100button" onmousedown="spawn(100)">Recruit 100 Workers</button><span class="cost"><span id="workerCost100">2000</span>        food</span><span class="note">: Recruit 100 new workers</span></div>
-      <div class="unit1000"><button class="btn btn-secondary btn-sm" id="spawn1000button" onmousedown="spawn(1000)">Recruit 1000 Workers</button><span class="cost"><span id="workerCost1000">20000</span>        food</span><span class="note">: Recruit 1000 new workers</span></div>
-      <div class="unitInfinity"><button class="btn btn-secondary btn-sm" id="spawnMaxbutton" onmousedown="spawn(Infinity)">Recruit <span id="workerNumMax">Max</span> Workers</button><span
-          class="cost"><span id="workerCostMax"></span> food</span><span class="note">: Recruit as many new workers as possible</span></div>
-      <div id="customSpawnQuantity"><button class="btn btn-secondary btn-sm" id="spawnCustomButton" onmousedown="spawn('custom')">Recruit Workers</button><input id="spawnCustomQty"
-          type="number" min="1" step="1" value="1" />
-      </div>
+    <button class="unit1 btn btn-secondary btn-sm" id="spawn1button" onmousedown="spawn(1)" disabled="disabled"
+        data-toggle="popover" :data-content="workerCostInfo(1)">
+      Recruit Worker
+    </button>
+    <button class="unit10 btn btn-secondary btn-sm" id="spawn10button" onmousedown="spawn(10)" disabled="disabled"
+        data-toggle="popover" :data-content="workerCostInfo(10)">
+      Recruit 10 Workers
+    </button>
+    <button class="unit100 btn btn-secondary btn-sm" id="spawn100button" onmousedown="spawn(100)" disabled="disabled"
+        data-toggle="popover" :data-content="workerCostInfo(100)">
+      Recruit 100 Workers
+    </button>
+    <button class="unit1000 btn btn-secondary btn-sm" id="spawn1000button" onmousedown="spawn(1000)" disabled="disabled"
+        data-toggle="popover" :data-content="workerCostInfo(1000)">
+      Recruit 1000 Workers
+    </button>
+    <button class="unit10000 btn btn-secondary btn-sm" id="spawn10000button" onmousedown="spawn(10000)" disabled="disabled"
+        data-toggle="popover" :data-content="workerCostInfo(10000)">
+      Recruit 10000 Workers
+    </button>
+    <button class="unitInfinity btn btn-secondary btn-sm" id="spawnMaxbutton" onmousedown="spawn(Infinity)">Recruit
+      <span id="workerNumMax">Max</span> Workers</button><span class="cost">
+        <span id="workerCostMax"></span> food</span><span class="note">: Recruit as many new workers as possible</span>
+    <div id="customSpawnQuantity"><button class="btn btn-secondary btn-sm" id="spawnCustomButton" onmousedown="spawn('custom')">Recruit Workers</button><input id="spawnCustomQty"
+        type="number" min="1" step="1" value="1" />
     </div>
   </div>
 </div>
 </template>
 
 <script>
+import { prettyint } from '../helpers'
+
 export default {
   name: 'population-pane',
+  props: ['curCiv', 'settings'],
   data() {
     return {}
   },
+  created() {
+    this.$nextTick(() => {
+      window.$('[data-toggle="popover"]').popover({
+        trigger: 'hover',
+        placement: 'top',
+        html: true,
+      })
+    })
+  },
   mounted() {
     this.$nextTick(() => {})
+  },
+  computed: {
+    workerCostInfo() {
+      // const vm = this
+      // console.log(this)
+      return function (numWorkers) { // eslint-disable-line
+        const msg = (numWorkers === 1) ? 'Recruit a new worker' : `Recruit ${numWorkers} new workers`
+
+        return `<b>${prettyint(window.calcWorkerCost(numWorkers))} food</b><br>${msg}`
+      }
+    },
+  },
+  filters: {
+    prettyint,
   },
 }
 </script>

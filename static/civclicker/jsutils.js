@@ -181,6 +181,9 @@ function setElemDisplay(htmlElem, visible) { // eslint-disable-line no-unused-va
       case 'SPAN':
         displayVal = 'inline'
         break
+      case 'BUTTON':
+        displayVal = 'inline'
+        break
       case 'DIV':
         displayVal = 'block'
         break

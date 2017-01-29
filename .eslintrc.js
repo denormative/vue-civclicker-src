@@ -38,7 +38,7 @@ module.exports = {
     'max-len': ["warn", 132, 2, { "ignoreComments": true }],
     'func-names': ["error", "as-needed"],
     'no-param-reassign': ["error", { "props": false }],
-    'no-console': ["error", { allow: ["warn", "error"] }],
+    'no-console': ["off", { allow: ["info", "warn", "error"] }],
     'no-continue': "off",
   },
   "settings": {

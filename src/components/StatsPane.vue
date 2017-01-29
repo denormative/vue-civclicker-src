@@ -27,6 +27,8 @@
 </template>
 
 <script>
+import { prettyint } from '../helpers'
+
 export default {
   name: 'stats-pane',
   props: ['curCiv', 'settings'],
@@ -36,6 +38,9 @@ export default {
   mounted() {
     this.$nextTick(() => {
     })
+  },
+  filters: {
+    prettyint,
   },
 }
 </script>
