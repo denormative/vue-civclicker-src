@@ -6,6 +6,18 @@ import App from './App'
 
 Vue.use(Vuex)
 
+Vue.mixin({
+  filters: {
+    prettyify(v) {
+      return (this.settings.delimiters) ? Number(v).toLocaleString() : v.toString()
+    },
+    prettyint(v, settings) {
+      const vv = Math.round(v)
+      return (settings.delimiters) ? Number(vv).toLocaleString() : vv.toString()
+    },
+  },
+})
+
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
