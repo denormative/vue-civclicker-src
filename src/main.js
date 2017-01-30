@@ -368,12 +368,12 @@ new Vue({
       // Do the actual combat.
       attackers.forEach((attacker) => {
         defenders.forEach((defender) => {
-          window.doFight(attacker, defender)
+          this.doFight(attacker, defender)
         }) // FIGHT!
       })
 
       // Handle siege engines
-      window.doSiege(window.vm.civData.siege, window.vm.civData.efort)
+      this.doSiege(window.vm.civData.siege, window.vm.civData.efort)
     },
     tickAutosave() { // eslint-disable-line no-unused-vars
       if (window.vm.settings.autosave && (++window.vm.settings.autosaveCounter >= window.vm.settings.autosaveTime)) { // eslint-disable-line no-plusplus

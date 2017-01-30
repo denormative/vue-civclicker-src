@@ -116,7 +116,7 @@
     </table>
   </div>
   <div id="iconoclasmGroup">
-    <button class="btn btn-danger btn-sm" id="iconoclasm" onmousedown="iconoclasmList()">Iconoclasm</button>
+    <button class="btn btn-danger btn-sm" id="iconoclasm" @click="iconoclasmList()">Iconoclasm</button>
     <span id="iconoclasmCost" class="cost">1,000 piety</span>
     <span id="iconoclasmNote" class="note">: Remove an old deity to gain gold</span><br>
     <div id="iconoclasmList"></div>
@@ -137,6 +137,25 @@ export default {
   mounted() {
     this.$nextTick(() => {
     })
+  },
+  methods: {
+    iconoclasmList() { // eslint-disable-line no-unused-vars
+      let i
+      // Lists the deities for removing
+      if (window.vm.civData.piety.owned >= 1000) {
+        window.vm.civData.piety.owned -= 1000
+        window.updateResourceTotals()
+        document.getElementById('iconoclasm').disabled = true
+        let append = '<br>'
+        for (i = 1; i < window.vm.curCiv.deities.length; ++i) {
+          append += `<button class="btn btn-danger btn-sm" onclick="iconoclasm(${i})">`
+          append += window.vm.curCiv.deities[i].name
+          append += '</button><br>'
+        }
+        append += '<br><button class="btn btn-primary btn-sm" onclick=\'iconoclasm("cancel")\'>Cancel</button>'
+        document.getElementById('iconoclasmList').innerHTML = append
+      }
+    },
   },
 }
 </script>

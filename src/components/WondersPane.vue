@@ -2,7 +2,7 @@
 <div class="wonders-pane card" id="wondersContainer">
   <h4 class="card-header">Wonders
     <div class="btn-group float-right" role="group" v-show="wonderInProgress"> <!-- FIXME: should be v-if -->
-      <button id="renameWonder" class="btn btn-outline-info btn-sm" onmousedown="renameWonder()">Rename</button>
+      <button id="renameWonder" class="btn btn-outline-info btn-sm" @onclick="renameWonder()">Rename</button>
       <button id="speedWonder" class="btn btn-outline-primary btn-sm" onmousedown="speedWonder()"
           data-content="<b>100 gold</b><br> Increase wonder progress by 1%">Speed</button>
     </div>
@@ -10,7 +10,7 @@
   <div class="card-block">
     <div class="row">
       <div id="startWonderLine" class="col" align="center">
-        <button id="startWonder" class="btn btn-success btn-lg" onmousedown="startWonder()">
+        <button id="startWonder" class="btn btn-success btn-lg" @click="startWonder()">
           Start Building Wonder
         </button>
       </div>
@@ -84,6 +84,39 @@ export default {
       })
 
       wcElem.innerHTML = s
+    },
+    startWonder() { // eslint-disable-line no-unused-vars
+      if (window.vm.curCiv.curWonder.stage !== 0) {
+        return
+      }
+      window.vm.curCiv.curWonder.stage += 1
+      this.renameWonder()
+      window.updateWonder()
+    },
+    renameWonder() {
+      // Can't rename before you start, or after you finish.
+      if (window.vm.curCiv.curWonder.stage === 0 || window.vm.curCiv.curWonder.stage > 2) {
+        return
+      }
+      const n = prompt('Please name your Wonder:', window.vm.curCiv.curWonder.name) // eslint-disable-line no-alert
+      if (!n) {
+        return
+      }
+      window.vm.curCiv.curWonder.name = n
+      const wc = document.getElementById('wonderNameC')
+      if (wc) {
+        wc.innerHTML = window.vm.curCiv.curWonder.name
+      }
+    },
+    speedWonder() { // eslint-disable-line no-unused-vars
+      if (window.vm.civData.gold.owned < 100) {
+        return
+      }
+      window.vm.civData.gold.owned -= 100
+
+      window.vm.curCiv.curWonder.progress += 1 / window.getWonderCostMultiplier()
+      window.vm.curCiv.curWonder.rushed = true
+      window.updateWonder()
     },
   },
 }

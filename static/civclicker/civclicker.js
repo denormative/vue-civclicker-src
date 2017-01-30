@@ -1599,24 +1599,6 @@ function pestControl(lengthArg) { // eslint-disable-line no-unused-vars
 
 /* Iconoclasm */
 
-function iconoclasmList() { // eslint-disable-line no-unused-vars
-  let i
-  // Lists the deities for removing
-  if (window.vm.civData.piety.owned >= 1000) {
-    window.vm.civData.piety.owned -= 1000
-    updateResourceTotals()
-    document.getElementById('iconoclasm').disabled = true
-    let append = '<br>'
-    for (i = 1; i < window.vm.curCiv.deities.length; ++i) {
-      append += `<button class="btn btn-danger btn-sm" onclick="iconoclasm(${i})">`
-      append += window.vm.curCiv.deities[i].name
-      append += '</button><br>'
-    }
-    append += '<br><button class="btn btn-primary btn-sm" onclick=\'iconoclasm("cancel")\'>Cancel</button>'
-    document.getElementById('iconoclasmList').innerHTML = append
-  }
-}
-
 function iconoclasm(index) { // eslint-disable-line no-unused-vars
   // will splice a deity from the deities array unless the user has cancelled
   document.getElementById('iconoclasmList').innerHTML = ''
@@ -1712,31 +1694,6 @@ function adjustMorale(delta) {
 
 /* Wonders functions */
 
-function startWonder() { // eslint-disable-line no-unused-vars
-  if (window.vm.curCiv.curWonder.stage !== 0) {
-    return
-  }
-  window.vm.curCiv.curWonder.stage += 1
-  renameWonder()
-  updateWonder()
-}
-
-function renameWonder() {
-  // Can't rename before you start, or after you finish.
-  if (window.vm.curCiv.curWonder.stage === 0 || window.vm.curCiv.curWonder.stage > 2) {
-    return
-  }
-  const n = prompt('Please name your Wonder:', window.vm.curCiv.curWonder.name) // eslint-disable-line no-alert
-  if (!n) {
-    return
-  }
-  window.vm.curCiv.curWonder.name = n
-  const wc = document.getElementById('wonderNameC')
-  if (wc) {
-    wc.innerHTML = window.vm.curCiv.curWonder.name
-  }
-}
-
 function wonderSelect(resourceId) { // eslint-disable-line no-unused-vars
   if (window.vm.curCiv.curWonder.stage !== 2) {
     return
@@ -1771,27 +1728,8 @@ function trade() { // eslint-disable-line no-unused-vars
   gameLog(`Traded ${window.vm.curCiv.trader.requested} ${material.getQtyName(window.vm.curCiv.trader.requested)}`)
 }
 
-function buy(materialId) { // eslint-disable-line no-unused-vars
-  const material = window.vm.civData[materialId]
-  if (window.vm.civData.gold.owned < 1) {
-    return
-  }
-  window.vm.civData.gold.owned -= 1
-
-  if (material === window.vm.civData.food || material === window.vm.civData.wood || material === window.vm.civData.stone) {
-    material.owned += 5000
-  }
-  if (material === window.vm.civData.skins || material === window.vm.civData.herbs || material === window.vm.civData.ore) {
-    material.owned += 500
-  }
-  if (material === window.vm.civData.leather || material === window.vm.civData.metal) {
-    material.owned += 250
-  }
-
-  updateResourceTotals()
-}
-
-function getWonderCostMultiplier() { // Based on the most wonders in any single resource.
+// Based on the most wonders in any single resource.
+function getWonderCostMultiplier() { // eslint-disable-line no-unused-vars
   let i
   let mostWonders = 0
   for (i in window.vm.wonderCount) {
@@ -1800,17 +1738,6 @@ function getWonderCostMultiplier() { // Based on the most wonders in any single 
     }
   }
   return (1.5 ** mostWonders)
-}
-
-function speedWonder() { // eslint-disable-line no-unused-vars
-  if (window.vm.civData.gold.owned < 100) {
-    return
-  }
-  window.vm.civData.gold.owned -= 100
-
-  window.vm.curCiv.curWonder.progress += 1 / getWonderCostMultiplier()
-  window.vm.curCiv.curWonder.rushed = true
-  updateWonder()
 }
 
 // Game infrastructure functions
