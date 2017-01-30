@@ -6,6 +6,7 @@ var baseWebpackConfig = require('./webpack.base.conf')
 var HtmlWebpackPlugin = require('html-webpack-plugin')
 var FriendlyErrors = require('friendly-errors-webpack-plugin')
 var StyleLintPlugin = require('stylelint-webpack-plugin');
+var SvgStore = require('webpack-svgstore-plugin');
 
 // add hot-reload related code to entry chunks
 Object.keys(baseWebpackConfig.entry).forEach(function (name) {
@@ -39,6 +40,16 @@ module.exports = merge(baseWebpackConfig, {
       jQuery: "jquery",
       'window.Tether': "tether",
       "Tether": "tether"
+    }),
+    // create svgStore instance object 
+    new SvgStore({
+      // svgo options 
+      svgoOptions: {
+        plugins: [
+          { removeTitle: true }
+        ]
+      },
+      prefix: 'icon'
     })
   ]
 })
