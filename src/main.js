@@ -261,7 +261,13 @@ new Vue({
       ]
     },
     postLoad() { // eslint-disable-line no-unused-vars
-      window.initCivclicker()
+      window.makeDeitiesTables()
+
+      if (!window.load('localStorage')) { // immediately attempts to load
+        // Prompt player for names
+        window.renameCiv()
+        window.renameRuler()
+      }
 
       // This sets up the main game loop, which is scheduled to execute once per second.
       window.setInterval(() => {

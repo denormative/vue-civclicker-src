@@ -1999,26 +1999,6 @@ function save(savetype) { // eslint-disable-line no-unused-vars
   return true
 }
 
-function deleteSave() { // eslint-disable-line no-unused-vars
-  // Deletes the current savegame by setting the game's cookies to expire in the past.
-  if (!confirm('Really delete save?')) { // eslint-disable-line no-alert
-    return
-  } // Check the player really wanted to do that.
-
-  try {
-    deleteCookie(window.vm.saveTag)
-    deleteCookie(window.vm.saveTag2)
-    localStorage.removeItem(window.vm.saveTag)
-    localStorage.removeItem(window.vm.saveTag2)
-    localStorage.removeItem(window.vm.saveSettingsTag)
-    gameLog('Save Deleted')
-  }
-  catch (err) {
-    handleStorageError(err)
-    alert('Save Deletion Failed!') // eslint-disable-line no-alert
-  }
-}
-
 function renameCiv(newName) {
   // Prompts player, uses result as new civName
   while (!newName) {
@@ -2307,53 +2287,7 @@ function doHavoc(attacker) { // eslint-disable-line no-unused-vars
   }
 }
 
-// Start of init program code
-function initCivclicker() { // eslint-disable-line no-unused-vars
-  makeDeitiesTables()
-
-  if (!load('localStorage')) { // immediately attempts to load
-    // Prompt player for names
-    renameCiv()
-    renameRuler()
-  }
-}
-
 /* UI functions */
-
-// Called when user switches between the various panes on the left hand side of the interface
-// Returns the target pane element.
-function paneSelect(control) { // eslint-disable-line no-unused-vars
-  let i
-  let oldTarget
-
-  // Identify the target pane to be activated, and the currently active
-  // selector tab(s).
-  const newTarget = dataset(control, 'target')
-  const selectors = document.getElementById('selectors')
-  if (!selectors) {
-    console.error('No selectors found')
-    return null
-  }
-  const curSelects = selectors.getElementsByClassName('selected')
-
-  // Deselect the old panels.
-  for (i = 0; i < curSelects.length; ++i) {
-    oldTarget = dataset(curSelects[i], 'target')
-    if (oldTarget === newTarget) {
-      continue
-    }
-    document.getElementById(oldTarget).classList.remove('selected')
-    curSelects[i].classList.remove('selected')
-  }
-
-  // Select the new panel.
-  control.classList.add('selected')
-  const targetElem = document.getElementById(newTarget)
-  if (targetElem) {
-    targetElem.classList.add('selected')
-  }
-  return targetElem
-}
 
 function impExp() { // eslint-disable-line no-unused-vars
   setElemDisplay('impexp') // Toggles visibility state
@@ -2367,17 +2301,6 @@ function versionAlert() {
 function prettify(input) {
   // xxx TODO: Add appropriate format options
   return (window.vm.settings.delimiters) ? Number(input).toLocaleString() : input.toString()
-}
-
-function setAutosave(value) {
-  if (value !== undefined) {
-    window.vm.settings.autosave = value
-  }
-  document.getElementById('toggleAutosave').checked = window.vm.settings.autosave
-}
-
-function onToggleAutosave(control) { // eslint-disable-line no-unused-vars
-  return setAutosave(control.checked)
 }
 
 function setCustomQuantities(value) {

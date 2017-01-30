@@ -3,10 +3,10 @@
   <div id="settings">
     <h3>Settings</h3>
     <button class="btn btn-primary btn-sm" onmousedown="save('manual')" title="Save your current stats">Manual Save</button><br>
-    <label><input id="toggleAutosave" type="checkbox" onclick="onToggleAutosave(this)" title="Autosave"/>Autosave</label><br>
+    <label><input id="toggleAutosave" type="checkbox" @click="onToggleAutosave(this)" title="Autosave"/>Autosave</label><br>
     <button class="btn btn-warning btn-sm" onmousedown="reset()" title="Reset your game">Reset Game</button><span class="note"><span id="resetNote"><br>Resetting allows you to </span><span id="resetDeity">gain another deity</span><span id="resetBoth"><br> and </span><span id="resetWonder">build another Wonder</span></span><br>
     <br>
-    <button class="btn btn-danger btn-sm" onmousedown="deleteSave()" title="Delete your saved stats">Delete Save File</button><br>
+    <button class="btn btn-danger btn-sm" @click="deleteSave()" title="Delete your saved stats">Delete Save File</button><br>
     <br>
     <button class="btn btn-secondary btn-sm" onmousedown="renameCiv()" title="Rename your civilisation">Rename Civilisation</button><br>
     <button class="btn btn-secondary btn-sm" id="renameRuler" onmousedown="renameRuler()" title="Rename yourself">Rename Yourself</button><br>
@@ -40,7 +40,7 @@ export default {
     updateSettings() {
       // Here, we ensure that UI is properly configured for our settings.
       // Calling these with no parameter makes them update the UI for the current values.
-      window.setAutosave()
+      this.setAutosave()
       window.setCustomQuantities()
       this.textSize(0)
       window.setDelimiters()
@@ -59,6 +59,35 @@ export default {
       // xxx Should this be applied to the document instead of the body?
       document.getElementsByTagName('body')[0].style.fontSize = `${window.vm.settings.fontSize}em`
     },
+    deleteSave() { // eslint-disable-line no-unused-vars
+      // Deletes the current savegame by setting the game's cookies to expire in the past.
+      if (!confirm('Really delete save?')) { // eslint-disable-line no-alert
+        return
+      } // Check the player really wanted to do that.
+
+      try {
+        window.deleteCookie(window.vm.saveTag)
+        window.deleteCookie(window.vm.saveTag2)
+        localStorage.removeItem(window.vm.saveTag)
+        localStorage.removeItem(window.vm.saveTag2)
+        localStorage.removeItem(window.vm.saveSettingsTag)
+        window.gameLog('Save Deleted')
+      }
+      catch (err) {
+        window.handleStorageError(err)
+        alert('Save Deletion Failed!') // eslint-disable-line no-alert
+      }
+    },
+    setAutosave(value) {
+      if (value !== undefined) {
+        window.vm.settings.autosave = value
+      }
+      document.getElementById('toggleAutosave').checked = window.vm.settings.autosave
+    },
+    onToggleAutosave(control) { // eslint-disable-line no-unused-vars
+      return this.setAutosave(control.checked)
+    },
+
   },
 }
 </script>
