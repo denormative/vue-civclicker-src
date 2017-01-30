@@ -45,7 +45,7 @@ function updateWonderCount() {
 }
 
 // Return the production multiplier from wonders for a resource.
-function getWonderBonus(resourceObj) {
+function getWonderBonus(resourceObj) { // eslint-disable-line no-unused-vars
   if (!resourceObj) {
     return 1
   }
@@ -1050,22 +1050,6 @@ function updateAchievements() {
   })
 }
 
-function testAchievements() { // eslint-disable-line no-unused-vars
-  window.vm.achData.forEach((achObj) => {
-    if (window.vm.civData[achObj.id].owned) {
-      return true
-    }
-    if (isValid(achObj.test) && !achObj.test()) {
-      return false
-    }
-    window.vm.civData[achObj.id].owned = true
-    gameLog(`Achievement Unlocked: ${achObj.getQtyName()}`)
-    return true
-  })
-
-  updateAchievements()
-}
-
 // Enable the raid buttons for eligible targets.
 function updateTargets() {
   let i
@@ -1602,32 +1586,6 @@ function walk(incrementArg) { // eslint-disable-line no-unused-vars
   setElemDisplay('walkGroup', (window.vm.civData.walk.rate > 0))
 }
 
-function tickWalk() { // eslint-disable-line no-unused-vars
-  let i
-  let target = ''
-  if (window.vm.civData.walk.rate > window.vm.population.healthy) {
-    window.vm.civData.walk.rate = window.vm.population.healthy
-    document.getElementById('ceaseWalk').disabled = true
-  }
-  if (window.vm.civData.walk.rate <= 0) {
-    return
-  }
-
-  for (i = 0; i < window.vm.civData.walk.rate; ++i) {
-    target = randomHealthyWorker() // xxx Need to modify this to do them all at once.
-    if (!target) {
-      break
-    }
-    window.vm.civData[target].owned -= 1
-      // We don't want to do UpdatePopulation() in a loop, so we just do the
-      // relevent adjustments directly.
-    window.vm.population.current -= 1
-    window.vm.population.healthy -= 1
-  }
-  updatePopulation()
-  updatePopulationUI()
-}
-
 // Give a temporary bonus based on the number of cats owned.
 function pestControl(lengthArg) { // eslint-disable-line no-unused-vars
   const length = (lengthArg === undefined) ? 10 : lengthArg
@@ -1796,58 +1754,6 @@ function wonderSelect(resourceId) { // eslint-disable-line no-unused-vars
 }
 
 /* Trade functions */
-
-function tradeTimer() {
-  // Set timer length (10 sec + 5 sec/upgrade)
-  window.vm.curCiv.trader.timer = 10 + (5 * (window.vm.civData.currency.owned +
-    window.vm.civData.commerce.owned + window.vm.civData.stay.owned))
-
-  // then set material and requested amount
-  const tradeItems = // Item and base amount
-    [{
-      materialId: 'food',
-      requested: 5000,
-    },
-    {
-      materialId: 'wood',
-      requested: 5000,
-    },
-    {
-      materialId: 'stone',
-      requested: 5000,
-    },
-    {
-      materialId: 'skins',
-      requested: 500,
-    },
-    {
-      materialId: 'herbs',
-      requested: 500,
-    },
-    {
-      materialId: 'ore',
-      requested: 500,
-    },
-    {
-      materialId: 'leather',
-      requested: 250,
-    },
-    {
-      materialId: 'metal',
-      requested: 250,
-    },
-    ]
-
-  // Randomly select and merge one of the above.
-  const selected = tradeItems[Math.floor(Math.random() * tradeItems.length)]
-  window.vm.curCiv.trader.materialId = selected.materialId
-  window.vm.curCiv.trader.requested = selected.requested * (Math.ceil(Math.random() * 20)) // Up to 20x amount
-
-  document.getElementById('tradeContainer').style.display = 'block'
-  document.getElementById('tradeType').innerHTML =
-    window.vm.civData[window.vm.curCiv.trader.materialId].getQtyName(window.vm.curCiv.trader.requested)
-  document.getElementById('tradeRequested').innerHTML = prettify(window.vm.curCiv.trader.requested)
-}
 
 function trade() { // eslint-disable-line no-unused-vars
   // check we have enough of the right type of resources to trade
@@ -2086,7 +1992,7 @@ function load(loadType) {
 
 // Create objects and populate them with the variables, these will be stored in HTML5 localStorage.
 // Cookie-based saves are no longer supported.
-function save(savetype) {
+function save(savetype) { // eslint-disable-line no-unused-vars
   let xmlhttp
 
   const saveVar = {
@@ -2471,97 +2377,6 @@ function doHavoc(attacker) { // eslint-disable-line no-unused-vars
   }
   else {
     doSack(attacker)
-  }
-}
-
-function doLabourers() { // eslint-disable-line no-unused-vars
-  if (window.vm.curCiv.curWonder.stage !== 1) {
-    return
-  }
-
-  if (window.vm.curCiv.curWonder.progress >= 100) {
-    // Wonder is finished! First, send workers home
-    window.vm.civData.unemployed.owned += window.vm.civData.labourer.owned
-    window.vm.civData.unemployed.ill += window.vm.civData.labourer.ill
-    window.vm.civData.labourer.owned = 0
-    window.vm.civData.labourer.ill = 0
-    updatePopulation()
-    // hide limited notice
-    document.getElementById('lowResources').style.display = 'none'
-      // then set wonder.stage so things will be updated appropriately
-    window.vm.curCiv.curWonder.stage += 1
-  }
-  else {
-    // we're still building
-
-    // First, check our labourers and other resources to see if we're limited.
-    let num = window.vm.civData.labourer.owned
-    window.vm.wonderResources.forEach((elem) => {
-      num = Math.min(num, elem.owned)
-    })
-
-    // remove resources
-    window.vm.wonderResources.forEach((elem) => {
-      elem.owned -= num
-    })
-
-    // increase progress
-    window.vm.curCiv.curWonder.progress += num / (1000000 * getWonderCostMultiplier())
-
-    // show/hide limited notice
-    setElemDisplay('lowResources', (num < window.vm.civData.labourer.owned))
-
-    let lowItem = null
-    let i = 0
-    for (i = 0; i < window.vm.wonderResources.length; ++i) {
-      if (window.vm.wonderResources[i].owned < 1) {
-        lowItem = window.vm.wonderResources[i]
-        break
-      }
-    }
-    if (lowItem) {
-      document.getElementById('limited').innerHTML = ` by low ${lowItem.getQtyName()}`
-    }
-  }
-  updateWonder()
-}
-
-function tickTraders() { // eslint-disable-line no-unused-vars
-  // traders occasionally show up
-  if (window.vm.population.current + window.vm.curCiv.zombie.owned > 0) {
-    window.vm.curCiv.trader.counter += 1
-  }
-  const delayMult = 60 * (3 - ((window.vm.civData.currency.owned) + (window.vm.civData.commerce.owned)))
-  let check
-  if (window.vm.population.current + window.vm.curCiv.zombie.owned > 0 && window.vm.curCiv.trader.counter > delayMult) {
-    check = Math.random() * delayMult
-    if (check < (1 + (0.2 * (window.vm.civData.comfort.owned)))) {
-      window.vm.curCiv.trader.counter = 0
-      tradeTimer()
-    }
-  }
-
-  // Trader stuff
-  if (window.vm.curCiv.trader.timer > 0) {
-    if (--window.vm.curCiv.trader.timer <= 0) { // eslint-disable-line no-plusplus
-      setElemDisplay('tradeContainer', false)
-    }
-  }
-}
-
-function doThrone() { // eslint-disable-line no-unused-vars
-  if (window.vm.civData.throne.count >= 100) {
-    // If sufficient enemies have been slain, build new temples for free
-    window.vm.civData.temple.owned += Math.floor(window.vm.civData.throne.count / 100)
-    window.vm.civData.throne.count = 0 // xxx This loses the leftovers.
-    updateResourceTotals()
-  }
-}
-
-function tickGrace() { // eslint-disable-line no-unused-vars
-  if (window.vm.civData.grace.cost > 1000) {
-    window.vm.civData.grace.cost = Math.floor(--window.vm.civData.grace.cost) // eslint-disable-line no-plusplus
-    document.getElementById('graceCost').innerHTML = prettify(window.vm.civData.grace.cost)
   }
 }
 

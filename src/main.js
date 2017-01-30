@@ -302,14 +302,14 @@ new Vue({
         this.doGraveyards()
         this.doHealers()
         this.doCorpses()
-        window.doThrone()
-        window.tickGrace()
-        window.tickWalk()
-        window.doLabourers()
-        window.tickTraders()
+        this.doThrone()
+        this.tickGrace()
+        this.tickWalk()
+        this.doLabourers()
+        this.tickTraders()
 
         window.updateResourceTotals() // This is the point where the page is updated with new resource totals
-        window.testAchievements()
+        this.testAchievements()
 
         // Data changes should be done; now update the UI.
         window.updateUpgrades()
@@ -841,6 +841,184 @@ new Vue({
         window.updatePopulation()
         window.gameLog(`${window.prettify(num)} workers got sick`) // notify player
       }
+    },
+    doThrone() { // eslint-disable-line no-unused-vars
+      if (window.vm.civData.throne.count >= 100) {
+        // If sufficient enemies have been slain, build new temples for free
+        window.vm.civData.temple.owned += Math.floor(window.vm.civData.throne.count / 100)
+        window.vm.civData.throne.count = 0 // xxx This loses the leftovers.
+        window.updateResourceTotals()
+      }
+    },
+    tickGrace() { // eslint-disable-line no-unused-vars
+      if (window.vm.civData.grace.cost > 1000) {
+        window.vm.civData.grace.cost = Math.floor(--window.vm.civData.grace.cost) // eslint-disable-line no-plusplus
+        document.getElementById('graceCost').innerHTML = window.prettify(window.vm.civData.grace.cost)
+      }
+    },
+    tickWalk() { // eslint-disable-line no-unused-vars
+      let i
+      let target = ''
+      if (window.vm.civData.walk.rate > window.vm.population.healthy) {
+        window.vm.civData.walk.rate = window.vm.population.healthy
+        document.getElementById('ceaseWalk').disabled = true
+      }
+      if (window.vm.civData.walk.rate <= 0) {
+        return
+      }
+
+      for (i = 0; i < window.vm.civData.walk.rate; ++i) {
+        target = window.randomHealthyWorker() // xxx Need to modify this to do them all at once.
+        if (!target) {
+          break
+        }
+        window.vm.civData[target].owned -= 1
+          // We don't want to do UpdatePopulation() in a loop, so we just do the
+          // relevent adjustments directly.
+        window.vm.population.current -= 1
+        window.vm.population.healthy -= 1
+      }
+      window.updatePopulation()
+      window.updatePopulationUI()
+    },
+    doLabourers() { // eslint-disable-line no-unused-vars
+      if (window.vm.curCiv.curWonder.stage !== 1) {
+        return
+      }
+
+      if (window.vm.curCiv.curWonder.progress >= 100) {
+        // Wonder is finished! First, send workers home
+        window.vm.civData.unemployed.owned += window.vm.civData.labourer.owned
+        window.vm.civData.unemployed.ill += window.vm.civData.labourer.ill
+        window.vm.civData.labourer.owned = 0
+        window.vm.civData.labourer.ill = 0
+        window.updatePopulation()
+        // hide limited notice
+        document.getElementById('lowResources').style.display = 'none'
+          // then set wonder.stage so things will be updated appropriately
+        window.vm.curCiv.curWonder.stage += 1
+      }
+      else {
+        // we're still building
+
+        // First, check our labourers and other resources to see if we're limited.
+        let num = window.vm.civData.labourer.owned
+        window.vm.wonderResources.forEach((elem) => {
+          num = Math.min(num, elem.owned)
+        })
+
+        // remove resources
+        window.vm.wonderResources.forEach((elem) => {
+          elem.owned -= num
+        })
+
+        // increase progress
+        window.vm.curCiv.curWonder.progress += num / (1000000 * window.getWonderCostMultiplier())
+
+        // show/hide limited notice
+        window.setElemDisplay('lowResources', (num < window.vm.civData.labourer.owned))
+
+        let lowItem = null
+        let i = 0
+        for (i = 0; i < window.vm.wonderResources.length; ++i) {
+          if (window.vm.wonderResources[i].owned < 1) {
+            lowItem = window.vm.wonderResources[i]
+            break
+          }
+        }
+        if (lowItem) {
+          document.getElementById('limited').innerHTML = ` by low ${lowItem.getQtyName()}`
+        }
+      }
+      window.updateWonder()
+    },
+    tradeTimer() {
+      // Set timer length (10 sec + 5 sec/upgrade)
+      window.vm.curCiv.trader.timer = 10 + (5 * (window.vm.civData.currency.owned +
+        window.vm.civData.commerce.owned + window.vm.civData.stay.owned))
+
+      // then set material and requested amount
+      const tradeItems = // Item and base amount
+        [{
+          materialId: 'food',
+          requested: 5000,
+        },
+        {
+          materialId: 'wood',
+          requested: 5000,
+        },
+        {
+          materialId: 'stone',
+          requested: 5000,
+        },
+        {
+          materialId: 'skins',
+          requested: 500,
+        },
+        {
+          materialId: 'herbs',
+          requested: 500,
+        },
+        {
+          materialId: 'ore',
+          requested: 500,
+        },
+        {
+          materialId: 'leather',
+          requested: 250,
+        },
+        {
+          materialId: 'metal',
+          requested: 250,
+        },
+        ]
+
+      // Randomly select and merge one of the above.
+      const selected = tradeItems[Math.floor(Math.random() * tradeItems.length)]
+      window.vm.curCiv.trader.materialId = selected.materialId
+      window.vm.curCiv.trader.requested = selected.requested * (Math.ceil(Math.random() * 20)) // Up to 20x amount
+
+      document.getElementById('tradeContainer').style.display = 'block'
+      document.getElementById('tradeType').innerHTML =
+        window.vm.civData[window.vm.curCiv.trader.materialId].getQtyName(window.vm.curCiv.trader.requested)
+      document.getElementById('tradeRequested').innerHTML = window.prettify(window.vm.curCiv.trader.requested)
+    },
+    tickTraders() { // eslint-disable-line no-unused-vars
+      // traders occasionally show up
+      if (window.vm.population.current + window.vm.curCiv.zombie.owned > 0) {
+        window.vm.curCiv.trader.counter += 1
+      }
+      const delayMult = 60 * (3 - ((window.vm.civData.currency.owned) + (window.vm.civData.commerce.owned)))
+      let check
+      if (window.vm.population.current + window.vm.curCiv.zombie.owned > 0 && window.vm.curCiv.trader.counter > delayMult) {
+        check = Math.random() * delayMult
+        if (check < (1 + (0.2 * (window.vm.civData.comfort.owned)))) {
+          window.vm.curCiv.trader.counter = 0
+          this.tradeTimer()
+        }
+      }
+
+      // Trader stuff
+      if (window.vm.curCiv.trader.timer > 0) {
+        if (--window.vm.curCiv.trader.timer <= 0) { // eslint-disable-line no-plusplus
+          window.setElemDisplay('tradeContainer', false)
+        }
+      }
+    },
+    testAchievements() { // eslint-disable-line no-unused-vars
+      window.vm.achData.forEach((achObj) => {
+        if (window.vm.civData[achObj.id].owned) {
+          return true
+        }
+        if (window.isValid(achObj.test) && !achObj.test()) {
+          return false
+        }
+        window.vm.civData[achObj.id].owned = true
+        window.gameLog(`Achievement Unlocked: ${achObj.getQtyName()}`)
+        return true
+      })
+
+      window.updateAchievements()
     },
 
 
