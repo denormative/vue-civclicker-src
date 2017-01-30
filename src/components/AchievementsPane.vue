@@ -1,7 +1,21 @@
 <template>
 <div role="tabpanel" id="achievementsPane" class="achievements-pane tab-pane">
-  <div id="achievements">
-    <h3>Achievements</h3>
+  <h3>Achievements</h3>
+  <div  v-for="achObj in achData">
+    <!-- true:  Generate a line break -->
+    <div v-if="achObj === true">
+      <div style='clear:both;'><br></div>
+    </div>
+    <!-- false: Generate a gap -->
+    <div v-else-if="achObj === false">
+      <div class='break'>&nbsp;</div>
+    </div>
+    <!-- An achievement (or civ size) object: Generate the display of that achievement -->
+    <div v-else="">
+      <div class='achievement' :title='achObj.getQtyName()'>
+        <div class='unlockedAch' :id='achObj.id'>{{achObj.getQtyName()}}</div>
+      </div>
+    </div>
   </div>
 </div>
 </template>
@@ -9,37 +23,15 @@
 <script>
 export default {
   name: 'achievements-pane',
+  props: ['achData'],
   data() {
     return {}
   },
   mounted() {
     this.$nextTick(() => {
-      this.addAchievementRows()
     })
   },
   methods: {
-    // achObj can be:
-    //   true:  Generate a line break
-    //   false: Generate a gap
-    //   An achievement (or civ size) object: Generate the display of that achievement
-    getAchRowText(achObj) {
-      if (achObj === true) {
-        return "<div style='clear:both;'><br></div>"
-      }
-      if (achObj === false) {
-        return "<div class='break'>&nbsp;</div>"
-      }
-      return `<div class='achievement' title='${achObj.getQtyName()}'>` +
-        `<div class='unlockedAch' id='${achObj.id}'>${achObj.getQtyName()}</div></div>`
-    },
-    // Dynamically create the achievement display
-    addAchievementRows() {
-      let s = ''
-      window.vm.achData.forEach((elem) => {
-        s += this.getAchRowText(elem)
-      })
-      document.getElementById('achievements').innerHTML += s
-    },
   },
 }
 </script>

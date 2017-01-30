@@ -19,6 +19,7 @@ new Vue({
       :armyUnits="armyUnits"
       :normalUpgrades="normalUpgrades"
       :civSizes="civSizes"
+      :achData="achData"
     />`,
   data() {
     return {
