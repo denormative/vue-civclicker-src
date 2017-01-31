@@ -42,7 +42,7 @@
             <conquest-pane :armyUnits="armyUnits" :civSizes="civSizes"></conquest-pane>
             <trade-pane></trade-pane>
             <achievements-pane :achData="achData"></achievements-pane>
-            <settings-pane></settings-pane>
+            <settings-pane :settings="settings"></settings-pane>
             <stats-pane :curCiv="curCiv" :settings="settings"></stats-pane>
           </div>
         </div>
