@@ -20,6 +20,7 @@ new Vue({
       :normalUpgrades="normalUpgrades"
       :civSizes="civSizes"
       :achData="achData"
+      :civData="civData"
     />`,
   data() {
     return {

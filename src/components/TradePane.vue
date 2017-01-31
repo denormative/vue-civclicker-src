@@ -1,10 +1,12 @@
 <template>
-<div role="tabpanel" id="tradePane" class="trade-pane tab-pane">
+<div role="tabpanel" id="tradePane" class="trade-pane tab-pane card">
+  <h4 class="card-header">Trade</h4>
+  <div class="card-block">
   <span id="tradeRow"></span>
-  <div id="tradeUpgradeContainer">
+  <div id="tradeUpgradeContainer"> <!-- v-show="civData.trade.owned"-->
     <span id="currencyRow"></span>
     <span id="commerceRow"></span>
-    <h4>Buy Resources (1 gold)</h4>
+    <h6>Buy Resources (1 gold)</h6>
     <div class="row">
       <div class="col-4"><button class="btn btn-secondary btn-block" @click="buy('food')">Buy 5000 Food</button></div>
       <div class="col-4"><button class="btn btn-secondary btn-block" @click="buy('wood')">Buy 5000 Wood</button></div>
@@ -22,6 +24,7 @@
 <script>
 export default {
   name: 'trade-pane',
+  props: ['civData'],
   data() {
     return {}
   },
@@ -31,19 +34,19 @@ export default {
   },
   methods: {
     buy(materialId) { // eslint-disable-line no-unused-vars
-      const material = window.vm.civData[materialId]
-      if (window.vm.civData.gold.owned < 1) {
+      const material = this.civData[materialId]
+      if (this.civData.gold.owned < 1) {
         return
       }
-      window.vm.civData.gold.owned -= 1
+      this.civData.gold.owned -= 1
 
-      if (material === window.vm.civData.food || material === window.vm.civData.wood || material === window.vm.civData.stone) {
+      if (material === this.civData.food || material === this.civData.wood || material === this.civData.stone) {
         material.owned += 5000
       }
-      if (material === window.vm.civData.skins || material === window.vm.civData.herbs || material === window.vm.civData.ore) {
+      if (material === this.civData.skins || material === this.civData.herbs || material === this.civData.ore) {
         material.owned += 500
       }
-      if (material === window.vm.civData.leather || material === window.vm.civData.metal) {
+      if (material === this.civData.leather || material === this.civData.metal) {
         material.owned += 250
       }
 

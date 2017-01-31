@@ -40,7 +40,7 @@
             <upgrade-pane :normalUpgrades="normalUpgrades"></upgrade-pane>
             <deity-pane></deity-pane>
             <conquest-pane :armyUnits="armyUnits" :civSizes="civSizes" :settings="settings"></conquest-pane>
-            <trade-pane></trade-pane>
+            <trade-pane :civData="civData"></trade-pane>
             <achievements-pane :achData="achData"></achievements-pane>
             <settings-pane :settings="settings"></settings-pane>
             <stats-pane :curCiv="curCiv" :settings="settings"></stats-pane>
@@ -82,7 +82,7 @@ import StatsPane from './components/StatsPane'
 export default {
   name: 'root',
   props: ['curCiv', 'settings', 'basicResources', 'homeBuildings',
-    'homeUnits', 'armyUnits', 'normalUpgrades', 'civSizes', 'achData'],
+    'homeUnits', 'armyUnits', 'normalUpgrades', 'civSizes', 'achData', 'civData'],
   components: {
     CivTitle,
     BasicResources,
