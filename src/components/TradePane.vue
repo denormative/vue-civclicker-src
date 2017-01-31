@@ -5,14 +5,16 @@
     <span id="currencyRow"></span>
     <span id="commerceRow"></span>
     <h4>Buy Resources (1 gold)</h4>
-    <button class="btn btn-secondary btn-sm tradeResource" @click="buy('food')">Buy 5000 Food</button><br>
-    <button class="btn btn-secondary btn-sm tradeResource" @click="buy('wood')">Buy 5000 Wood</button><br>
-    <button class="btn btn-secondary btn-sm tradeResource" @click="buy('stone')">Buy 5000 Stone</button><br>
-    <button class="btn btn-secondary btn-sm tradeResource" @click="buy('skins')">Buy 500 Skins</button><br>
-    <button class="btn btn-secondary btn-sm tradeResource" @click="buy('herbs')">Buy 500 Herbs</button><br>
-    <button class="btn btn-secondary btn-sm tradeResource" @click="buy('ore')">Buy 500 Ore</button><br>
-    <button class="btn btn-secondary btn-sm tradeResource" @click="buy('leather')">Buy 250 Leather</button><br>
-    <button class="btn btn-secondary btn-sm tradeResource" @click="buy('metal')">Buy 250 Metal</button><br>
+    <div class="row">
+      <div class="col-4"><button class="btn btn-secondary btn-block" @click="buy('food')">Buy 5000 Food</button></div>
+      <div class="col-4"><button class="btn btn-secondary btn-block" @click="buy('wood')">Buy 5000 Wood</button></div>
+      <div class="col-4"><button class="btn btn-secondary btn-block" @click="buy('stone')">Buy 5000 Stone</button></div>
+      <div class="col-4"><button class="btn btn-secondary btn-block" @click="buy('skins')">Buy 500 Skins</button></div>
+      <div class="col-4"><button class="btn btn-secondary btn-block" @click="buy('herbs')">Buy 500 Herbs</button></div>
+      <div class="col-4"><button class="btn btn-secondary btn-block" @click="buy('ore')">Buy 500 Ore</button></div>
+      <div class="col-4"><button class="btn btn-secondary btn-block" @click="buy('leather')">Buy 250 Leather</button></div>
+      <div class="col-4"><button class="btn btn-secondary btn-block" @click="buy('metal')">Buy 250 Metal</button></div>
+    </div>
   </div>
 </div>
 </template>

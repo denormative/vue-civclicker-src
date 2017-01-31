@@ -49,7 +49,7 @@ export default {
     // value is the desired change in 0.1em units.
     textSize(value) {
       if (value !== undefined) {
-        window.vm.settings.fontSize += 0.1 * value
+        this.settings.fontSize += 0.1 * value
       }
     },
     deleteSave() {
@@ -153,7 +153,7 @@ export default {
     },
     'settings.fontSize': function() {
       // xxx Should this be applied to the document instead of the body?
-      document.getElementsByTagName('body')[0].style.fontSize = `${window.vm.settings.fontSize}em`
+      document.getElementsByTagName('body')[0].style.fontSize = `${this.settings.fontSize}em`
     },
   },
 }
