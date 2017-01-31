@@ -2,8 +2,8 @@
 <div class="wonders-pane card" id="wondersContainer">
   <h4 class="card-header">Wonders
     <div class="btn-group float-right" role="group" v-show="wonderInProgress"> <!-- FIXME: should be v-if -->
-      <button id="renameWonder" class="btn btn-outline-info btn-sm" @onclick="renameWonder()">Rename</button>
-      <button id="speedWonder" class="btn btn-outline-primary btn-sm" onmousedown="speedWonder()"
+      <button id="renameWonder" class="btn btn-outline-info btn-sm" @click="renameWonder()">Rename</button>
+      <button id="speedWonder" class="btn btn-outline-primary btn-sm" @click="speedWonder()"
           data-content="<b>100 gold</b><br> Increase wonder progress by 1%">Speed</button>
     </div>
   </h4>
