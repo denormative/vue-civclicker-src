@@ -36,10 +36,10 @@
 
         <div class="container-fluid">
           <div class="tab-content">
-            <buildings-pane :homeBuildings="homeBuildings"></buildings-pane>
+            <buildings-pane :homeBuildings="homeBuildings" :settings="settings"></buildings-pane>
             <upgrade-pane :normalUpgrades="normalUpgrades"></upgrade-pane>
             <deity-pane></deity-pane>
-            <conquest-pane :armyUnits="armyUnits" :civSizes="civSizes"></conquest-pane>
+            <conquest-pane :armyUnits="armyUnits" :civSizes="civSizes" :settings="settings"></conquest-pane>
             <trade-pane></trade-pane>
             <achievements-pane :achData="achData"></achievements-pane>
             <settings-pane :settings="settings"></settings-pane>

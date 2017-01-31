@@ -1,6 +1,6 @@
 <template>
 <div role="tabpanel" id="buildingsPane" class="buildings-pane tab-pane active">
-  <p id="customBuildQuantity">
+  <p v-show="settings.customIncr">
     Custom Quantity <input id="buildingCustomQty" type="number" min="1" step="1" value="1" />
   </p>
   <table id="buildings"></table>
@@ -10,7 +10,7 @@
 <script>
 export default {
   name: 'buildings-pane',
-  props: ['homeBuildings'],
+  props: ['homeBuildings', 'settings'],
   data() {
     return {}
   },
@@ -23,8 +23,4 @@ export default {
 </script>
 
 <style>
-#customBuildQuantity {
-  display: none;
-  margin-left: 1em;
-}
 </style>

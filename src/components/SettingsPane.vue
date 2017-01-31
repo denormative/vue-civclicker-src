@@ -93,9 +93,6 @@ export default {
       let elems
 
       const curPop = window.vm.population.current + window.vm.curCiv.zombie.owned
-      window.setElemDisplay('customPartyQuantity', this.settings.customIncr)
-      window.setElemDisplay('customBuildQuantity', this.settings.customIncr)
-      window.setElemDisplay('customSpawnQuantity', this.settings.customIncr)
 
       elems = document.getElementsByClassName('unit10')
       for (let i = 0; i < elems.length; ++i) {

@@ -65,8 +65,9 @@
     <button class="unitInfinity btn btn-secondary btn-sm" id="spawnMaxbutton" onmousedown="spawn(Infinity)">Recruit
       <span id="workerNumMax">Max</span> Workers</button><span class="cost">
         <span id="workerCostMax"></span> food</span><span class="note">: Recruit as many new workers as possible</span>
-    <div id="customSpawnQuantity"><button class="btn btn-secondary btn-sm" id="spawnCustomButton" onmousedown="spawn('custom')">Recruit Workers</button><input id="spawnCustomQty"
-        type="number" min="1" step="1" value="1" />
+    <div v-show="settings.customIncr">
+      <button class="btn btn-secondary btn-sm" id="spawnCustomButton" onmousedown="spawn('custom')">Recruit Workers</button>
+      <input id="spawnCustomQty" type="number" min="1" step="1" value="1" />
     </div>
   </div>
 </div>
@@ -111,10 +112,6 @@ export default {
 </script>
 
 <style>
-#customSpawnQuantity {
-  display: none;
-}
-
 #zombieWorkers {
   display: none;
 }

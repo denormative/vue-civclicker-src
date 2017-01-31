@@ -3,7 +3,7 @@
   <span id="standardRow"></span>
   <div id="conquest">
     <h4>Army</h4>
-    <p id="customPartyQuantity">
+    <p v-show="settings.customIncr">
       Custom Quantity <input id="partyCustomQty" type="number" min="1" step="1" value="1" />
     </p>
     <table id="party"></table>
@@ -28,7 +28,7 @@
 <script>
 export default {
   name: 'conquest-pane',
-  props: ['armyUnits', 'civSizes'],
+  props: ['armyUnits', 'civSizes', 'settings'],
   data() {
     return {}
   },
@@ -111,10 +111,6 @@ export default {
 
 <style>
 #conquest {
-  display: none;
-}
-
-#customPartyQuantity {
   display: none;
 }
 
