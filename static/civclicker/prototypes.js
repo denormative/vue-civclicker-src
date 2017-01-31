@@ -7,8 +7,8 @@ function VersionData(major, minor, sub, mod) {
   this.sub = sub
   this.mod = mod
 }
-VersionData.prototype.toNumber = function() { return this.major * 1000 + this.minor + this.sub / 1000 }
-VersionData.prototype.toString = function() {
+VersionData.prototype.toNumber = function() { return this.major * 1000 + this.minor + this.sub / 1000 } // eslint-disable-line
+VersionData.prototype.toString = function() { // eslint-disable-line
   return `${String(this.major)}.${
     String(this.minor)}.${String(this.sub)}${String(this.mod)}`
 }
@@ -41,8 +41,8 @@ CivObj.prototype = {
   effectText: '',
   prestige: false,
   initOwned: 0,  // Override this to undefined to inhibit initialization.  Also determines the type of the 'owned' property.
-  init(fullInit) {
-    if (fullInit === undefined) { fullInit = true }
+  init(fullInitArg) {
+    const fullInit = (fullInitArg === undefined) ? true : fullInitArg
     if (fullInit || !this.prestige) {
       this.data = {}
       if (this.initOwned !== undefined) { this.owned = this.initOwned }
@@ -51,7 +51,8 @@ CivObj.prototype = {
   },
   reset() { return this.init(false) }, // Default reset behavior is to re-init non-prestige items.
   get limit() {
-    return +((typeof this.initOwned === 'number') ? Infinity : // Default is no limit for numbers
+    // Default is no limit for numbers
+    return +((typeof this.initOwned === 'number') ? Infinity : // eslint-disable-line
                        (typeof this.initOwned === 'boolean') ? true : 0)
   }, // true (1) for booleans, 0 otherwise.
   set limit(value) { return +this.limit }, // Only here for JSLint.
@@ -65,7 +66,7 @@ CivObj.prototype = {
     const requireDesc = Object.getOwnPropertyDescriptor(this, 'require')
     if (!requireDesc) { return false } // Unpurchaseable
         // If our requirements contain a function, assume variable.
-    for (i in this.require) { if (typeof this.require[i] === 'function') { return true } }
+    for (i in this.require) { if (typeof this.require[i] === 'function') { return true } } // eslint-disable-line
     return false
   },
 
@@ -187,7 +188,9 @@ Unit.prototype = new CivObj({
   set limit(value) { return +this.limit }, // Only here for JSLint.
 
     // The total quantity of this unit, regardless of status or place.
-  get total() { return (this.isDest()) ? window.vm.civData[this.source].total : (this.owned + (this.ill || 0) + (this.party || 0)) },
+  get total() {
+    return (this.isDest()) ? window.vm.civData[this.source].total : (this.owned + (this.ill || 0) + (this.party || 0))
+  },
   set total(value) { return this.total }, // Only here for JSLint.
 }, true)
 
