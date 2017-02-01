@@ -92,7 +92,7 @@ function getReqText(costObjArg, qty) {
     if (text) {
       text += ', '
     }
-    text += `${prettify(Math.round(num))} ${window.vm.civData[i].getQtyName(num)}`
+    text += `${window.vm.prettify(Math.round(num))} ${window.vm.civData[i].getQtyName(num)}`
   }
 
   return text
@@ -406,7 +406,7 @@ function updateResourceTotals() {
   for (i = 0; i < displayElems.length; ++i) {
     elem = displayElems[i]
     // xxx Have to use window.vm.curCiv here because of zombies and other non-window.vm.civData displays.
-    elem.innerHTML = prettify(Math.floor(window.vm.curCiv[dataset(elem, 'target')].owned))
+    elem.innerHTML = window.vm.prettify(Math.floor(window.vm.curCiv[dataset(elem, 'target')].owned))
   }
 
   // Update net production values for primary resources.  Same as the above,
@@ -430,7 +430,7 @@ function updateResourceTotals() {
       elem.style.color = '#000'
     }
 
-    elem.innerHTML = prettify(val.toFixed(1))
+    elem.innerHTML = window.vm.prettify(val.toFixed(1))
   }
 
   if (window.vm.civData.gold.owned >= 1) {
@@ -438,9 +438,9 @@ function updateResourceTotals() {
   }
 
   // Update page with building numbers, also stockpile limits.
-  document.getElementById('maxfood').innerHTML = prettify(window.vm.civData.food.limit)
-  document.getElementById('maxwood').innerHTML = prettify(window.vm.civData.wood.limit)
-  document.getElementById('maxstone').innerHTML = prettify(window.vm.civData.stone.limit)
+  document.getElementById('maxfood').innerHTML = window.vm.prettify(window.vm.civData.food.limit)
+  document.getElementById('maxwood').innerHTML = window.vm.prettify(window.vm.civData.wood.limit)
+  document.getElementById('maxstone').innerHTML = window.vm.prettify(window.vm.civData.stone.limit)
 
   // Update land values
   let buildingCount = 0
@@ -453,8 +453,8 @@ function updateResourceTotals() {
       buildingCount += elem.owned
     }
   })
-  document.getElementById('totalBuildings').innerHTML = prettify(buildingCount)
-  document.getElementById('totalLand').innerHTML = prettify(buildingCount + landCount)
+  document.getElementById('totalBuildings').innerHTML = window.vm.prettify(buildingCount)
+  document.getElementById('totalLand').innerHTML = window.vm.prettify(buildingCount + landCount)
 
   // Unlock advanced control tabs as they become enabled (they never disable)
   // Temples unlock Deity, barracks unlock Conquest, having gold unlocks Trade.
@@ -545,7 +545,7 @@ function updatePopulationUI() {
   const displayElems = document.querySelectorAll("[data-action='display_pop']")
   for (i = 0; i < displayElems.length; ++i) {
     elem = displayElems[i]
-    elem.innerHTML = prettify(Math.floor(window.vm.population[dataset(elem, 'target')]))
+    elem.innerHTML = window.vm.prettify(Math.floor(window.vm.population[dataset(elem, 'target')]))
   }
 
   window.vm.civData.house.update() // xxx Effect might change dynamically.  Need a more general way to do this.
@@ -630,9 +630,9 @@ function updatePopulationUI() {
   document.getElementById('raiseDead100').disabled = (maxRaise < 100)
 
   // Calculates and displays the cost of buying workers at the current window.vm.population.
-  document.getElementById('raiseDeadCost').innerHTML = prettify(Math.round(calcZombieCost(1)))
-  document.getElementById('workerNumMax').innerHTML = prettify(Math.round(maxSpawn))
-  document.getElementById('workerCostMax').innerHTML = prettify(Math.round(calcWorkerCost(maxSpawn)))
+  document.getElementById('raiseDeadCost').innerHTML = window.vm.prettify(Math.round(calcZombieCost(1)))
+  document.getElementById('workerNumMax').innerHTML = window.vm.prettify(Math.round(maxSpawn))
+  document.getElementById('workerCostMax').innerHTML = window.vm.prettify(Math.round(calcWorkerCost(maxSpawn)))
   updateJobButtons() // handles the display of units in the player's kingdom.
   updatePartyButtons() // handles the display of units out on raids.
   updateMorale()
@@ -1310,7 +1310,7 @@ function walk(incrementArg) { // eslint-disable-line no-unused-vars
   window.vm.civData.walk.rate += inc
 
   // xxx This needs to move into the main loop in case it's reloaded.
-  document.getElementById('walkStat').innerHTML = prettify(window.vm.civData.walk.rate)
+  document.getElementById('walkStat').innerHTML = window.vm.prettify(window.vm.civData.walk.rate)
   document.getElementById('ceaseWalk').disabled = (window.vm.civData.walk.rate === 0)
   setElemDisplay('walkGroup', (window.vm.civData.walk.rate > 0))
 }
@@ -1395,7 +1395,7 @@ function grace(deltaArg) { // eslint-disable-line no-unused-vars
   if (window.vm.civData.piety.owned >= window.vm.civData.grace.cost) {
     window.vm.civData.piety.owned -= window.vm.civData.grace.cost
     window.vm.civData.grace.cost = Math.floor(window.vm.civData.grace.cost * 1.2)
-    document.getElementById('graceCost').innerHTML = prettify(window.vm.civData.grace.cost)
+    document.getElementById('graceCost').innerHTML = window.vm.prettify(window.vm.civData.grace.cost)
     adjustMorale(delta)
     updateResourceTotals()
     updateMorale()
@@ -1870,7 +1870,7 @@ function reset() { // eslint-disable-line no-unused-vars
   window.vm.curCiv.curWonder.rushed = false
   window.vm.curCiv.curWonder.progress = 0
 
-  document.getElementById('graceCost').innerHTML = prettify(window.vm.civData.grace.cost)
+  document.getElementById('graceCost').innerHTML = window.vm.prettify(window.vm.civData.grace.cost)
   // Update page with all new values
   updateResourceTotals()
   updateUpgrades()
@@ -2025,11 +2025,6 @@ function impExp() { // eslint-disable-line no-unused-vars
 function versionAlert() {
   console.warn('New Version Available')
   document.getElementById('versionAlert').style.display = 'inline'
-}
-
-function prettify(input) {
-  // xxx TODO: Add appropriate format options
-  return (window.vm.settings.delimiters) ? Number(input).toLocaleString() : input.toString()
 }
 
 /* Debug functions */

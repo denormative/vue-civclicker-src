@@ -6,6 +6,12 @@ Vue.use(Vuex)
 const storeState = {
   settings: {
   },
+  population: {
+    current: 0,
+    limit: 0,
+    healthy: 0,
+    totalSick: 0,
+  },
   notes: [],
   activeNote: {},
 }

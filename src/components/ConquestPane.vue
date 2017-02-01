@@ -52,7 +52,7 @@ export default {
         window.vm.curCiv.raid.epop *= 2
       } // doubles soldiers fought
 
-      // 5-25% of enemy window.vm.population is soldiers.
+      // 5-25% of enemy population is soldiers.
       window.vm.civData.esoldier.owned += (window.vm.curCiv.raid.epop / 20) +
         Math.floor(Math.random() * (window.vm.curCiv.raid.epop / 5))
       window.vm.civData.efort.owned += Math.floor(Math.random() * (window.vm.curCiv.raid.epop / 5000))

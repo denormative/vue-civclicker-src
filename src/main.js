@@ -530,7 +530,7 @@ new Vue({
           window.gameLog('A worker starved to death')
         }
         if (numStarve > 1) {
-          window.gameLog(`${window.prettify(numStarve)} workers starved to death`)
+          window.gameLog(`${window.vm.prettify(numStarve)} workers starved to death`)
         }
         window.adjustMorale(-0.01)
         window.vm.civData.food.owned = 0
@@ -558,9 +558,9 @@ new Vue({
       mobObj.owned += num
       window.vm.civData.esiege.owned += numSge
 
-      msg = `${window.prettify(num)} ${mobObj.getQtyName(num)} attacked` // xxx L10N
+      msg = `${window.vm.prettify(num)} ${mobObj.getQtyName(num)} attacked` // xxx L10N
       if (numSge > 0) {
-        msg += `, with ${window.prettify(numSge)} ${window.vm.civData.esiege.getQtyName(numSge)}`
+        msg += `, with ${window.vm.prettify(numSge)} ${window.vm.civData.esiege.getQtyName(numSge)}`
       } // xxx L10N
       window.gameLog(msg)
 
@@ -731,7 +731,7 @@ new Vue({
         window.getCombatants(targetObj.place, targetObj.alignment).length) {
         // the siege engines are undefended; maybe capture them.
         if ((targetObj.alignment === 'player') && window.vm.civData.mathematics.owned) { // Can we use them?
-          window.gameLog(`Captured ${window.prettify(siegeObj.owned)} enemy siege engines.`)
+          window.gameLog(`Captured ${window.vm.prettify(siegeObj.owned)} enemy siege engines.`)
           window.vm.civData.siege.owned += siegeObj.owned // capture them
         }
         siegeObj.owned = 0
@@ -847,7 +847,7 @@ new Vue({
       num = this.plague(num)
       if (num > 0) {
         window.updatePopulation()
-        window.gameLog(`${window.prettify(num)} workers got sick`) // notify player
+        window.gameLog(`${window.vm.prettify(num)} workers got sick`) // notify player
       }
     },
     doThrone() { // eslint-disable-line no-unused-vars
@@ -861,7 +861,7 @@ new Vue({
     tickGrace() { // eslint-disable-line no-unused-vars
       if (window.vm.civData.grace.cost > 1000) {
         window.vm.civData.grace.cost = Math.floor(--window.vm.civData.grace.cost) // eslint-disable-line no-plusplus
-        document.getElementById('graceCost').innerHTML = window.prettify(window.vm.civData.grace.cost)
+        document.getElementById('graceCost').innerHTML = window.vm.prettify(window.vm.civData.grace.cost)
       }
     },
     tickWalk() { // eslint-disable-line no-unused-vars
@@ -989,7 +989,7 @@ new Vue({
       document.getElementById('tradeContainer').style.display = 'block'
       document.getElementById('tradeType').innerHTML =
         window.vm.civData[window.vm.curCiv.trader.materialId].getQtyName(window.vm.curCiv.trader.requested)
-      document.getElementById('tradeRequested').innerHTML = window.prettify(window.vm.curCiv.trader.requested)
+      document.getElementById('tradeRequested').innerHTML = window.vm.prettify(window.vm.curCiv.trader.requested)
     },
     tickTraders() { // eslint-disable-line no-unused-vars
       // traders occasionally show up
@@ -1195,6 +1195,13 @@ new Vue({
       groupElem.onmousedown = window.onBulkEvent
       return groupElem
     },
+
+    // ////////////////////////////////////////////////////////////////////
+    prettify(input) {
+      // xxx TODO: Add appropriate format options
+      return (this.settings.delimiters) ? Number(input).toLocaleString() : input.toString()
+    },
+
 
   },
 })
