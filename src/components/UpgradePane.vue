@@ -14,7 +14,7 @@ export default {
   mounted() {
     this.$nextTick(() => {
       this.addUpgradeRows() // This sets up the framework for the upgrade items.
-      window.addUITable(window.vm.normalUpgrades, 'upgrades') // Place the stubs for most upgrades under the upgrades tab.
+      window.vm.addUITable(window.vm.normalUpgrades, 'upgrades') // Place the stubs for most upgrades under the upgrades tab.
     })
   },
   methods: {
@@ -39,7 +39,7 @@ export default {
         ('onPurchase(this)'))
       s += `">${upgradeObj.getQtyName()}</button>`
       s += `${window.isValid(upgradeObj.extraText) ? upgradeObj.extraText : ''}</td>`
-      s += `<td>${window.getCostNote(upgradeObj)}</td>`
+      s += `<td>${window.vm.getCostNote(upgradeObj)}</td>`
       s += '</tr>'
 
       return s
@@ -76,7 +76,7 @@ export default {
             console.error(`Missing UI element for ${elem.id}`)
             return
           }
-          stubElem.outerHTML = window.getUpgradeRowText(elem, false) // Replaces stubElem
+          stubElem.outerHTML = window.vm.getUpgradeRowText(elem, false) // Replaces stubElem
           stubElem = document.getElementById(`${elem.id}Row`) // Get stubElem again.
           stubElem.onmousedown = window.onBulkEvent
         }

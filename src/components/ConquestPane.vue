@@ -34,7 +34,7 @@ export default {
   },
   mounted() {
     this.$nextTick(() => {
-      window.addUITable(window.vm.armyUnits, 'party') // Dynamically create the party controls table.
+      window.vm.addUITable(window.vm.armyUnits, 'party') // Dynamically create the party controls table.
     })
   },
   methods: {

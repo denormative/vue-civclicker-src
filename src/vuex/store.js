@@ -39,6 +39,6 @@ const storeMutations = {
 }
 
 export default new Vuex.Store({
-  storeState,
-  storeMutations,
+  state: storeState,
+  mutations: storeMutations,
 })

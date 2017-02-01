@@ -17,7 +17,7 @@ export default {
   },
   mounted() {
     this.$nextTick(() => {
-      window.addUITable(this.basicResources, 'basicResources') // Dynamically create the basic resource table.
+      window.vm.addUITable(this.basicResources, 'basicResources') // Dynamically create the basic resource table.
     })
   },
 }

@@ -19,7 +19,7 @@ export default {
   },
   mounted() {
     this.$nextTick(() => {
-      window.addUITable(window.vm.homeUnits, 'jobs') // Dynamically create the job controls table.
+      window.vm.addUITable(window.vm.homeUnits, 'jobs') // Dynamically create the job controls table.
     })
   },
   computed: {

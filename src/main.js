@@ -1029,6 +1029,172 @@ new Vue({
       window.updateAchievements()
     },
 
+    // //////////////////////////////////////////////////////////////////////////////
+    // Pass this the item definition object.
+    // Or pass nothing, to create a blank row.
+    getResourceRowText(purchaseObj) {
+      // Make sure to update this if the number of columns changes.
+      if (!purchaseObj) {
+        return "<tr class='purchaseRow'><td colspan='6'/>&nbsp;</tr>"
+      }
+
+      const objId = purchaseObj.id
+      const objName = purchaseObj.getQtyName(0)
+      let s = `<tr id='${objId}Row' class='purchaseRow' data-target='${objId}'>`
+
+      s += `<td><button class='btn btn-secondary btn-sm' data-action='increment'>${purchaseObj.verb} ${objName}</button></td>`
+      s += `<td class='itemname'>${objName}: </td>`
+      s += "<td class='number'><span data-action='display'>0</span></td>"
+      s += `<td class='icon'><img src='/static/civclicker/images/${objId}.png' class='icon icon-lg' alt='${objName}'/></td>`
+      s += `<td class='number'>(Max: <span id='max${objId}'>200</span>)</td>`
+      s += "<td class='number net'><span data-action='displayNet'>0</span>/s</td>"
+
+      s += '</tr>'
+
+      return s
+    },
+    // Generate two HTML <span> texts to display an item's cost and effect note.
+    getCostNote(civObj) {
+      // Only add a ":" if both items are present.
+      const reqText = window.getReqText(civObj.require)
+      const effectText = (window.isValid(civObj.effectText)) ? civObj.effectText : ''
+      const separator = (reqText && effectText) ? ': ' : ''
+
+      return `<span id='${civObj.id}Cost' class='cost'>${reqText}</span>` +
+        `<span id='${civObj.id}Note' class='note'>${separator}${civObj.effectText}</span>`
+    },
+    // We have a separate row generation function for upgrades, because their
+    // layout is differs greatly from buildings/units:
+    //  - Upgrades are boolean, so they don't need multi-purchase buttons.
+    //  - Upgrades don't need quantity labels, and put the name in the button.
+    //  - Upgrades are sometimes generated in a table with <tr>, but sometimes
+    //    outside of one with <span>.
+    getUpgradeRowText(upgradeObj, inTableArg) {
+      const inTable = (inTableArg === undefined) ? true : inTableArg
+      const cellTagName = inTable ? 'td' : 'span'
+      const rowTagName = inTable ? 'tr' : 'span'
+      // Make sure to update this if the number of columns changes.
+      if (!upgradeObj) {
+        return inTable ? `<${rowTagName} class='purchaseRow'><td colspan='2'/>&nbsp;</${rowTagName}>` : ''
+      }
+
+      let s = `<${rowTagName} id='${upgradeObj.id}Row' class='purchaseRow'`
+      s += ` data-target='${upgradeObj.id}'>`
+      s += this.getPurchaseCellText(upgradeObj, true, inTable)
+      s += `<${cellTagName}>${this.getCostNote(upgradeObj)}</${cellTagName}>`
+      if (!inTable) {
+        s += '<br>'
+      }
+      s += `</${rowTagName}>`
+      return s
+    },
+    getPurchaseCellText(purchaseObj, qty, inTableArg) {
+      const inTable = (inTableArg === undefined) ? true : inTableArg
+
+      // Internal utility functions.
+      function sgnchr(x) {
+        return (x > 0) ? '+' : (x < 0) ? '&minus;' : '' // eslint-disable-line no-nested-ternary
+      }
+      // xxx Hack: Special formatting for booleans, Infinity and 1k.
+      function infchr(x) {
+        return (x === Infinity) ? '&infin;' : (x === 1000) ? '1k' : x // eslint-disable-line no-nested-ternary
+      }
+
+      function fmtbool(x) {
+        const neg = (window.sgn(x) < 0)
+        return (neg ? '(' : '') + purchaseObj.getQtyName(0) + (neg ? ')' : '')
+      }
+
+      function fmtqty(x) {
+        return (typeof x === 'boolean') ? fmtbool(x) : sgnchr(window.sgn(x)) + infchr(window.abs(x))
+      }
+
+      function allowPurchase() {
+        if (!qty) {
+          return false
+        } // No-op
+
+        // Can't buy/sell items not controlled by player
+        if (purchaseObj.alignment && (purchaseObj.alignment !== 'player')) {
+          return false
+        }
+
+        // Quantities > 1 are meaningless for boolean items.
+        if ((typeof purchaseObj.initOwned === 'boolean') && (window.abs(qty) > 1)) {
+          return false
+        }
+
+        // Don't buy/sell unbuyable/unsalable items.
+        if ((window.sgn(qty) > 0) && (purchaseObj.require === undefined)) {
+          return false
+        }
+        if ((window.sgn(qty) < 0) && (!purchaseObj.salable)) {
+          return false
+        }
+
+        // xxx Right now, variable-cost items can't be sold, and are bought one-at-a-time.
+        if ((qty !== 1) && purchaseObj.hasVariableCost()) {
+          return false
+        }
+
+        return true
+      }
+
+      const tagName = inTable ? 'td' : 'span'
+      const className = (window.abs(qty) === 'custom') ? 'buy' : purchaseObj.type // 'custom' buttons all use the same class.
+
+      let s = `<${tagName} class='${className}${window.abs(qty)}' data-quantity='${qty}' >`
+      if (allowPurchase()) {
+        s += `<button class='btn btn-secondary btn-sm x${window.abs(qty)}' data-action='purchase' disabled='disabled'>${fmtqty(qty)}</button>` // eslint-disable-line
+      }
+      s += `</${tagName}>`
+      return s
+    },
+    // Pass this the item definition object.
+    // Or pass nothing, to create a blank row.
+    getPurchaseRowText(purchaseObj) {
+      // Make sure to update this if the number of columns changes.
+      if (!purchaseObj) {
+        return "<tr class='purchaseRow'><td colspan='13'/>&nbsp;</tr>"
+      }
+
+      const objId = purchaseObj.id
+      let s = `<tr id='${objId}Row' class='purchaseRow' data-target='${purchaseObj.id}'>`;
+
+      [-Infinity, '-custom', -100, -10, -1]
+      .forEach((elem) => {
+        s += this.getPurchaseCellText(purchaseObj, elem)
+      })
+
+      const enemyFlag = (purchaseObj.alignment === 'enemy') ? ' enemy' : ''
+      s += `<td class='itemname${enemyFlag}'>${purchaseObj.getQtyName(0)}: </td>`
+
+      const action = (window.isValid(window.vm.population[objId])) ? 'display_pop' : 'display' // xxx Hack
+      s += `<td class='number'><span data-action='${action}'>0</span></td>`;
+
+      // Don't allow Infinite (max) purchase on things we can't sell back.
+      [1, 10, 100, 'custom', ((purchaseObj.salable) ? Infinity : 1000)]
+      .forEach((elem) => {
+        s += this.getPurchaseCellText(purchaseObj, elem)
+      })
+
+      s += `<td>${this.getCostNote(purchaseObj)}</td>`
+      s += '</tr>'
+
+      return s
+    },
+    addUITable(civObjs, groupElemName) { // eslint-disable-line no-unused-vars
+      let s = ''
+      civObjs.forEach((elem) => {
+        s += elem.type === 'resource' ? this.getResourceRowText(elem) : // eslint-disable-line no-nested-ternary
+          elem.type === 'upgrade' ? this.getUpgradeRowText(elem) :
+          this.getPurchaseRowText(elem)
+      })
+      const groupElem = document.getElementById(groupElemName)
+      groupElem.innerHTML += s
+      groupElem.onmousedown = window.onBulkEvent
+      return groupElem
+    },
 
   },
 })
