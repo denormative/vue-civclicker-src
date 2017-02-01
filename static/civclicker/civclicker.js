@@ -243,7 +243,7 @@ function canPurchase(purchaseObj, qtyArg) {
 // Interface initialization code
 
 // Much of this interface consists of tables of buttons, columns of which get
-// revealed or hidden based on toggles and window.vm.population.  Currently, we do this
+// revealed or hidden based on toggles and population.  Currently, we do this
 // by setting the "display" property on every affected <td>.  This is very
 // inefficient, because it forces a table re-layout after every cell change.
 //
@@ -401,7 +401,7 @@ function updateResourceTotals() {
   // is presumed to contain
   // the global variable name to be displayed as the element's content.
   // xxx Note that this is now also updating nearly all updatable values,
-  // including window.vm.population.
+  // including population.
   displayElems = document.querySelectorAll("[data-action='display']")
   for (i = 0; i < displayElems.length; ++i) {
     elem = displayElems[i]
@@ -476,55 +476,58 @@ function updateResourceTotals() {
   // Cheaters don't get names.
   document.getElementById('renameRuler').disabled = (window.vm.curCiv.rulerName === 'Cheater')
 
-  updatePopulation() // updatePopulation() handles the window.vm.population limit, which is determined by buildings.
+  updatePopulation() // updatePopulation() handles the population limit, which is determined by buildings.
   updatePopulationUI() // xxx Maybe remove this?
 }
 
 function updatePopulation() {
-  // Update window.vm.population limit by multiplying out housing numbers
-  window.vm.population.limit = window.vm.civData.tent.owned +
-      (window.vm.civData.hut.owned * 3) + (window.vm.civData.cottage.owned * 6) +
-      (window.vm.civData.house.owned * (10 + ((window.vm.civData.tenements.owned) * 2) +
-      ((window.vm.civData.slums.owned) * 2))) + (window.vm.civData.mansion.owned * 50)
-
+  // Update population limit by multiplying out housing numbers
+  window.vm.$store.commit('setPopulationLimit', window.vm.civData.tent.owned +
+    (window.vm.civData.hut.owned * 3) + (window.vm.civData.cottage.owned * 6) +
+    (window.vm.civData.house.owned * (10 + ((window.vm.civData.tenements.owned) * 2) +
+      ((window.vm.civData.slums.owned) * 2))) + (window.vm.civData.mansion.owned * 50))
   // Update sick workers
-  window.vm.population.totalSick = 0
+  let totalSick = 0
   window.vm.unitData.forEach(function(elem) { // eslint-disable-line
     if (elem.alignment === 'player') {
-      window.vm.population.totalSick += (elem.ill || 0)
+      totalSick += (elem.ill || 0)
     }
   })
-  setElemDisplay('totalSickRow', (window.vm.population.totalSick > 0))
+  window.vm.$store.commit('setPopulationSick', totalSick)
+
+  setElemDisplay('totalSickRow', (window.vm.$store.state.population.totalSick > 0))
 
   // Calculate healthy workers (excludes sick, zombies and deployed units)
   // xxx Should this use 'window.vm.killable'?
-  window.vm.population.healthy = 0
+  let healthy = 0
   window.vm.unitData.forEach((elem) => {
     if ((elem.vulnerable)) {
-      window.vm.population.healthy += elem.owned
+      healthy += elem.owned
     }
   })
-  // xxx Doesn't subtracting the zombies here throw off the calculations in randomHealthyWorker()?
-  window.vm.population.healthy -= window.vm.curCiv.zombie.owned
 
-  // Calculate housed/fed window.vm.population (excludes zombies)
-  window.vm.population.current = window.vm.population.healthy + window.vm.population.totalSick
+  // xxx Doesn't subtracting the zombies here throw off the calculations in randomHealthyWorker()?
+  window.vm.$store.commit('setPopulationHealthy', healthy - window.vm.curCiv.zombie.owned)
+
+  // Calculate housed/fed population (excludes zombies)
+  let current = window.vm.$store.state.population.healthy + window.vm.$store.state.population.totalSick
   window.vm.unitData.forEach((elem) => {
     if ((elem.alignment === 'player') && (elem.subType === 'normal') && (elem.place === 'party')) {
-      window.vm.population.current += elem.owned
+      current += elem.owned
     }
   })
+  window.vm.$store.commit('setPopulationCurrent', current)
 
-  // Zombie soldiers dying can drive window.vm.population.current negative if they are killed and zombies are the only thing left.
+  // Zombie soldiers dying can drive population.current negative if they are killed and zombies are the only thing left.
   // xxx This seems like a hack that should be given a real fix.
-  if (window.vm.population.current < 0) {
+  if (window.vm.$store.state.population.current < 0) {
     if (window.vm.curCiv.zombie.owned > 0) {
       // This fixes that by removing zombies and setting to zero.
-      window.vm.curCiv.zombie.owned += window.vm.population.current
-      window.vm.population.current = 0
+      window.vm.curCiv.zombie.owned += window.vm.$store.state.population.current
+      window.vm.$store.commit('setPopulationCurrent', 0)
     }
     else {
-      console.error('Warning: Negative current window.vm.population detected.')
+      console.error('Warning: Negative current population detected.')
     }
   }
 }
@@ -537,35 +540,35 @@ function updatePopulationUI() {
 
   // Scan the HTML document for elements with a "data-action" element of
   // "display_pop".  The "data-target" of such elements is presumed to contain
-  // the window.vm.population subproperty to be displayed as the element's content.
+  // the population subproperty to be displayed as the element's content.
   // xxx This selector should probably require data-target too.
-  // xxx Note that relatively few values are still stored in the window.vm.population
+  // xxx Note that relatively few values are still stored in the population
   // struct; most of them are now updated by the 'display' action run
   // by updateResourceTotals().
   const displayElems = document.querySelectorAll("[data-action='display_pop']")
   for (i = 0; i < displayElems.length; ++i) {
     elem = displayElems[i]
-    elem.innerHTML = window.vm.prettify(Math.floor(window.vm.population[dataset(elem, 'target')]))
+    elem.innerHTML = window.vm.prettify(Math.floor(window.vm.$store.state.population[dataset(elem, 'target')]))
   }
 
   window.vm.civData.house.update() // xxx Effect might change dynamically.  Need a more general way to do this.
 
   setElemDisplay('graveTotal', (window.vm.curCiv.grave.owned > 0))
 
-  // As window.vm.population increases, various things change
+  // As population increases, various things change
   // Update our civ type name
-  let civType = window.vm.civSizes.getCivSize(window.vm.population.current).name
-  if (window.vm.population.current === 0 && window.vm.population.limit >= 1000) {
+  let civType = window.vm.civSizes.getCivSize(window.vm.$store.state.population.current).name
+  if (window.vm.$store.state.population.current === 0 && window.vm.$store.state.population.limit >= 1000) {
     civType = 'Ghost Town'
   }
-  if (window.vm.curCiv.zombie.owned >= 1000 && window.vm.curCiv.zombie.owned >= 2 * window.vm.population.current) { // easter egg
+  if (window.vm.curCiv.zombie.owned >= 1000 && window.vm.curCiv.zombie.owned >= 2 * window.vm.$store.state.population.current) { // easter egg
     civType = 'Necropolis'
   }
   document.getElementById('civType').innerHTML = civType
 
-  // Unlocking interface elements as window.vm.population increases to reduce unnecessary clicking
+  // Unlocking interface elements as population increases to reduce unnecessary clicking
   // xxx These should be reset in reset()
-  if (window.vm.population.current + window.vm.curCiv.zombie.owned >= 10) {
+  if (window.vm.$store.state.population.current + window.vm.curCiv.zombie.owned >= 10) {
     if (!window.vm.settings.customIncr) {
       elems = document.getElementsByClassName('unit10')
       for (i = 0; i < elems.length; i++) {
@@ -573,7 +576,7 @@ function updatePopulationUI() {
       }
     }
   }
-  if (window.vm.population.current + window.vm.curCiv.zombie.owned >= 100) {
+  if (window.vm.$store.state.population.current + window.vm.curCiv.zombie.owned >= 100) {
     if (!window.vm.settings.customIncr) {
       elems = document.getElementsByClassName('building10')
       for (i = 0; i < elems.length; i++) {
@@ -585,7 +588,7 @@ function updatePopulationUI() {
       }
     }
   }
-  if (window.vm.population.current + window.vm.curCiv.zombie.owned >= 1000) {
+  if (window.vm.$store.state.population.current + window.vm.curCiv.zombie.owned >= 1000) {
     if (!window.vm.settings.customIncr) {
       elems = document.getElementsByClassName('building100')
       for (i = 0; i < elems.length; i++) {
@@ -601,7 +604,7 @@ function updatePopulationUI() {
       }
     }
   }
-  if (window.vm.population.current + window.vm.curCiv.zombie.owned >= 10000) {
+  if (window.vm.$store.state.population.current + window.vm.curCiv.zombie.owned >= 10000) {
     if (!window.vm.settings.customIncr) {
       elems = document.getElementsByClassName('building1000')
       for (i = 0; i < elems.length; i++) {
@@ -612,7 +615,7 @@ function updatePopulationUI() {
 
   // Turning on/off buttons based on free space.
   const maxSpawn = Math.max(0, Math.min(
-    (window.vm.population.limit - window.vm.population.current),
+    (window.vm.$store.state.population.limit - window.vm.$store.state.population.current),
     logSearchFn(calcWorkerCost, window.vm.civData.food.owned)))
 
   document.getElementById('spawn1button').disabled = (maxSpawn < 1)
@@ -629,7 +632,7 @@ function updatePopulationUI() {
   document.getElementById('raiseDeadMax').disabled = (maxRaise < 1)
   document.getElementById('raiseDead100').disabled = (maxRaise < 100)
 
-  // Calculates and displays the cost of buying workers at the current window.vm.population.
+  // Calculates and displays the cost of buying workers at the current population.
   document.getElementById('raiseDeadCost').innerHTML = window.vm.prettify(Math.round(calcZombieCost(1)))
   document.getElementById('workerNumMax').innerHTML = window.vm.prettify(Math.round(maxSpawn))
   document.getElementById('workerCostMax').innerHTML = window.vm.prettify(Math.round(calcWorkerCost(maxSpawn)))
@@ -764,7 +767,7 @@ function updateDevotion() {
   // xxx Smite should also be disabled if there are no foes.
 
   // xxx These costs are not yet handled by canAfford().
-  if (window.vm.population.healthy < 1) {
+  if (window.vm.$store.state.population.healthy < 1) {
     document.getElementById('wickerman').disabled = true
     document.getElementById('walk').disabled = true
   }
@@ -808,7 +811,7 @@ function updateMorale() {
   let text
   let color
   // first check there's someone to be happy or unhappy, not including zombies
-  if (window.vm.population.current < 1) {
+  if (window.vm.$store.state.population.current < 1) {
     window.vm.curCiv.morale.efficiency = 1.0
   }
 
@@ -1086,10 +1089,10 @@ function getCustomNumber(civObj) {
   return num
 }
 
-// Calculates and returns the cost of adding a certain number of workers at the present window.vm.population
+// Calculates and returns the cost of adding a certain number of workers at the present population
 // xxx Make this work for negative numbers
 function calcWorkerCost(num, curPopArg) {
-  const curPop = (curPopArg === undefined) ? window.vm.population.current : curPopArg
+  const curPop = (curPopArg === undefined) ? window.vm.$store.state.population.current : curPopArg
   return (20 * num) + calcArithSum(0.01, curPop, curPop + num)
 }
 
@@ -1118,8 +1121,8 @@ function spawn(numArg) { // eslint-disable-line no-unused-vars
   num = Math.max(num, -jobObj.owned) // Cap firing by # in that job.
   num = Math.min(num, logSearchFn(calcWorkerCost, window.vm.civData.food.owned))
 
-  // Apply window.vm.population limit, and only allow whole workers.
-  num = Math.min(num, (window.vm.population.limit - window.vm.population.current))
+  // Apply population limit, and only allow whole workers.
+  num = Math.min(num, (window.vm.$store.state.population.limit - window.vm.$store.state.population.current))
 
   // Update numbers and resource levels
   window.vm.civData.food.owned -= calcWorkerCost(num)
@@ -1131,7 +1134,7 @@ function spawn(numArg) { // eslint-disable-line no-unused-vars
   else {
     jobObj.owned += num
   }
-  updatePopulation() // Run through the window.vm.population->job update cycle
+  updatePopulation() // Run through the population->job update cycle
 
   // This is intentionally independent of the number of workers spawned
   if (Math.random() * 100 < 1 + (window.vm.civData.lure.owned)) {
@@ -1185,7 +1188,7 @@ function raiseDead(numArg) { // eslint-disable-line no-unused-vars
     gameLog('The zombies fall, mere corpses once again.')
   }
 
-  updatePopulation() // Run through window.vm.population->jobs cycle to update page with zombie and corpse totals
+  updatePopulation() // Run through population->jobs cycle to update page with zombie and corpse totals
   updatePopulationUI()
   updateResourceTotals() // Update any piety spent
 
@@ -1233,7 +1236,7 @@ function digGraves(num) { // eslint-disable-line no-unused-vars
 // xxx Take a parameter for how many people to pick.
 // xxx Make this able to return multiples by returning a cost structure.
 function randomHealthyWorker() {
-  const num = Math.random() * window.vm.population.healthy
+  const num = Math.random() * window.vm.$store.state.population.healthy
   let chance = 0
   let i
   for (i = 0; i < window.vm.killable.length; ++i) {
@@ -1270,7 +1273,7 @@ function getRewardMessage(rewardObj, qty) {
 }
 
 // Selects a random worker, kills them, and then adds a random resource
-// xxx This should probably scale based on window.vm.population (and maybe devotion).
+// xxx This should probably scale based on population (and maybe devotion).
 function wickerman() { // eslint-disable-line no-unused-vars
   // Select a random worker
   const job = randomHealthyWorker()
@@ -1405,9 +1408,10 @@ function grace(deltaArg) { // eslint-disable-line no-unused-vars
 // xxx Eventually, we should have events like deaths affect morale (scaled by %age of total pop)
 function adjustMorale(delta) {
   // Changes and updates morale given a delta value
-  if (window.vm.population.current + window.vm.curCiv.zombie.owned > 0) { // dividing by zero is bad for hive
+  if (window.vm.$store.state.population.current + window.vm.curCiv.zombie.owned > 0) { // dividing by zero is bad for hive
     // calculates zombie proportion (zombies do not become happy or sad)
-    const fraction = window.vm.population.current / (window.vm.population.current + window.vm.curCiv.zombie.owned)
+    const fraction = window.vm.$store.state.population.current /
+      (window.vm.$store.state.population.current + window.vm.curCiv.zombie.owned)
     // alters morale
     window.vm.curCiv.morale.efficiency += delta * fraction
     // Then check limits (50 is median, limits are max 0 or 100, but moderated by fraction of zombies)
@@ -1850,12 +1854,10 @@ function reset() { // eslint-disable-line no-unused-vars
   updateRequirements(window.vm.civData.underworldAltar)
   updateRequirements(window.vm.civData.catAltar)
 
-  window.vm.population = {
-    current: 0,
-    limit: 0,
-    healthy: 0,
-    totalSick: 0,
-  }
+  window.vm.$store.commit('setPopulationCurrent', 0)
+  window.vm.$store.commit('setPopulationLimit', 0)
+  window.vm.$store.commit('setPopulationHealthy', 0)
+  window.vm.$store.commit('setPopulationSick', 0)
 
   resetRaiding()
   window.vm.curCiv.raid.targetMax = window.vm.civSizes[0].id

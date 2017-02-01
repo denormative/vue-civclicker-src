@@ -32,7 +32,6 @@ new Vue({
       logRepeat: 0,
       civSizes: [],
       curCiv: {},
-      population: {},
       // Caches the total number of each wonder, so that we don't have to recount repeatedly.
       wonderCount: {},
       settings: {},
@@ -174,14 +173,6 @@ new Vue({
         // xxx We're still accessing many of the properties put here by this.civData
         // elements without going through the this.civData accessors.  That should
         // change.
-      }
-
-      // These are not saved, but we need them up here for the asset data to init properly.
-      this.population = {
-        current: 0,
-        limit: 0,
-        healthy: 0,
-        totalSick: 0,
       }
 
       // These are settings that should probably be tied to the browser.
@@ -396,14 +387,15 @@ new Vue({
     doFarmers() { // eslint-disable-line no-unused-vars
       const specialChance = window.vm.civData.food.specialChance + (0.1 * window.vm.civData.flensing.owned)
       let millMod = 1
-      if (window.vm.population.current > 0 || window.vm.curCiv.zombie.owned > 0) {
-        millMod = window.vm.population.current / (window.vm.population.current + window.vm.curCiv.zombie.owned)
+      if (window.vm.$store.state.population.current > 0 || window.vm.curCiv.zombie.owned > 0) {
+        millMod = window.vm.$store.state.population.current /
+          (window.vm.$store.state.population.current + window.vm.curCiv.zombie.owned)
       }
       window.vm.civData.food.net = window.vm.civData.farmer.owned *
         (1 + (window.vm.civData.farmer.efficiency * window.vm.curCiv.morale.efficiency)) *
         ((window.vm.civData.pestControl.timer > 0) ? 1.01 : 1) * window.getWonderBonus(window.vm.civData.food) *
         (1 + (window.vm.civData.walk.rate / 120)) * (1 + ((window.vm.civData.mill.owned * millMod) / 200)) // Farmers farm food
-      window.vm.civData.food.net -= window.vm.population.current // The living window.vm.population eats food.
+      window.vm.civData.food.net -= window.vm.$store.state.population.current // The living window.vm.$store.state.population eats food.
       window.vm.civData.food.owned += window.vm.civData.food.net
       if (window.vm.civData.skinning.owned && window.vm.civData.farmer.owned > 0) { // and sometimes get skins
         const numSkins = specialChance * (window.vm.civData.food.increment +
@@ -489,7 +481,7 @@ new Vue({
       let targetObj
       let i
       let num = (numArg === undefined) ? 1 : numArg
-      num = Math.min(num, window.vm.population.current)
+      num = Math.min(num, window.vm.$store.state.population.current)
 
       for (i = 0; i < num; ++i) {
         targetObj = this.pickStarveTarget()
@@ -525,7 +517,7 @@ new Vue({
 
       if (window.vm.civData.food.owned < 0) { // starve if there's not enough food.
         // xxx This is very kind.  Only 0.1% deaths no matter how big the shortage?
-        numStarve = this.starve(Math.ceil(window.vm.population.current / 1000))
+        numStarve = this.starve(Math.ceil(window.vm.$store.state.population.current / 1000))
         if (numStarve === 1) {
           window.gameLog('A worker starved to death')
         }
@@ -541,8 +533,8 @@ new Vue({
       let numSge = 0
       let msg = ''
 
-      if (num === undefined) { // By default, base numbers on current window.vm.population
-        const maxMob = ((window.vm.population.current + window.vm.curCiv.zombie.owned) / 50)
+      if (num === undefined) { // By default, base numbers on current window.vm.$store.state.population
+        const maxMob = ((window.vm.$store.state.population.current + window.vm.curCiv.zombie.owned) / 50)
         num = Math.ceil(maxMob * Math.random())
       }
 
@@ -612,7 +604,7 @@ new Vue({
         window.vm.civData.piety.owned += (attackerCas + defenderCas) * 10
       }
 
-      // Updates window.vm.population figures (including total window.vm.population)
+      // Updates population figures (including total population)
       window.updatePopulation()
     },
     doMobs() { // eslint-disable-line no-unused-vars
@@ -620,15 +612,16 @@ new Vue({
       // xxx Perhaps this should go after the mobs attack, so we give 1 turn's warning?
       let mobType
       let choose
-      if (window.vm.population.current + window.vm.curCiv.zombie.owned > 0) {
+      if (window.vm.$store.state.population.current + window.vm.curCiv.zombie.owned > 0) {
         window.vm.curCiv.attackCounter += 1
       } // No attacks if deserted.
-      if (window.vm.population.current + window.vm.curCiv.zombie.owned > 0 && window.vm.curCiv.attackCounter > (60 * 5)) { // Minimum 5 minutes
+      if (window.vm.$store.state.population.current + window.vm.curCiv.zombie.owned > 0 &&
+          window.vm.curCiv.attackCounter > (60 * 5)) { // Minimum 5 minutes
         if (600 * Math.random() < 1) {
           window.vm.curCiv.attackCounter = 0
           // Choose which kind of mob will attack
           mobType = 'wolf' // Default to wolves
-          if (window.vm.population.current + window.vm.curCiv.zombie.owned >= 10000) {
+          if (window.vm.$store.state.population.current + window.vm.curCiv.zombie.owned >= 10000) {
             choose = Math.random()
             if (choose > 0.5) {
               mobType = 'barbarian'
@@ -637,7 +630,7 @@ new Vue({
               mobType = 'bandit'
             }
           }
-          else if (window.vm.population.current + window.vm.curCiv.zombie.owned >= 1000) {
+          else if (window.vm.$store.state.population.current + window.vm.curCiv.zombie.owned >= 1000) {
             if (Math.random() > 0.5) {
               mobType = 'bandit'
             }
@@ -782,9 +775,10 @@ new Vue({
       num = Math.min(num, window.vm.civData[job].ill)
       num = Math.max(num, -window.vm.civData[job].owned)
       window.vm.civData[job].ill -= num
-      window.vm.population.totalSick -= num
       window.vm.civData[job].owned += num
-      window.vm.population.healthy += num
+      // window.vm.$store.state.population.totalSick -= num
+      // window.vm.$store.state.population.healthy += num
+      window.vm.$store.commit('healSick', num)
 
       return num
     },
@@ -797,7 +791,7 @@ new Vue({
       window.vm.civData.healer.cureCount += (numHealers * window.vm.civData.healer.efficiency * window.vm.curCiv.morale.efficiency)
 
       // We can't cure more sick people than there are
-      window.vm.civData.healer.cureCount = Math.min(window.vm.civData.healer.cureCount, window.vm.population.totalSick)
+      window.vm.civData.healer.cureCount = Math.min(window.vm.civData.healer.cureCount, window.vm.$store.state.population.totalSick)
 
       // Cure people until we run out of healing capacity or herbs
       while (window.vm.civData.healer.cureCount >= 1 && window.vm.civData.herbs.owned >= 1) {
@@ -838,8 +832,8 @@ new Vue({
         return
       }
 
-      // Infect up to 1% of the window.vm.population.
-      let num = Math.floor((window.vm.population.current / 100) * Math.random())
+      // Infect up to 1% of the window.vm.$store.state.population.
+      let num = Math.floor((window.vm.$store.state.population.current / 100) * Math.random())
       if (num <= 0) {
         return
       }
@@ -867,8 +861,8 @@ new Vue({
     tickWalk() { // eslint-disable-line no-unused-vars
       let i
       let target = ''
-      if (window.vm.civData.walk.rate > window.vm.population.healthy) {
-        window.vm.civData.walk.rate = window.vm.population.healthy
+      if (window.vm.civData.walk.rate > window.vm.$store.state.population.healthy) {
+        window.vm.civData.walk.rate = window.vm.$store.state.population.healthy
         document.getElementById('ceaseWalk').disabled = true
       }
       if (window.vm.civData.walk.rate <= 0) {
@@ -883,8 +877,9 @@ new Vue({
         window.vm.civData[target].owned -= 1
           // We don't want to do UpdatePopulation() in a loop, so we just do the
           // relevent adjustments directly.
-        window.vm.population.current -= 1
-        window.vm.population.healthy -= 1
+        // window.vm.$store.state.population.current -= 1
+        // window.vm.$store.state.population.healthy -= 1
+        window.vm.$store.commit('kill', 1)
       }
       window.updatePopulation()
       window.updatePopulationUI()
@@ -993,12 +988,13 @@ new Vue({
     },
     tickTraders() { // eslint-disable-line no-unused-vars
       // traders occasionally show up
-      if (window.vm.population.current + window.vm.curCiv.zombie.owned > 0) {
+      if (window.vm.$store.state.population.current + window.vm.curCiv.zombie.owned > 0) {
         window.vm.curCiv.trader.counter += 1
       }
       const delayMult = 60 * (3 - ((window.vm.civData.currency.owned) + (window.vm.civData.commerce.owned)))
       let check
-      if (window.vm.population.current + window.vm.curCiv.zombie.owned > 0 && window.vm.curCiv.trader.counter > delayMult) {
+      if (window.vm.$store.state.population.current + window.vm.curCiv.zombie.owned > 0 &&
+          window.vm.curCiv.trader.counter > delayMult) {
         check = Math.random() * delayMult
         if (check < (1 + (0.2 * (window.vm.civData.comfort.owned)))) {
           window.vm.curCiv.trader.counter = 0
@@ -1169,7 +1165,7 @@ new Vue({
       const enemyFlag = (purchaseObj.alignment === 'enemy') ? ' enemy' : ''
       s += `<td class='itemname${enemyFlag}'>${purchaseObj.getQtyName(0)}: </td>`
 
-      const action = (window.isValid(window.vm.population[objId])) ? 'display_pop' : 'display' // xxx Hack
+      const action = (window.isValid(window.vm.$store.state.population[objId])) ? 'display_pop' : 'display' // xxx Hack
       s += `<td class='number'><span data-action='${action}'>0</span></td>`;
 
       // Don't allow Infinite (max) purchase on things we can't sell back.

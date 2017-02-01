@@ -259,10 +259,10 @@ function civDataTable() { // eslint-disable-line no-unused-vars
       },
       effectText: 'allows 1 cleric',
       // If purchase was a temple and aesthetics has been activated, increase morale
-      // If window.vm.population is large, temples have less effect.
+      // If population is large, temples have less effect.
       onGain(num) {
         if (window.vm.civData.aesthetics && window.vm.civData.aesthetics.owned && num) {
-          adjustMorale(num * (25 / window.vm.population.current))
+          adjustMorale(num * (25 / window.vm.$store.state.population.current))
         }
       },
     }),
@@ -664,7 +664,7 @@ function civDataTable() { // eslint-disable-line no-unused-vars
       effectText: 'Houses support +2 workers',
       onGain() {
         updatePopulationUI()
-      }, // due to window.vm.population limits changing
+      }, // due to population limits changing
     }),
     new Upgrade({
       id: 'slums',
@@ -681,7 +681,7 @@ function civDataTable() { // eslint-disable-line no-unused-vars
       effectText: 'Houses support +2 workers',
       onGain() {
         updatePopulationUI()
-      }, // due to window.vm.population limits changing
+      }, // due to population limits changing
     }),
     new Upgrade({
       id: 'granaries',
@@ -1280,10 +1280,11 @@ function civDataTable() { // eslint-disable-line no-unused-vars
       salable: false, // Cannot be sold.
       // xxx This (alternate data location) could probably be cleaner.
       get owned() {
-        return window.vm.population[this.id]
+        return window.vm.$store.state.population[this.id]
       },
       set owned(value) {
-        window.vm.population[this.id] = value
+        // window.vm.$store.state.population[this.id] = value
+        window.vm.$store.commit('setSick', value)
       },
       init() {
         this.owned = this.initOwned
@@ -1710,20 +1711,20 @@ function civDataTable() { // eslint-disable-line no-unused-vars
         return window.vm.civData.cat.owned >= 100
       },
     }),
-    // other window.vm.population
+    // other population
     // Plagued achievement requires sick people to outnumber healthy
     new Achievement({
       id: 'plaguedAch',
       name: 'Plagued',
       test() {
-        return window.vm.population.totalSick > window.vm.population.healthy
+        return window.vm.$store.state.population.totalSick > window.vm.$store.state.population.healthy
       },
     }),
     new Achievement({
       id: 'ghostTownAch',
       name: 'Ghost Town',
       test() {
-        return (window.vm.population.current === 0) && (window.vm.population.limit >= 1000)
+        return (window.vm.$store.state.population.current === 0) && (window.vm.$store.state.population.limit >= 1000)
       },
     }),
     // deities
@@ -1824,7 +1825,7 @@ function civDataTable() { // eslint-disable-line no-unused-vars
 function augmentCivData(civData) { // eslint-disable-line no-unused-vars
   let i
   const testCivSizeAch = function() {
-    return (this.id === `${window.vm.civSizes.getCivSize(window.vm.population.current).id}Ach`)
+    return (this.id === `${window.vm.civSizes.getCivSize(window.vm.$store.state.population.current).id}Ach`)
   }
   // Add the civ size based achivements to the front of the data, so that they come first.
   for (i = window.vm.civSizes.length - 1; i > 0; --i) {

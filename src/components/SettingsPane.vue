@@ -92,7 +92,7 @@ export default {
     'settings.customIncr': function() {
       let elems
 
-      const curPop = window.vm.population.current + window.vm.curCiv.zombie.owned
+      const curPop = window.vm.$store.state.population.current + window.vm.curCiv.zombie.owned
 
       elems = document.getElementsByClassName('unit10')
       for (let i = 0; i < elems.length; ++i) {

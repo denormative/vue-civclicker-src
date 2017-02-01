@@ -6,6 +6,7 @@ Vue.use(Vuex)
 const storeState = {
   settings: {
   },
+  // These are not saved, but we need them up here for the asset data to init properly.
   population: {
     current: 0,
     limit: 0,
@@ -17,6 +18,29 @@ const storeState = {
 }
 
 const storeMutations = {
+  healSick(state, num) {
+    state.population.totalSick -= num
+    state.population.healthy += num
+  },
+  kill(state, num) {
+    state.population.current -= num
+    state.population.healthy -= num
+  },
+  setSick(state, num) {
+    state.population.totalSick = num
+  },
+  setPopulationLimit(state, num) {
+    state.population.limit = num
+  },
+  setPopulationSick(state, num) {
+    state.population.totalSick = num
+  },
+  setPopulationHealthy(state, num) {
+    state.population.healthy = num
+  },
+  setPopulationCurrent(state, num) {
+    state.population.current = num
+  },
   ADD_NOTE (state) {
     const newNote = {
       text: 'New note',
