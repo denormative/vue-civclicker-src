@@ -13,14 +13,13 @@
 
 <script>
 export default {
-  name: 'current-deity-pane',
+  name:  'current-deity-pane',
   props: ['curCiv'],
   data() {
     return {}
   },
   mounted() {
-    this.$nextTick(() => {
-    })
+    this.$nextTick(() => {})
   },
   computed: {
     hasDeity() {

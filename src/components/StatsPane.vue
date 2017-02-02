@@ -30,14 +30,13 @@
 import { prettyint } from '../helpers'
 
 export default {
-  name: 'stats-pane',
+  name:  'stats-pane',
   props: ['curCiv', 'settings'],
   data() {
     return {}
   },
   mounted() {
-    this.$nextTick(() => {
-    })
+    this.$nextTick(() => {})
   },
   filters: {
     prettyint,
@@ -46,4 +45,5 @@ export default {
 </script>
 
 <style>
+
 </style>

@@ -9,7 +9,7 @@
 
 <script>
 export default {
-  name: 'buildings-pane',
+  name:  'buildings-pane',
   props: ['homeBuildings', 'settings'],
   data() {
     return {}
@@ -23,4 +23,5 @@ export default {
 </script>
 
 <style>
+
 </style>

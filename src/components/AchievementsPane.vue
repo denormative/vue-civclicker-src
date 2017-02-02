@@ -1,7 +1,7 @@
 <template>
 <div role="tabpanel" id="achievementsPane" class="achievements-pane tab-pane">
   <h3>Achievements</h3>
-  <div  v-for="achObj in achData">
+  <div v-for="achObj in achData">
     <!-- true:  Generate a line break -->
     <div v-if="achObj === true">
       <div style='clear:both;'><br></div>
@@ -22,17 +22,15 @@
 
 <script>
 export default {
-  name: 'achievements-pane',
+  name:  'achievements-pane',
   props: ['achData'],
   data() {
     return {}
   },
   mounted() {
-    this.$nextTick(() => {
-    })
+    this.$nextTick(() => {})
   },
-  methods: {
-  },
+  methods: {},
 }
 </script>
 

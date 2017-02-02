@@ -10,9 +10,9 @@
       <button type="button" class="btn btn-secondary">I / E</button>
     </div>
     <a class="nav-item nav-link" href="civFAQ.html" target="_blank">FAQ / Instructions / Bugfixing</a>
-        <a class="nav-item nav-link" href="civUpdates.html" target="_blank">Game Updates Log</a>
-        <a class="nav-item nav-link" href="#" onclick="impExp()">Import/Export Save</a>
-        <span id="versionAlert"><span class="nav-item nav-link" id="newVersionText" onclick="location.reload()">New Version Available</span></span>
+    <a class="nav-item nav-link" href="civUpdates.html" target="_blank">Game Updates Log</a>
+    <a class="nav-item nav-link" href="#" onclick="impExp()">Import/Export Save</a>
+    <span id="versionAlert"><span class="nav-item nav-link" id="newVersionText" onclick="location.reload()">New Version Available</span></span>
     <menus></menus>
   </div>
 </div>
@@ -22,8 +22,8 @@
 import Menus from './Menus'
 
 export default {
-  name: 'civ-title',
-  props: ['curCiv'],
+  name:       'civ-title',
+  props:      ['curCiv'],
   components: {
     Menus,
   },

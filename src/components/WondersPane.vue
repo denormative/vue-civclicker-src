@@ -22,27 +22,26 @@
         <!-- FIXME: really should be v-if not v-show -->
         <div class="">Progress on <b>{{curCiv.curWonder.name}}</b></div>
         <div class="progress" style="line-height: 1.5rem; font-size: 1rem">
-          <div class="progress-bar bg-success" style="height: 1.5rem" role="progressbar" v-bind:style="{width: curCiv.curWonder.progress + '%'}"
-              aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
+          <div class="progress-bar bg-success" style="height: 1.5rem" role="progressbar" v-bind:style="{width: curCiv.curWonder.progress + '%'}" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
             {{progressDisplay}}%
+          </div>
         </div>
+        <div id="lowResources" class="text-center">Limited<span id="limited"> by low resources</span></div>
       </div>
-      <div id="lowResources" class="text-center">Limited<span id="limited"> by low resources</span></div>
-    </div>
-    <div class="col col-auto">
-      <table id="pastWonders">
-        <tr>
-          <td></td>
-        </tr>
-      </table>
+      <div class="col col-auto">
+        <table id="pastWonders">
+          <tr>
+            <td></td>
+          </tr>
+        </table>
+      </div>
     </div>
   </div>
-</div>
 </template>
 
 <script>
 export default {
-  name: 'wonders-pane',
+  name:  'wonders-pane',
   props: ['curCiv', 'wonderInProgress', 'wonderCompleted'],
   data() {
     return {}
@@ -51,9 +50,9 @@ export default {
     this.$nextTick(() => {
       // window.$('[data-toggle="popover"]').popover()
       window.$('#speedWonder').popover({
-        trigger: 'hover',
+        trigger:   'hover',
         placement: 'left',
-        html: true,
+        html:      true,
       })
     })
   },

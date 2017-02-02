@@ -1,22 +1,20 @@
 <template>
-  <div class="current-trade-pane">
-    <div id="tradeContainer" class="card-block">
-      Trader offers 1 gold for <span id="tradeRequested">0</span> <span id="tradeType">food</span><br>
-      <button class="btn btn-primary" id="trader" onmousedown="trade()">Trade</button>
-    </div>
+<div class="current-trade-pane">
+  <div id="tradeContainer" class="card-block">
+    Trader offers 1 gold for <span id="tradeRequested">0</span> <span id="tradeType">food</span><br>
+    <button class="btn btn-primary" id="trader" onmousedown="trade()">Trade</button>
   </div>
+</div>
 </template>
 
 <script>
 export default {
   name: 'current-trade-pane',
-  data () {
-    return {
-    }
+  data() {
+    return {}
   },
   mounted() {
-    this.$nextTick(() => {
-    })
+    this.$nextTick(() => {})
   },
 }
 </script>

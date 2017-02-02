@@ -135,8 +135,7 @@ export default {
     return {}
   },
   mounted() {
-    this.$nextTick(() => {
-    })
+    this.$nextTick(() => {})
   },
   methods: {
     iconoclasmList() { // eslint-disable-line no-unused-vars

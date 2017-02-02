@@ -8,7 +8,7 @@ import App from './App'
 /* eslint-disable no-new */
 new Vue({
   store,
-  el: '#app',
+  el:       '#app',
   template: `
     <App
       :curCiv="curCiv"
@@ -24,36 +24,36 @@ new Vue({
     />`,
   data() {
     return {
-      version: 0, // This is an ordinal used to trigger reloads.
-      versionData: {},
-      saveTag: '',
-      saveTag2: '', // For old saves.
+      version:         0, // This is an ordinal used to trigger reloads.
+      versionData:     {},
+      saveTag:         '',
+      saveTag2:        '', // For old saves.
       saveSettingsTag: '',
-      logRepeat: 0,
-      civSizes: [],
-      curCiv: {},
+      logRepeat:       0,
+      civSizes:        [],
+      curCiv:          {},
       // Caches the total number of each wonder, so that we don't have to recount repeatedly.
-      wonderCount: {},
-      settings: {},
-      civData: [],
+      wonderCount:     {},
+      settings:        {},
+      civData:         [],
       // Build a variety of additional indices so that we can iterate over specific
       // subsets of our civ objects.
-      resourceData: [], // All resources
-      buildingData: [], // All buildings
-      upgradeData: [], // All upgrades
-      powerData: [], // All 'powers' //xxx This needs refinement.
-      unitData: [], // All units
-      achData: [], // All achievements
-      sackable: [], // All buildings that can be destroyed
-      lootable: [], // All resources that can be stolen
-      killable: [], // All units that can be destroyed
-      homeBuildings: [], // All buildings to be displayed in the home area
-      homeUnits: [], // All units to be displayed in the home area
-      armyUnits: [], // All units to be displayed in the army area
-      basicResources: [], // All basic (click-to-get) resources
-      normalUpgrades: [], // All upgrades to be listed in the normal upgrades area
+      resourceData:    [], // All resources
+      buildingData:    [], // All buildings
+      upgradeData:     [], // All upgrades
+      powerData:       [], // All 'powers' //xxx This needs refinement.
+      unitData:        [], // All units
+      achData:         [], // All achievements
+      sackable:        [], // All buildings that can be destroyed
+      lootable:        [], // All resources that can be stolen
+      killable:        [], // All units that can be destroyed
+      homeBuildings:   [], // All buildings to be displayed in the home area
+      homeUnits:       [], // All units to be displayed in the home area
+      armyUnits:       [], // All units to be displayed in the army area
+      basicResources:  [], // All basic (click-to-get) resources
+      normalUpgrades:  [], // All upgrades to be listed in the normal upgrades area
       wonderResources: [],
-      body: {},
+      body:            {},
 
     }
   },
@@ -70,7 +70,7 @@ new Vue({
     App,
   },
   methods: {
-    preLoad() { // eslint-disable-line no-unused-vars
+    preLoad() {
       this.version = 19 // This is an ordinal used to trigger reloads.
 
       this.versionData = new VersionData(1, 1, 59, 'alpha')
@@ -100,7 +100,7 @@ new Vue({
       /* beautify preserve:end */
       indexArrayByAttr(this.civSizes, 'id')
 
-      // Annotate with max this.population and index.
+      // Annotate with max population and index.
       this.civSizes.forEach((elem, i, arr) => {
         elem.max_pop = (i + 1 < arr.length) ? (arr[i + 1].min_pop - 1) : Infinity
         elem.idx = i
@@ -118,7 +118,7 @@ new Vue({
 
       // Declare variables here so they can be referenced later.
       this.curCiv = {
-        civName: 'Woodstock',
+        civName:   'Woodstock',
         rulerName: 'Orteil',
 
         zombie: {
@@ -135,29 +135,29 @@ new Vue({
         },
 
         resourceClicks: 0, // For NeverClick
-        attackCounter: 0, // How long since last attack?
+        attackCounter:  0, // How long since last attack?
 
         trader: {
           materialId: '',
-          requested: 0,
-          timer: 0,
-          counter: 0, // How long since last trader?
+          requested:  0,
+          timer:      0,
+          counter:    0, // How long since last trader?
         },
 
         raid: {
-          raiding: false, // Are we in a raid right now?
-          victory: false, // Are we in a "raid succeeded" (Plunder-enabled) state right now?
-          epop: 0, // Population of enemy we're raiding.
+          raiding:     false, // Are we in a raid right now?
+          victory:     false, // Are we in a "raid succeeded" (Plunder-enabled) state right now?
+          epop:        0, // Population of enemy we're raiding.
           plunderLoot: {}, // Loot we get if we win.
-          last: '',
-          targetMax: this.civSizes[0].id, // Largest target allowed
+          last:        '',
+          targetMax:   this.civSizes[0].id, // Largest target allowed
         },
 
         curWonder: {
-          name: '',
-          stage: 0, // 0 = Not started, 1 = Building, 2 = Built, awaiting selection, 3 = Finished.
+          name:     '',
+          stage:    0, // 0 = Not started, 1 = Building, 2 = Built, awaiting selection, 3 = Finished.
           progress: 0, // Percentage completed.
-          rushed: false,
+          rushed:   false,
         },
         wonders: [], // Array of {name: name, resourceId: resourceId} for all wonders.
 
@@ -165,7 +165,7 @@ new Vue({
         // If the name is "", no deity has been created (can also check for worship upgrade)
         // If the name is populated but the domain is not, the domain has not been selected.
         deities: [{
-          name: '',
+          name:   '',
           domain: '',
           maxDev: 0,
         }], // array of { name, domain, maxDev }
@@ -177,16 +177,16 @@ new Vue({
 
       // These are settings that should probably be tied to the browser.
       this.settings = {
-        autosave: true,
+        autosave:        true,
         autosaveCounter: 1,
-        autosaveTime: 60, // Currently autosave is every minute. Might change to 5 mins in future.
-        customIncr: false,
-        fontSize: 1.0,
-        delimiters: true,
-        textShadow: false,
-        notes: true,
-        worksafe: false,
-        useIcons: true,
+        autosaveTime:    60, // Currently autosave is every minute. Might change to 5 mins in future.
+        customIncr:      false,
+        fontSize:        1.0,
+        delimiters:      true,
+        textShadow:      false,
+        notes:           true,
+        worksafe:        false,
+        useIcons:        true,
       }
 
       // Initialize Data
@@ -253,7 +253,7 @@ new Vue({
         this.civData.piety,
       ]
     },
-    postLoad() { // eslint-disable-line no-unused-vars
+    postLoad() {
       window.makeDeitiesTables()
 
       if (!window.load('localStorage')) { // immediately attempts to load
@@ -329,7 +329,7 @@ new Vue({
       }, 1000) // updates once per second (1000 milliseconds)
     },
     // Handling raids
-    doRaid(place, attackerID, defenderID) { // eslint-disable-line no-unused-vars
+    doRaid(place, attackerID, defenderID) {
       if (!window.vm.curCiv.raid.raiding) {
         return
       } // We're not raiding right now.
@@ -374,7 +374,7 @@ new Vue({
       // Handle siege engines
       this.doSiege(window.vm.civData.siege, window.vm.civData.efort)
     },
-    tickAutosave() { // eslint-disable-line no-unused-vars
+    tickAutosave() {
       if (window.vm.settings.autosave && (++window.vm.settings.autosaveCounter >= window.vm.settings.autosaveTime)) { // eslint-disable-line no-plusplus
         window.vm.settings.autosaveCounter = 0
         // If autosave fails, disable it.
@@ -384,39 +384,39 @@ new Vue({
       }
     },
     // xxx Need to improve 'net' handling.
-    doFarmers() { // eslint-disable-line no-unused-vars
+    doFarmers() {
       const specialChance = window.vm.civData.food.specialChance + (0.1 * window.vm.civData.flensing.owned)
       let millMod = 1
       if (window.vm.$store.state.population.current > 0 || window.vm.curCiv.zombie.owned > 0) {
-        millMod = window.vm.$store.state.population.current /
-          (window.vm.$store.state.population.current + window.vm.curCiv.zombie.owned)
+        millMod = this.$store.state.population.current /
+          (this.$store.state.population.current + window.vm.curCiv.zombie.owned)
       }
       window.vm.civData.food.net = window.vm.civData.farmer.owned *
         (1 + (window.vm.civData.farmer.efficiency * window.vm.curCiv.morale.efficiency)) *
         ((window.vm.civData.pestControl.timer > 0) ? 1.01 : 1) * window.getWonderBonus(window.vm.civData.food) *
         (1 + (window.vm.civData.walk.rate / 120)) * (1 + ((window.vm.civData.mill.owned * millMod) / 200)) // Farmers farm food
-      window.vm.civData.food.net -= window.vm.$store.state.population.current // The living window.vm.$store.state.population eats food.
+      window.vm.civData.food.net -= this.$store.state.population.current // The living population eats food.
       window.vm.civData.food.owned += window.vm.civData.food.net
       if (window.vm.civData.skinning.owned && window.vm.civData.farmer.owned > 0) { // and sometimes get skins
         const numSkins = specialChance * (window.vm.civData.food.increment +
-          ((window.vm.civData.butchering.owned * window.vm.civData.farmer.owned) / 15.0)) *
-            window.getWonderBonus(window.vm.civData.skins)
+            ((window.vm.civData.butchering.owned * window.vm.civData.farmer.owned) / 15.0)) *
+          window.getWonderBonus(window.vm.civData.skins)
         window.vm.civData.skins.owned += window.rndRound(numSkins)
       }
     },
-    doWoodcutters() { // eslint-disable-line no-unused-vars
+    doWoodcutters() {
       window.vm.civData.wood.net = window.vm.civData.woodcutter.owned *
         (window.vm.civData.woodcutter.efficiency * window.vm.curCiv.morale.efficiency) *
         window.getWonderBonus(window.vm.civData.wood) // Woodcutters cut wood
       window.vm.civData.wood.owned += window.vm.civData.wood.net
       if (window.vm.civData.harvesting.owned && window.vm.civData.woodcutter.owned > 0) { // and sometimes get herbs
         const numHerbs = window.vm.civData.wood.specialChance * (window.vm.civData.wood.increment +
-          ((window.vm.civData.gardening.owned * window.vm.civData.woodcutter.owned) / 5.0)) *
-            window.getWonderBonus(window.vm.civData.herbs)
+            ((window.vm.civData.gardening.owned * window.vm.civData.woodcutter.owned) / 5.0)) *
+          window.getWonderBonus(window.vm.civData.herbs)
         window.vm.civData.herbs.owned += window.rndRound(numHerbs)
       }
     },
-    doMiners() { // eslint-disable-line no-unused-vars
+    doMiners() {
       const specialChance = window.vm.civData.stone.specialChance + (window.vm.civData.macerating.owned ? 0.1 : 0)
       window.vm.civData.stone.net = window.vm.civData.miner.owned *
         (window.vm.civData.miner.efficiency * window.vm.curCiv.morale.efficiency) * window.getWonderBonus(window.vm.civData.stone) // Miners mine stone
@@ -424,28 +424,28 @@ new Vue({
       if (window.vm.civData.prospecting.owned && window.vm.civData.miner.owned > 0) { // and sometimes get ore
         const numOre = specialChance * (window.vm.civData.stone.increment +
             ((window.vm.civData.extraction.owned * window.vm.civData.miner.owned) / 5.0)) *
-              window.getWonderBonus(window.vm.civData.ore)
+          window.getWonderBonus(window.vm.civData.ore)
         window.vm.civData.ore.owned += window.rndRound(numOre)
       }
     },
-    doBlacksmiths() { // eslint-disable-line no-unused-vars
+    doBlacksmiths() {
       const numUsed = Math.min(window.vm.civData.ore.owned,
         (window.vm.civData.blacksmith.owned * window.vm.civData.blacksmith.efficiency * window.vm.curCiv.morale.efficiency))
       window.vm.civData.ore.owned -= numUsed
       window.vm.civData.metal.owned += numUsed * window.getWonderBonus(window.vm.civData.metal)
     },
-    doTanners() { // eslint-disable-line no-unused-vars
+    doTanners() {
       const numUsed = Math.min(window.vm.civData.skins.owned,
         (window.vm.civData.tanner.owned * window.vm.civData.tanner.efficiency * window.vm.curCiv.morale.efficiency))
       window.vm.civData.skins.owned -= numUsed
       window.vm.civData.leather.owned += numUsed * window.getWonderBonus(window.vm.civData.leather)
     },
-    doClerics() { // eslint-disable-line no-unused-vars
+    doClerics() {
       window.vm.civData.piety.owned += window.vm.civData.cleric.owned *
         (window.vm.civData.cleric.efficiency + (window.vm.civData.cleric.efficiency *
           (window.vm.civData.writing.owned))) * (1 + ((window.vm.civData.secrets.owned) *
           (1 - (100 / (window.vm.civData.graveyard.owned + 100))))) * window.vm.curCiv.morale.efficiency *
-            window.getWonderBonus(window.vm.civData.piety)
+        window.getWonderBonus(window.vm.civData.piety)
     },
     // Picks the next worker to starve.  Kills the sick first, then the healthy.
     // Deployed military starve last.
@@ -481,7 +481,7 @@ new Vue({
       let targetObj
       let i
       let num = (numArg === undefined) ? 1 : numArg
-      num = Math.min(num, window.vm.$store.state.population.current)
+      num = Math.min(num, this.$store.state.population.current)
 
       for (i = 0; i < num; ++i) {
         targetObj = this.pickStarveTarget()
@@ -506,7 +506,7 @@ new Vue({
 
       return num
     },
-    doStarve() { // eslint-disable-line no-unused-vars
+    doStarve() {
       let corpsesEaten
       let numStarve
       if (window.vm.civData.food.owned < 0 && window.vm.civData.waste.owned) { // Workers eat corpses if needed
@@ -517,7 +517,7 @@ new Vue({
 
       if (window.vm.civData.food.owned < 0) { // starve if there's not enough food.
         // xxx This is very kind.  Only 0.1% deaths no matter how big the shortage?
-        numStarve = this.starve(Math.ceil(window.vm.$store.state.population.current / 1000))
+        numStarve = this.starve(Math.ceil(this.$store.state.population.current / 1000))
         if (numStarve === 1) {
           window.gameLog('A worker starved to death')
         }
@@ -533,8 +533,8 @@ new Vue({
       let numSge = 0
       let msg = ''
 
-      if (num === undefined) { // By default, base numbers on current window.vm.$store.state.population
-        const maxMob = ((window.vm.$store.state.population.current + window.vm.curCiv.zombie.owned) / 50)
+      if (num === undefined) { // By default, base numbers on current population
+        const maxMob = ((this.$store.state.population.current + window.vm.curCiv.zombie.owned) / 50)
         num = Math.ceil(maxMob * Math.random())
       }
 
@@ -607,21 +607,21 @@ new Vue({
       // Updates population figures (including total population)
       window.updatePopulation()
     },
-    doMobs() { // eslint-disable-line no-unused-vars
+    doMobs() {
       // Checks when mobs will attack
       // xxx Perhaps this should go after the mobs attack, so we give 1 turn's warning?
       let mobType
       let choose
-      if (window.vm.$store.state.population.current + window.vm.curCiv.zombie.owned > 0) {
+      if (this.$store.state.population.current + window.vm.curCiv.zombie.owned > 0) {
         window.vm.curCiv.attackCounter += 1
       } // No attacks if deserted.
-      if (window.vm.$store.state.population.current + window.vm.curCiv.zombie.owned > 0 &&
-          window.vm.curCiv.attackCounter > (60 * 5)) { // Minimum 5 minutes
+      if (this.$store.state.population.current + window.vm.curCiv.zombie.owned > 0 &&
+        window.vm.curCiv.attackCounter > (60 * 5)) { // Minimum 5 minutes
         if (600 * Math.random() < 1) {
           window.vm.curCiv.attackCounter = 0
           // Choose which kind of mob will attack
           mobType = 'wolf' // Default to wolves
-          if (window.vm.$store.state.population.current + window.vm.curCiv.zombie.owned >= 10000) {
+          if (this.$store.state.population.current + window.vm.curCiv.zombie.owned >= 10000) {
             choose = Math.random()
             if (choose > 0.5) {
               mobType = 'barbarian'
@@ -630,7 +630,7 @@ new Vue({
               mobType = 'bandit'
             }
           }
-          else if (window.vm.$store.state.population.current + window.vm.curCiv.zombie.owned >= 1000) {
+          else if (this.$store.state.population.current + window.vm.curCiv.zombie.owned >= 1000) {
             if (Math.random() > 0.5) {
               mobType = 'bandit'
             }
@@ -656,13 +656,13 @@ new Vue({
         }) // FIGHT!
       })
     },
-    doPestControl() { // eslint-disable-line no-unused-vars
+    doPestControl() {
       // Decrements the pestControl Timer
       if (window.vm.civData.pestControl.timer > 0) {
         window.vm.civData.pestControl.timer -= 1
       }
     },
-    tickGlory() { // eslint-disable-line no-unused-vars
+    tickGlory() {
       // Handles the Glory bonus
       if (window.vm.civData.glory.timer > 0) {
         document.getElementById('gloryTimer').innerHTML = window.vm.civData.glory.timer-- // eslint-disable-line no-plusplus
@@ -671,7 +671,7 @@ new Vue({
         document.getElementById('gloryGroup').style.display = 'none'
       }
     },
-    doShades() { // eslint-disable-line no-unused-vars
+    doShades() {
       const defender = window.vm.civData.shade
       if (defender.owned <= 0) {
         return
@@ -714,7 +714,7 @@ new Vue({
       return hits
     },
     // Deals with potentially capturing enemy siege engines.
-    doEsiege(siegeObj, targetObj) { // eslint-disable-line no-unused-vars
+    doEsiege(siegeObj, targetObj) {
       if (siegeObj.owned <= 0) {
         return
       }
@@ -736,7 +736,7 @@ new Vue({
         }
       }
     },
-    doGraveyards() { // eslint-disable-line no-unused-vars
+    doGraveyards() {
       let i
       if (window.vm.civData.corpses.owned > 0 && window.vm.curCiv.grave.owned > 0) {
         // Clerics will bury corpses if there are graves to fill and corpses lying around
@@ -776,13 +776,11 @@ new Vue({
       num = Math.max(num, -window.vm.civData[job].owned)
       window.vm.civData[job].ill -= num
       window.vm.civData[job].owned += num
-      // window.vm.$store.state.population.totalSick -= num
-      // window.vm.$store.state.population.healthy += num
       window.vm.$store.commit('healSick', num)
 
       return num
     },
-    doHealers() { // eslint-disable-line no-unused-vars
+    doHealers() {
       let job
       let numHealed = 0
       const numHealers = window.vm.civData.healer.owned + (window.vm.civData.cat.owned * (window.vm.civData.companion.owned))
@@ -791,7 +789,7 @@ new Vue({
       window.vm.civData.healer.cureCount += (numHealers * window.vm.civData.healer.efficiency * window.vm.curCiv.morale.efficiency)
 
       // We can't cure more sick people than there are
-      window.vm.civData.healer.cureCount = Math.min(window.vm.civData.healer.cureCount, window.vm.$store.state.population.totalSick)
+      window.vm.civData.healer.cureCount = Math.min(window.vm.civData.healer.cureCount, this.$store.state.population.totalSick)
 
       // Cure people until we run out of healing capacity or herbs
       while (window.vm.civData.healer.cureCount >= 1 && window.vm.civData.herbs.owned >= 1) {
@@ -820,7 +818,7 @@ new Vue({
 
       return actualNum
     },
-    doCorpses() { // eslint-disable-line no-unused-vars
+    doCorpses() {
       if (window.vm.civData.corpses.owned <= 0) {
         return
       }
@@ -832,8 +830,8 @@ new Vue({
         return
       }
 
-      // Infect up to 1% of the window.vm.$store.state.population.
-      let num = Math.floor((window.vm.$store.state.population.current / 100) * Math.random())
+      // Infect up to 1% of the population.
+      let num = Math.floor((this.$store.state.population.current / 100) * Math.random())
       if (num <= 0) {
         return
       }
@@ -844,7 +842,7 @@ new Vue({
         window.gameLog(`${window.vm.prettify(num)} workers got sick`) // notify player
       }
     },
-    doThrone() { // eslint-disable-line no-unused-vars
+    doThrone() {
       if (window.vm.civData.throne.count >= 100) {
         // If sufficient enemies have been slain, build new temples for free
         window.vm.civData.temple.owned += Math.floor(window.vm.civData.throne.count / 100)
@@ -852,17 +850,17 @@ new Vue({
         window.updateResourceTotals()
       }
     },
-    tickGrace() { // eslint-disable-line no-unused-vars
+    tickGrace() {
       if (window.vm.civData.grace.cost > 1000) {
         window.vm.civData.grace.cost = Math.floor(--window.vm.civData.grace.cost) // eslint-disable-line no-plusplus
         document.getElementById('graceCost').innerHTML = window.vm.prettify(window.vm.civData.grace.cost)
       }
     },
-    tickWalk() { // eslint-disable-line no-unused-vars
+    tickWalk() {
       let i
       let target = ''
-      if (window.vm.civData.walk.rate > window.vm.$store.state.population.healthy) {
-        window.vm.civData.walk.rate = window.vm.$store.state.population.healthy
+      if (window.vm.civData.walk.rate > this.$store.state.population.healthy) {
+        window.vm.civData.walk.rate = this.$store.state.population.healthy
         document.getElementById('ceaseWalk').disabled = true
       }
       if (window.vm.civData.walk.rate <= 0) {
@@ -875,16 +873,14 @@ new Vue({
           break
         }
         window.vm.civData[target].owned -= 1
-          // We don't want to do UpdatePopulation() in a loop, so we just do the
-          // relevent adjustments directly.
-        // window.vm.$store.state.population.current -= 1
-        // window.vm.$store.state.population.healthy -= 1
+        // We don't want to do UpdatePopulation() in a loop, so we just do the
+        // relevent adjustments directly.
         window.vm.$store.commit('kill', 1)
       }
       window.updatePopulation()
       window.updatePopulationUI()
     },
-    doLabourers() { // eslint-disable-line no-unused-vars
+    doLabourers() {
       if (window.vm.curCiv.curWonder.stage !== 1) {
         return
       }
@@ -898,7 +894,7 @@ new Vue({
         window.updatePopulation()
         // hide limited notice
         document.getElementById('lowResources').style.display = 'none'
-          // then set wonder.stage so things will be updated appropriately
+        // then set wonder.stage so things will be updated appropriately
         window.vm.curCiv.curWonder.stage += 1
       }
       else {
@@ -941,40 +937,19 @@ new Vue({
         window.vm.civData.commerce.owned + window.vm.civData.stay.owned))
 
       // then set material and requested amount
-      const tradeItems = // Item and base amount
-        [{
-          materialId: 'food',
-          requested: 5000,
-        },
-        {
-          materialId: 'wood',
-          requested: 5000,
-        },
-        {
-          materialId: 'stone',
-          requested: 5000,
-        },
-        {
-          materialId: 'skins',
-          requested: 500,
-        },
-        {
-          materialId: 'herbs',
-          requested: 500,
-        },
-        {
-          materialId: 'ore',
-          requested: 500,
-        },
-        {
-          materialId: 'leather',
-          requested: 250,
-        },
-        {
-          materialId: 'metal',
-          requested: 250,
-        },
-        ]
+      // Item and base amount
+      const tradeItems = [
+        /* beautify preserve:start */
+        { materialId: 'food',    requested: 5000 },
+        { materialId: 'wood',    requested: 5000 },
+        { materialId: 'stone',   requested: 5000 },
+        { materialId: 'skins',   requested: 500  },
+        { materialId: 'herbs',   requested: 500  },
+        { materialId: 'ore',     requested: 500  },
+        { materialId: 'leather', requested: 250  },
+        { materialId: 'metal',   requested: 250  },
+        /* beautify preserve:end */
+      ]
 
       // Randomly select and merge one of the above.
       const selected = tradeItems[Math.floor(Math.random() * tradeItems.length)]
@@ -986,7 +961,7 @@ new Vue({
         window.vm.civData[window.vm.curCiv.trader.materialId].getQtyName(window.vm.curCiv.trader.requested)
       document.getElementById('tradeRequested').innerHTML = window.vm.prettify(window.vm.curCiv.trader.requested)
     },
-    tickTraders() { // eslint-disable-line no-unused-vars
+    tickTraders() {
       // traders occasionally show up
       if (window.vm.$store.state.population.current + window.vm.curCiv.zombie.owned > 0) {
         window.vm.curCiv.trader.counter += 1
@@ -994,7 +969,7 @@ new Vue({
       const delayMult = 60 * (3 - ((window.vm.civData.currency.owned) + (window.vm.civData.commerce.owned)))
       let check
       if (window.vm.$store.state.population.current + window.vm.curCiv.zombie.owned > 0 &&
-          window.vm.curCiv.trader.counter > delayMult) {
+        window.vm.curCiv.trader.counter > delayMult) {
         check = Math.random() * delayMult
         if (check < (1 + (0.2 * (window.vm.civData.comfort.owned)))) {
           window.vm.curCiv.trader.counter = 0
@@ -1009,7 +984,7 @@ new Vue({
         }
       }
     },
-    testAchievements() { // eslint-disable-line no-unused-vars
+    testAchievements() {
       window.vm.achData.forEach((achObj) => {
         if (window.vm.civData[achObj.id].owned) {
           return true
@@ -1179,7 +1154,7 @@ new Vue({
 
       return s
     },
-    addUITable(civObjs, groupElemName) { // eslint-disable-line no-unused-vars
+    addUITable(civObjs, groupElemName) {
       let s = ''
       civObjs.forEach((elem) => {
         s += elem.type === 'resource' ? this.getResourceRowText(elem) : // eslint-disable-line no-nested-ternary

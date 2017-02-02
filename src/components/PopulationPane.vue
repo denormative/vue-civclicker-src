@@ -42,29 +42,26 @@
         </table>
       </div>
     </div>
-    <button class="unit1 btn btn-secondary btn-sm" id="spawn1button" onmousedown="spawn(1)" disabled="disabled"
-        data-toggle="popover" :data-content="workerCostInfo(1)">
+    <button class="unit1 btn btn-secondary btn-sm" id="spawn1button" onmousedown="spawn(1)" disabled="disabled" data-toggle="popover" :data-content="workerCostInfo(1)">
       Recruit Worker
     </button>
-    <button class="unit10 btn btn-secondary btn-sm" id="spawn10button" onmousedown="spawn(10)" disabled="disabled"
-        data-toggle="popover" :data-content="workerCostInfo(10)">
+    <button class="unit10 btn btn-secondary btn-sm" id="spawn10button" onmousedown="spawn(10)" disabled="disabled" data-toggle="popover" :data-content="workerCostInfo(10)">
       Recruit 10 Workers
     </button>
-    <button class="unit100 btn btn-secondary btn-sm" id="spawn100button" onmousedown="spawn(100)" disabled="disabled"
-        data-toggle="popover" :data-content="workerCostInfo(100)">
+    <button class="unit100 btn btn-secondary btn-sm" id="spawn100button" onmousedown="spawn(100)" disabled="disabled" data-toggle="popover" :data-content="workerCostInfo(100)">
       Recruit 100 Workers
     </button>
-    <button class="unit1000 btn btn-secondary btn-sm" id="spawn1000button" onmousedown="spawn(1000)" disabled="disabled"
-        data-toggle="popover" :data-content="workerCostInfo(1000)">
+    <button class="unit1000 btn btn-secondary btn-sm" id="spawn1000button" onmousedown="spawn(1000)" disabled="disabled" data-toggle="popover" :data-content="workerCostInfo(1000)">
       Recruit 1000 Workers
     </button>
-    <button class="unit10000 btn btn-secondary btn-sm" id="spawn10000button" onmousedown="spawn(10000)" disabled="disabled"
-        data-toggle="popover" :data-content="workerCostInfo(10000)">
+    <button class="unit10000 btn btn-secondary btn-sm" id="spawn10000button" onmousedown="spawn(10000)" disabled="disabled" data-toggle="popover" :data-content="workerCostInfo(10000)">
       Recruit 10000 Workers
     </button>
-    <button class="unitInfinity btn btn-secondary btn-sm" id="spawnMaxbutton" onmousedown="spawn(Infinity)">Recruit
-      <span id="workerNumMax">Max</span> Workers</button><span class="cost">
-        <span id="workerCostMax"></span> food</span><span class="note">: Recruit as many new workers as possible</span>
+    <button class="unitInfinity btn btn-secondary btn-sm" id="spawnMaxbutton" onmousedown="spawn(Infinity)">
+      Recruit <span id="workerNumMax">Max</span> Workers
+    </button>
+    <span class="cost"><span id="workerCostMax"></span> food</span>
+    <span class="note">: Recruit as many new workers as possible</span>
     <div v-show="settings.customIncr">
       <button class="btn btn-secondary btn-sm" id="spawnCustomButton" onmousedown="spawn('custom')">Recruit Workers</button>
       <input id="spawnCustomQty" type="number" min="1" step="1" value="1" />
@@ -77,7 +74,7 @@
 import { prettyint } from '../helpers'
 
 export default {
-  name: 'population-pane',
+  name:  'population-pane',
   props: ['curCiv', 'settings'],
   data() {
     return {}
@@ -85,9 +82,9 @@ export default {
   created() {
     this.$nextTick(() => {
       window.$('[data-toggle="popover"]').popover({
-        trigger: 'hover',
+        trigger:   'hover',
         placement: 'top',
-        html: true,
+        html:      true,
       })
     })
   },
@@ -98,7 +95,7 @@ export default {
     workerCostInfo() {
       // const vm = this
       // console.log(this)
-      return function (numWorkers) { // eslint-disable-line
+      return function(numWorkers) { // eslint-disable-line
         const msg = (numWorkers === 1) ? 'Recruit a new worker' : `Recruit ${numWorkers} new workers`
 
         return `<b>${prettyint(window.calcWorkerCost(numWorkers))} food</b><br>${msg}`

@@ -2,35 +2,35 @@
 <div role="tabpanel" id="tradePane" class="trade-pane tab-pane card">
   <h4 class="card-header">Trade</h4>
   <div class="card-block">
-  <span id="tradeRow"></span>
-  <div id="tradeUpgradeContainer"> <!-- v-show="civData.trade.owned"-->
-    <span id="currencyRow"></span>
-    <span id="commerceRow"></span>
-    <h6>Buy Resources (1 gold)</h6>
-    <div class="row">
-      <div class="col-4"><button class="btn btn-secondary btn-block" @click="buy('food')">Buy 5000 Food</button></div>
-      <div class="col-4"><button class="btn btn-secondary btn-block" @click="buy('wood')">Buy 5000 Wood</button></div>
-      <div class="col-4"><button class="btn btn-secondary btn-block" @click="buy('stone')">Buy 5000 Stone</button></div>
-      <div class="col-4"><button class="btn btn-secondary btn-block" @click="buy('skins')">Buy 500 Skins</button></div>
-      <div class="col-4"><button class="btn btn-secondary btn-block" @click="buy('herbs')">Buy 500 Herbs</button></div>
-      <div class="col-4"><button class="btn btn-secondary btn-block" @click="buy('ore')">Buy 500 Ore</button></div>
-      <div class="col-4"><button class="btn btn-secondary btn-block" @click="buy('leather')">Buy 250 Leather</button></div>
-      <div class="col-4"><button class="btn btn-secondary btn-block" @click="buy('metal')">Buy 250 Metal</button></div>
+    <span id="tradeRow"></span>
+    <div id="tradeUpgradeContainer">
+      <!-- v-show="civData.trade.owned"-->
+      <span id="currencyRow"></span>
+      <span id="commerceRow"></span>
+      <h6>Buy Resources (1 gold)</h6>
+      <div class="row">
+        <div class="col-4"><button class="btn btn-secondary btn-block" @click="buy('food')">Buy 5000 Food</button></div>
+        <div class="col-4"><button class="btn btn-secondary btn-block" @click="buy('wood')">Buy 5000 Wood</button></div>
+        <div class="col-4"><button class="btn btn-secondary btn-block" @click="buy('stone')">Buy 5000 Stone</button></div>
+        <div class="col-4"><button class="btn btn-secondary btn-block" @click="buy('skins')">Buy 500 Skins</button></div>
+        <div class="col-4"><button class="btn btn-secondary btn-block" @click="buy('herbs')">Buy 500 Herbs</button></div>
+        <div class="col-4"><button class="btn btn-secondary btn-block" @click="buy('ore')">Buy 500 Ore</button></div>
+        <div class="col-4"><button class="btn btn-secondary btn-block" @click="buy('leather')">Buy 250 Leather</button></div>
+        <div class="col-4"><button class="btn btn-secondary btn-block" @click="buy('metal')">Buy 250 Metal</button></div>
+      </div>
     </div>
   </div>
-</div>
 </template>
 
 <script>
 export default {
-  name: 'trade-pane',
+  name:  'trade-pane',
   props: ['civData'],
   data() {
     return {}
   },
   mounted() {
-    this.$nextTick(() => {
-    })
+    this.$nextTick(() => {})
   },
   methods: {
     buy(materialId) { // eslint-disable-line no-unused-vars

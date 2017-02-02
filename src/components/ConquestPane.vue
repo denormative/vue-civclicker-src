@@ -27,7 +27,7 @@
 
 <script>
 export default {
-  name: 'conquest-pane',
+  name:  'conquest-pane',
   props: ['armyUnits', 'civSizes', 'settings'],
   data() {
     return {}
@@ -77,7 +77,7 @@ export default {
 
       // If we fought our largest eligible foe, but not the largest possible, raise the limit.
       if ((window.vm.curCiv.raid.targetMax !== window.vm.civSizes[window.vm.civSizes.length - 1].id) &&
-          window.vm.curCiv.raid.last === window.vm.curCiv.raid.targetMax) {
+        window.vm.curCiv.raid.last === window.vm.curCiv.raid.targetMax) {
         window.vm.curCiv.raid.targetMax = window.vm.civSizes[window.vm.civSizes[window.vm.curCiv.raid.targetMax].idx + 1].id
       }
 
@@ -93,7 +93,8 @@ export default {
       window.payFor(window.vm.curCiv.raid.plunderLoot, -1) // We pay for -1 of these to receive them.
 
       // Create message to notify player
-      plunderMsg = `
+      plunderMsg =
+        `
         ${window.vm.civSizes[window.vm.curCiv.raid.last].name} defeated!
         Plundered ${window.getReqText(window.vm.curCiv.raid.plunderLoot)}.
       `

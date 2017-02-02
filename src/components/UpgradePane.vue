@@ -6,7 +6,7 @@
 
 <script>
 export default {
-  name: 'upgrades-pane',
+  name:  'upgrades-pane',
   props: ['normalUpgrades'],
   data() {
     return {}

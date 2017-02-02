@@ -1620,7 +1620,7 @@ function load(loadType) { // eslint-disable-line
     // window.vm.curCiv = loadVar.window.vm.curCiv // No need to merge if the versions match; this is quicker.
   }
 
-  console.warn(`Loaded save game version ${saveVersion.major
+  console.info(`Loaded save game version ${saveVersion.major
     }.${saveVersion.minor}.${saveVersion.sub}(${saveVersion.mod}).`)
 
   if (isValid(settingsVar)) {
@@ -1687,12 +1687,12 @@ function save(savetype) { // eslint-disable-line no-unused-vars
 
     // Update console for debugging, also the player depending on the type of save (manual/auto)
     if (savetype === 'auto') {
-      console.warn('Autosave')
+      console.info('Autosave')
       gameLog('Autosaved')
     }
     else if (savetype === 'manual') {
       alert('Game Saved') // eslint-disable-line no-alert
-      console.warn('Manual Save')
+      console.info('Manual Save')
       gameLog('Saved game')
     }
   }

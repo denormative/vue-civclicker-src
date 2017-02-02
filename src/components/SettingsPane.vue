@@ -7,9 +7,9 @@
       <button class="btn btn-warning btn-sm" onmousedown="reset()" title="Reset your game">Reset Game</button>
       <span class="note">
         <span id="resetNote"><br>Resetting allows you to </span>
-        <span id="resetDeity">gain another deity</span>
-        <span id="resetBoth"><br> and </span>
-        <span id="resetWonder">build another Wonder</span>
+      <span id="resetDeity">gain another deity</span>
+      <span id="resetBoth"><br> and </span>
+      <span id="resetWonder">build another Wonder</span>
       </span>
       <br>
       <button class="btn btn-danger btn-sm" @click="deleteSave()" title="Delete your saved stats">Delete Save File</button>
@@ -37,7 +37,7 @@
 
 <script>
 export default {
-  name: 'settings-pane',
+  name:  'settings-pane',
   props: ['settings'],
   data() {
     return {}
@@ -92,7 +92,7 @@ export default {
     'settings.customIncr': function() {
       let elems
 
-      const curPop = window.vm.$store.state.population.current + window.vm.curCiv.zombie.owned
+      const curPop = this.$store.state.population.current + window.vm.curCiv.zombie.owned
 
       elems = document.getElementsByClassName('unit10')
       for (let i = 0; i < elems.length; ++i) {

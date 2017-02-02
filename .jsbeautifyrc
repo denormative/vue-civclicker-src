@@ -1,0 +1,26 @@
+{
+  "indent_size": 2,
+  "css": {
+  },
+  "html": {
+    "brace_style": "end-expand",
+    "end_with_newline": true,
+    "wrap_attributes_indent_size": 2,
+    "wrap_line_length": 132
+  },
+  "js": {
+    "brace_style": "end-expand,preserve-inline",
+    "end_with_comma": true,
+    "end_with_newline": true,
+  },
+  "json": {
+  },
+  "vue": {
+    "brace_style": "end-expand,preserve-inline",
+    "end_with_comma": true,
+    "eval_code": true,
+    "keep_array_indentation": true,
+    "wrap_attributes_indent_size": 2,
+    "wrap_line_length": 264
+  }
+}

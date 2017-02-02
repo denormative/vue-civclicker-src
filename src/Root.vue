@@ -80,7 +80,7 @@ import WondersPane from './components/WondersPane'
 import StatsPane from './components/StatsPane'
 
 export default {
-  name: 'root',
+  name:  'root',
   props: ['curCiv', 'settings', 'basicResources', 'homeBuildings',
     'homeUnits', 'armyUnits', 'normalUpgrades', 'civSizes', 'achData', 'civData'],
   components: {
@@ -117,7 +117,9 @@ export default {
 </script>
 
 <style scoped>
-#deitySelect, #conquestSelect, #tradeSelect {
+#deitySelect,
+#conquestSelect,
+#tradeSelect {
   display: none;
 }
 </style>

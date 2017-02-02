@@ -12,7 +12,7 @@
 
 <script>
 export default {
-  name: 'jobs-pane',
+  name:  'jobs-pane',
   props: ['settings', 'homeUnits'],
   data() {
     return {}

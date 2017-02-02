@@ -40,7 +40,9 @@ module.exports = {
     'no-param-reassign': ["error", { "props": false }],
     'no-console': ["off", { allow: ["info", "warn", "error"] }],
     'no-continue': "off",
-    quotes: ["off", "double", { "allowTemplateLiterals": true }]
+    'quotes': ["off", "double", { "allowTemplateLiterals": true }],
+    'no-multi-spaces': ["error", { exceptions: { "ObjectExpression": true } }],
+    'key-spacing': ["error", { align: "value" }]
   },
   "settings": {
     "import/resolver": {
