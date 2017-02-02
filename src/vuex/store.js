@@ -12,9 +12,11 @@ const storeState = {
     healthy:   0,
     totalSick: 0,
   },
+  // Caches the total number of each wonder, so that we don't have to recount repeatedly.
+  wonderCount: {},
   // then set material and requested amount
   // Item and base amount
-  tradeItems: [
+  tradeItems:  [
     /* beautify preserve:start */
     { materialId: 'food',    requested: 5000 },
     { materialId: 'wood',    requested: 5000 },
@@ -53,6 +55,9 @@ const storeMutations = {
   },
   setPopulationCurrent(state, num) {
     state.population.current = num
+  },
+  setWonderCount(state, wonderCount) {
+    state.wonderCount = wonderCount
   },
   ADD_NOTE(state) {
     const newNote = {

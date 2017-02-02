@@ -34,14 +34,15 @@ function getCurDeityDomain() {
 
 // Tallies the number of each wonder from the wonders array.
 function updateWonderCount() {
-  window.vm.wonderCount = {}
+  const wonderCount = {}
   window.vm.curCiv.wonders.forEach((elem) => {
     const resourceId = elem.resourceId
-    if (!isValid(window.vm.wonderCount[resourceId])) {
-      window.vm.wonderCount[resourceId] = 0
+    if (!isValid(wonderCount[resourceId])) {
+      wonderCount[resourceId] = 0
     }
-    window.vm.wonderCount[resourceId] += 1
+    wonderCount[resourceId] += 1
   })
+  window.vm.$store.commit('setWonderCount', wonderCount)
 }
 
 // Return the production multiplier from wonders for a resource.
@@ -49,7 +50,7 @@ function getWonderBonus(resourceObj) { // eslint-disable-line no-unused-vars
   if (!resourceObj) {
     return 1
   }
-  return (1 + ((window.vm.wonderCount[resourceObj.id] || 0) / 10))
+  return (1 + ((window.vm.$store.state.wonderCount[resourceObj.id] || 0) / 10))
 }
 
 // Reset the raid data.
@@ -1465,9 +1466,9 @@ function trade() { // eslint-disable-line no-unused-vars
 function getWonderCostMultiplier() { // eslint-disable-line no-unused-vars
   let i
   let mostWonders = 0
-  for (i in window.vm.wonderCount) {
-    if (Object.prototype.hasOwnProperty.call(window.vm.wonderCount, i)) {
-      mostWonders = Math.max(mostWonders, window.vm.wonderCount[i])
+  for (i in window.vm.$store.state.wonderCount) {
+    if (Object.prototype.hasOwnProperty.call(window.vm.$store.state.wonderCount, i)) {
+      mostWonders = Math.max(mostWonders, window.vm.$store.state.wonderCount[i])
     }
   }
   return (1.5 ** mostWonders)
