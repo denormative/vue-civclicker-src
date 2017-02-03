@@ -44,6 +44,10 @@ const storeState = {
   activeNote: {},
 }
 
+const storeGetters = {
+  doneTodos: state => state.todos.filter(todo => todo.done),
+}
+
 const storeMutations = {
   healSick(state, num) {
     state.population.totalSick -= num
@@ -70,6 +74,42 @@ const storeMutations = {
   },
   setWonderCount(state, wonderCount) {
     state.wonderCount = wonderCount
+  },
+  resizeFontSize(state, sizeMod) {
+    state.settings.fontSize += sizeMod
+  },
+  incrementAutosaveCounter(state) {
+    state.settings.autosaveCounter += 1
+  },
+  resetAutosaveCounter(state) {
+    state.settings.autosaveCounter = 0
+  },
+  disableAutosave(state) {
+    state.settings.autosave = false
+  },
+  loadSettings(state, savedSettings) {
+    state.settings = savedSettings
+  },
+  setCustomIncr(state, val) {
+    state.settings.customIncr = val
+  },
+  setAutosave(state, val) {
+    state.settings.autosave = val
+  },
+  setDelimiters(state, val) {
+    state.settings.delimiters = val
+  },
+  setTextShadow(state, val) {
+    state.settings.textShadow = val
+  },
+  setNotes(state, val) {
+    state.settings.notes = val
+  },
+  setWorksafe(state, val) {
+    state.settings.worksafe = val
+  },
+  setUseIcons(state, val) {
+    state.settings.useIcons = val
   },
   ADD_NOTE(state) {
     const newNote = {
@@ -101,5 +141,6 @@ const storeMutations = {
 export default new Vuex.Store({
   state:     storeState,
   mutations: storeMutations,
+  getters:   storeGetters,
   strict:    process.env.NODE_ENV !== 'production',
 })

@@ -570,46 +570,46 @@ function updatePopulationUI() {
   // Unlocking interface elements as population increases to reduce unnecessary clicking
   // xxx These should be reset in reset()
   if (window.vm.$store.state.population.current + window.vm.curCiv.zombie.owned >= 10) {
-    if (!window.vm.settings.customIncr) {
+    if (!window.vm.$store.state.settings.customIncr) {
       elems = document.getElementsByClassName('unit10')
       for (i = 0; i < elems.length; i++) {
-        setElemDisplay(elems[i], !window.vm.settings.customincr)
+        setElemDisplay(elems[i], !window.vm.$store.state.settings.customincr)
       }
     }
   }
   if (window.vm.$store.state.population.current + window.vm.curCiv.zombie.owned >= 100) {
-    if (!window.vm.settings.customIncr) {
+    if (!window.vm.$store.state.settings.customIncr) {
       elems = document.getElementsByClassName('building10')
       for (i = 0; i < elems.length; i++) {
-        setElemDisplay(elems[i], !window.vm.settings.customincr)
+        setElemDisplay(elems[i], !window.vm.$store.state.settings.customincr)
       }
       elems = document.getElementsByClassName('unit100')
       for (i = 0; i < elems.length; i++) {
-        setElemDisplay(elems[i], !window.vm.settings.customincr)
+        setElemDisplay(elems[i], !window.vm.$store.state.settings.customincr)
       }
     }
   }
   if (window.vm.$store.state.population.current + window.vm.curCiv.zombie.owned >= 1000) {
-    if (!window.vm.settings.customIncr) {
+    if (!window.vm.$store.state.settings.customIncr) {
       elems = document.getElementsByClassName('building100')
       for (i = 0; i < elems.length; i++) {
-        setElemDisplay(elems[i], !window.vm.settings.customincr)
+        setElemDisplay(elems[i], !window.vm.$store.state.settings.customincr)
       }
       elems = document.getElementsByClassName('unit1000')
       for (i = 0; i < elems.length; i++) {
-        setElemDisplay(elems[i], !window.vm.settings.customincr)
+        setElemDisplay(elems[i], !window.vm.$store.state.settings.customincr)
       }
       elems = document.getElementsByClassName('unitInfinity')
       for (i = 0; i < elems.length; i++) {
-        setElemDisplay(elems[i], !window.vm.settings.customincr)
+        setElemDisplay(elems[i], !window.vm.$store.state.settings.customincr)
       }
     }
   }
   if (window.vm.$store.state.population.current + window.vm.curCiv.zombie.owned >= 10000) {
-    if (!window.vm.settings.customIncr) {
+    if (!window.vm.$store.state.settings.customIncr) {
       elems = document.getElementsByClassName('building1000')
       for (i = 0; i < elems.length; i++) {
-        setElemDisplay(elems[i], !window.vm.settings.customincr)
+        setElemDisplay(elems[i], !window.vm.$store.state.settings.customincr)
       }
     }
   }
@@ -706,7 +706,7 @@ function updateDeity() {
 function getDeityRowText(deityId, deityObj) {
   if (!deityObj) {
     deityObj = { // eslint-disable-line no-param-reassign
-      name: 'No deity',
+      name:   'No deity',
       domain: '',
       maxDev: 0,
     }
@@ -1624,8 +1624,8 @@ function load(loadType) { // eslint-disable-line
   console.info(`Loaded save game version ${saveVersion.major
     }.${saveVersion.minor}.${saveVersion.sub}(${saveVersion.mod}).`)
 
-  if (isValid(settingsVar)) {
-    window.vm.settings = mergeObj(window.vm.settings, settingsVar)
+  if (isValid(settingsVar) && (loadType !== 'import')) {
+    window.vm.$store.commit('loadSettings', settingsVar)
   }
 
   adjustMorale(0)
@@ -1658,10 +1658,10 @@ function save(savetype) { // eslint-disable-line no-unused-vars
 
   const saveVar = {
     versionData: window.vm.versionData, // Version information header
-    curCiv: window.vm.curCiv, // Game data
+    curCiv:      window.vm.curCiv, // Game data
   }
 
-  const settingsVar = window.vm.settings // UI Settings are saved separately.
+  const settingsVar = window.vm.$store.state.settings // UI Settings are saved separately.
 
   // //////////////////////////////////////////////////
 
@@ -1843,7 +1843,7 @@ function reset() { // eslint-disable-line no-unused-vars
   }
   // Insert space for a fresh deity.
   window.vm.curCiv.deities.unshift({
-    name: '',
+    name:   '',
     domain: '',
     maxDev: 0,
   })

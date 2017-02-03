@@ -23,33 +23,68 @@
         Text Size
         <button class="btn btn-secondary btn-sm" id="largerText" @click="textSize(1)" title="Larger Text">+</button></span>
       <br>
-      <label><input id="toggleAutosave" type="checkbox" v-model="settings.autosave" title="Autosave"/>Autosave</label><br>
-      <label><input id="toggleCustomQuantities" type="checkbox" v-model="settings.customIncr" title="Custom Quantity"/>Use Custom Quantities</label><br>
-      <label><input id="toggleDelimiters" type="checkbox" v-model="settings.delimiters" title="Toggle Delimiters"/>Number Delimiters</label><br>
-      <label><input id="toggleShadow" type="checkbox" v-model="settings.textShadow" title="Toggle Text Shadow"/>Text Shadows</label><br>
-      <label><input id="toggleNotes" type="checkbox" v-model="settings.notes" title="Toggle Notes"/>Show Notes</label><br>
-      <label><input id="toggleWorksafe" type="checkbox" v-model="settings.worksafe" title="Toggle Worksafe Mode"/>Worksafe Mode</label><br>
-      <label><input id="toggleIcons" type="checkbox" v-model="settings.useIcons" title="Toggle Icons"/>Use Icons</label><br>
+      <label><input id="toggleAutosave" type="checkbox" v-model="autosave" title="Autosave"/>Autosave</label><br>
+      <label><input id="toggleCustomQuantities" type="checkbox" v-model="customIncr" title="Custom Quantity"/>Use Custom Quantities</label><br>
+      <label><input id="toggleDelimiters" type="checkbox" v-model="delimiters" title="Toggle Delimiters"/>Number Delimiters</label><br>
+      <label><input id="toggleShadow" type="checkbox" v-model="textShadow" title="Toggle Text Shadow"/>Text Shadows</label><br>
+      <label><input id="toggleNotes" type="checkbox" v-model="notes" title="Toggle Notes"/>Show Notes</label><br>
+      <label><input id="toggleWorksafe" type="checkbox" v-model="worksafe" title="Toggle Worksafe Mode"/>Worksafe Mode</label><br>
+      <label><input id="toggleIcons" type="checkbox" v-model="useIcons" title="Toggle Icons"/>Use Icons</label><br>
     </div>
   </div>
 </div>
 </template>
 
 <script>
+import { mapState } from 'vuex'
+
 export default {
   name:  'settings-pane',
-  props: ['settings'],
+  props: [],
   data() {
     return {}
   },
   mounted() {
     this.$nextTick(() => {})
   },
+  computed: {
+    ...mapState({
+      settings: state => state.settings,
+    }),
+    customIncr: {
+      get() { return this.settings.customIncr },
+      set(v) { this.$store.commit("setCustomIncr", v) },
+    },
+    autosave: {
+      get() { return this.settings.autosave },
+      set(v) { this.$store.commit("setAutosave", v) },
+    },
+    delimiters: {
+      get() { return this.settings.delimiters },
+      set(v) { this.$store.commit("setDelimiters", v) },
+    },
+    textShadow: {
+      get() { return this.settings.textShadow },
+      set(v) { this.$store.commit("setTextShadow", v) },
+    },
+    notes: {
+      get() { return this.settings.notes },
+      set(v) { this.$store.commit("setNotes", v) },
+    },
+    worksafe: {
+      get() { return this.settings.worksafe },
+      set(v) { this.$store.commit("setWorksafe", v) },
+    },
+    useIcons: {
+      get() { return this.settings.useIcons },
+      set(v) { this.$store.commit("setUseIcons", v) },
+    },
+  },
   methods: {
     // value is the desired change in 0.1em units.
     textSize(value) {
       if (value !== undefined) {
-        this.settings.fontSize += 0.1 * value
+        this.$store.commit('resizeFontSize', 0.1 * value)
       }
     },
     deleteSave() {

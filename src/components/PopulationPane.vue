@@ -71,11 +71,13 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
+// import { mapGetters } from 'vuex'
 import { prettyint } from '../helpers'
 
 export default {
   name:  'population-pane',
-  props: ['curCiv', 'settings'],
+  props: ['curCiv'],
   data() {
     return {}
   },
@@ -92,7 +94,12 @@ export default {
     this.$nextTick(() => {})
   },
   computed: {
-    settings: state => state.settings,
+    ...mapState({
+      settings: state => state.settings,
+    }),
+    // ...mapGetters([
+    //   '',
+    // ]}
     workerCostInfo() {
       // const vm = this
       // console.log(this)

@@ -1,6 +1,6 @@
 <template>
 <div id="app">
-  <root :curCiv="curCiv" :settings="settings" :basicResources="basicResources" :civSizes="civSizes" :achData="achData" :civData="civData"></root>
+  <root :curCiv="curCiv" :basicResources="basicResources" :civSizes="civSizes" :achData="achData" :civData="civData"></root>
 </div>
 </template>
 
@@ -10,7 +10,7 @@ import Root from './Root'
 
 export default {
   name:  'app',
-  props: ['curCiv', 'settings', 'basicResources', 'homeBuildings',
+  props: ['curCiv', 'basicResources', 'homeBuildings',
     'homeUnits', 'armyUnits', 'normalUpgrades', 'civSizes', 'achData', 'civData'],
   components: {
     Hello,

@@ -8,9 +8,11 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
+
 export default {
   name:  'buildings-pane',
-  props: ['homeBuildings', 'settings'],
+  props: ['homeBuildings'],
   data() {
     return {}
   },
@@ -19,6 +21,9 @@ export default {
       window.vm.addUITable(window.vm.homeBuildings, 'buildings') // Dynamically create the building controls table.
     })
   },
+  computed: mapState({
+    settings: state => state.settings,
+  }),
 }
 </script>
 

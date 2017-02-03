@@ -6,7 +6,7 @@
       <tbody>
         <tr>
           <th scope="row">Resource clicks</th>
-          <td class="number">{{curCiv.resourceClicks | prettyint(settings)}}</td>
+          <td class="number">{{curCiv.resourceClicks | prettyint}}</td>
         </tr>
         <tr>
           <th scope="row">Total Land</th>
@@ -31,7 +31,7 @@ import { prettyint } from '../helpers'
 
 export default {
   name:  'stats-pane',
-  props: ['curCiv', 'settings'],
+  props: ['curCiv'],
   data() {
     return {}
   },

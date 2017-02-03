@@ -26,9 +26,11 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
+
 export default {
   name:  'conquest-pane',
-  props: ['armyUnits', 'civSizes', 'settings'],
+  props: ['armyUnits', 'civSizes'],
   data() {
     return {}
   },
@@ -37,6 +39,9 @@ export default {
       window.vm.addUITable(window.vm.armyUnits, 'party') // Dynamically create the party controls table.
     })
   },
+  computed: mapState({
+    settings: state => state.settings,
+  }),
   methods: {
     invade(ecivtype) {
       // invades a certain type of civilisation based on the button clicked

@@ -12,7 +12,7 @@ new Vue({
   template: `
     <App
       :curCiv="curCiv"
-      :settings="settings"
+
       :basicResources="basicResources"
       :homeBuildings="homeBuildings"
       :homeUnits="homeUnits"
@@ -359,13 +359,15 @@ new Vue({
       this.doSiege(window.vm.civData.siege, window.vm.civData.efort)
     },
     tickAutosave() {
-      if (window.vm.settings.autosave && (++window.vm.settings.autosaveCounter >= window.vm.settings.autosaveTime)) { // eslint-disable-line no-plusplus
-        window.vm.settings.autosaveCounter = 0
+      if (this.$store.state.settings.autosave &&
+        (this.$store.state.settings.autosaveCounter >= this.$store.state.settings.autosaveTime)) {
+        this.$store.commit('resetAutosaveCounter')
         // If autosave fails, disable it.
         if (!window.save('auto')) {
-          window.vm.settings.autosave = false
+          this.$store.commit('disableAutosave')
         }
       }
+      this.$store.commit('incrementAutosaveCounter')
     },
     // xxx Need to improve 'net' handling.
     doFarmers() {
@@ -1154,7 +1156,7 @@ new Vue({
     // ////////////////////////////////////////////////////////////////////
     prettify(input) {
       // xxx TODO: Add appropriate format options
-      return (this.settings.delimiters) ? Number(input).toLocaleString() : input.toString()
+      return (this.$store.state.settings.delimiters) ? Number(input).toLocaleString() : input.toString()
     },
 
 
