@@ -4,7 +4,19 @@ import Vuex from 'vuex'
 Vue.use(Vuex)
 
 const storeState = {
-  settings:   {},
+  // These are settings that should probably be tied to the browser.
+  settings: {
+    autosave:        true,
+    autosaveCounter: 1,
+    autosaveTime:    60, // Currently autosave is every minute. Might change to 5 mins in future.
+    customIncr:      false,
+    fontSize:        1.0,
+    delimiters:      true,
+    textShadow:      false,
+    notes:           true,
+    worksafe:        false,
+    useIcons:        true,
+  },
   // These are not saved, but we need them up here for the asset data to init properly.
   population: {
     current:   0,

@@ -92,6 +92,7 @@ export default {
     this.$nextTick(() => {})
   },
   computed: {
+    settings: state => state.settings,
     workerCostInfo() {
       // const vm = this
       // console.log(this)
