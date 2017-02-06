@@ -4,6 +4,10 @@ import Vue from 'vue'
 import store from './vuex/store'
 import App from './App'
 
+import tradeItems from './csv/tradeItems.csv'
+
+console.log(tradeItems)
+
 /* global VersionData indexArrayByAttr civDataTable CivObj */
 /* eslint-disable no-new */
 new Vue({
@@ -54,6 +58,9 @@ new Vue({
       body:            {},
 
     }
+  },
+  beforeCreate() {
+    this.$store.commit('populate', tradeItems)
   },
   created() {
     window.vm = this
@@ -922,23 +929,10 @@ new Vue({
       window.vm.curCiv.trader.timer = 10 + (5 * (window.vm.civData.currency.owned +
         window.vm.civData.commerce.owned + window.vm.civData.stay.owned))
 
-      // then set material and requested amount
-      // Item and base amount
-      const tradeItems = [
-        /* beautify preserve:start */
-        { materialId: 'food',    requested: 5000 },
-        { materialId: 'wood',    requested: 5000 },
-        { materialId: 'stone',   requested: 5000 },
-        { materialId: 'skins',   requested: 500  },
-        { materialId: 'herbs',   requested: 500  },
-        { materialId: 'ore',     requested: 500  },
-        { materialId: 'leather', requested: 250  },
-        { materialId: 'metal',   requested: 250  },
-        /* beautify preserve:end */
+      const selected = window.vm.$store.state.tradeItems[
+        Math.floor(Math.random() * window.vm.$store.state.tradeItems.length)
       ]
-
       // Randomly select and merge one of the above.
-      const selected = tradeItems[Math.floor(Math.random() * tradeItems.length)]
       window.vm.curCiv.trader.materialId = selected.materialId
       window.vm.curCiv.trader.requested = selected.requested * (Math.ceil(Math.random() * 20)) // Up to 20x amount
 

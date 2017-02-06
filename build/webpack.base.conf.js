@@ -83,6 +83,11 @@ module.exports = {
           limit: 10000,
           name: utils.assetsPath('fonts/[name].[hash:7].[ext]')
         }
+      },
+      {
+        //will load all .csv files with dsv-loader by default
+        test: /\.csv$/,
+        loader: 'dsv-loader'
       }
     ]
   },

@@ -4,6 +4,7 @@ import Vuex from 'vuex'
 Vue.use(Vuex)
 
 const storeState = {
+  /* beautify preserve:start */
   // These are settings that should probably be tied to the browser.
   settings: {
     autosave:        true,
@@ -28,20 +29,10 @@ const storeState = {
   wonderCount: {},
   // then set material and requested amount
   // Item and base amount
-  tradeItems:  [
-    /* beautify preserve:start */
-    { materialId: 'food',    requested: 5000 },
-    { materialId: 'wood',    requested: 5000 },
-    { materialId: 'stone',   requested: 5000 },
-    { materialId: 'skins',   requested: 500  },
-    { materialId: 'herbs',   requested: 500  },
-    { materialId: 'ore',     requested: 500  },
-    { materialId: 'leather', requested: 250  },
-    { materialId: 'metal',   requested: 250  },
-    /* beautify preserve:end */
-  ],
-  notes:      [],
-  activeNote: {},
+  tradeItems:  [],
+  notes:       [],
+  activeNote:  {},
+  /* beautify preserve:end */
 }
 
 const storeGetters = {
@@ -110,6 +101,9 @@ const storeMutations = {
   },
   setUseIcons(state, val) {
     state.settings.useIcons = val
+  },
+  populate(state, tradeItems) {
+    state.tradeItems = tradeItems
   },
   ADD_NOTE(state) {
     const newNote = {
