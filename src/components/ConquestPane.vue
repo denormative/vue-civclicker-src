@@ -13,7 +13,7 @@
       <p id="gloryGroup">
         Glory: <span id="gloryTimer">0</span> seconds remain
       </p>
-      <button v-for="elem in civSizes" class="btn btn-secondary btn-sm raid" @click="invade(elem.id)" :data-target="elem.id" disabled="disabled">
+      <button v-for="elem in civSizes" class="btn btn-secondary btn-sm raid" @click="invade(elem.id)" :data-target="elem.id" disabled>
         Raid {{elem.name}}
       </button>
     </div>

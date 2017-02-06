@@ -6,8 +6,6 @@ import App from './App'
 
 import tradeItems from './csv/tradeItems.csv'
 
-console.log(tradeItems)
-
 /* global VersionData indexArrayByAttr civDataTable CivObj */
 /* eslint-disable no-new */
 new Vue({

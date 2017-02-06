@@ -1,0 +1,14 @@
+id,name,min_pop
+thorp,"Thorp",0
+hamlet,"Hamlet",20
+village,"Village",60
+smallTown,"Small Town",200
+# xxx This is a really big jump.  Reduce it.
+largeTown,"Large Town",2000
+smallCity,"Small City",5000
+largeCity,"Large City",10000
+metropolis,"Metro&shy;polis",20000
+smallNation,"Small Nation",50000
+nation,"Nation",100000
+largeNation,"Large Nation",200000
+empire,"Empire",500000
