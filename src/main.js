@@ -5,6 +5,9 @@ import store from './vuex/store'
 import App from './App'
 
 import tradeItems from './csv/tradeItems.csv'
+// Civ size category minimums
+// Really big jump between smallTown and largeTown.  Reduce it.
+import civSizes from './csv/civSizes.csv'
 
 /* global VersionData indexArrayByAttr civDataTable CivObj */
 /* eslint-disable no-new */
@@ -14,13 +17,11 @@ new Vue({
   template: `
     <App
       :curCiv="curCiv"
-
       :basicResources="basicResources"
       :homeBuildings="homeBuildings"
       :homeUnits="homeUnits"
       :armyUnits="armyUnits"
       :normalUpgrades="normalUpgrades"
-      :civSizes="civSizes"
       :achData="achData"
       :civData="civData"
     />`,
@@ -32,9 +33,7 @@ new Vue({
       saveTag2:        '', // For old saves.
       saveSettingsTag: '',
       logRepeat:       0,
-      civSizes:        [],
       curCiv:          {},
-      settings:        {},
       civData:         [],
       // Build a variety of additional indices so that we can iterate over specific
       // subsets of our civ objects.
@@ -53,12 +52,13 @@ new Vue({
       basicResources:  [], // All basic (click-to-get) resources
       normalUpgrades:  [], // All upgrades to be listed in the normal upgrades area
       wonderResources: [],
-      body:            {},
-
     }
   },
   beforeCreate() {
-    this.$store.commit('populate', tradeItems)
+    this.$store.commit('populate', {
+      tradeItems,
+      civSizes,
+    })
   },
   created() {
     window.vm = this
@@ -82,42 +82,6 @@ new Vue({
       this.saveTag2 = `${this.saveTag}2` // For old saves.
       this.saveSettingsTag = 'civSettings'
       this.logRepeat = 1
-
-      // Civ size category minimums
-      /* beautify preserve:start */
-      this.civSizes = [
-        { min_pop: 0, name: 'Thorp', id: 'thorp' },
-        { min_pop: 20, name: 'Hamlet', id: 'hamlet' },
-        { min_pop: 60, name: 'Village', id: 'village' },
-        { min_pop: 200, name: 'Small Town', id: 'smallTown' },
-        // xxx This is a really big jump.  Reduce it.
-        { min_pop: 2000, name: 'Large Town', id: 'largeTown' },
-        { min_pop: 5000, name: 'Small City', id: 'smallCity' },
-        { min_pop: 10000, name: 'Large City', id: 'largeCity' },
-        { min_pop: 20000, name: 'Metro&shy;polis', id: 'metropolis' },
-        { min_pop: 50000, name: 'Small Nation', id: 'smallNation' },
-        { min_pop: 100000, name: 'Nation', id: 'nation' },
-        { min_pop: 200000, name: 'Large Nation', id: 'largeNation' },
-        { min_pop: 500000, name: 'Empire', id: 'empire' },
-      ]
-      /* beautify preserve:end */
-      indexArrayByAttr(this.civSizes, 'id')
-
-      // Annotate with max population and index.
-      this.civSizes.forEach((elem, i, arr) => {
-        elem.max_pop = (i + 1 < arr.length) ? (arr[i + 1].min_pop - 1) : Infinity
-        elem.idx = i
-      })
-
-      this.civSizes.getCivSize = function(popcnt) { // eslint-disable-line func-names
-        let i
-        for (i = 0; i < this.length; ++i) {
-          if (popcnt <= this[i].max_pop) {
-            return this[i]
-          }
-        }
-        return this[0]
-      }
 
       // Declare variables here so they can be referenced later.
       this.curCiv = {
@@ -153,7 +117,7 @@ new Vue({
           epop:        0, // Population of enemy we're raiding.
           plunderLoot: {}, // Loot we get if we win.
           last:        '',
-          targetMax:   this.civSizes[0].id, // Largest target allowed
+          targetMax:   window.vm.$store.state.civSizes[0].id, // Largest target allowed
         },
 
         curWonder: {

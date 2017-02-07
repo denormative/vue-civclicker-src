@@ -558,7 +558,7 @@ function updatePopulationUI() {
 
   // As population increases, various things change
   // Update our civ type name
-  let civType = window.vm.civSizes.getCivSize(window.vm.$store.state.population.current).name
+  let civType = window.vm.$store.getters.getCivSize(window.vm.$store.state.population.current).name
   if (window.vm.$store.state.population.current === 0 && window.vm.$store.state.population.limit >= 1000) {
     civType = 'Ghost Town'
   }
@@ -802,7 +802,8 @@ function updateTargets() {
       // Disable if we have no standard, no army, or they are too big a target.
       curElem = raidButtons[i]
       curElem.disabled = (!window.vm.civData.standard.owned || !haveArmy ||
-        (window.vm.civSizes[dataset(curElem, 'target')].idx > window.vm.civSizes[window.vm.curCiv.raid.targetMax].idx))
+        (window.vm.$store.state.civSizes[dataset(curElem, 'target')].idx >
+          window.vm.$store.state.civSizes[window.vm.curCiv.raid.targetMax].idx))
     }
   }
 }
@@ -1861,7 +1862,7 @@ function reset() { // eslint-disable-line no-unused-vars
   window.vm.$store.commit('setPopulationSick', 0)
 
   resetRaiding()
-  window.vm.curCiv.raid.targetMax = window.vm.civSizes[0].id
+  window.vm.curCiv.raid.targetMax = window.vm.$store.state.civSizes[0].id
 
   window.vm.curCiv.trader.materialId = ''
   window.vm.curCiv.trader.requested = 0

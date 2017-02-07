@@ -1671,7 +1671,7 @@ function civDataTable() { // eslint-disable-line no-unused-vars
       name: 'Domi&shy;nation',
       test() {
         return window.vm.curCiv.raid.victory &&
-          (window.vm.curCiv.raid.last === window.vm.civSizes[window.vm.civSizes.length - 1].id)
+          (window.vm.curCiv.raid.last === window.vm.$store.state.civSizes[window.vm.$store.state.civSizes.length - 1].id)
       },
     }),
     // Morale
@@ -1825,13 +1825,13 @@ function civDataTable() { // eslint-disable-line no-unused-vars
 function augmentCivData(civData) { // eslint-disable-line no-unused-vars
   let i
   const testCivSizeAch = function() {
-    return (this.id === `${window.vm.civSizes.getCivSize(window.vm.$store.state.population.current).id}Ach`)
+    return (this.id === `${window.vm.$store.state.civSizes.getCivSize(window.vm.$store.state.population.current).id}Ach`)
   }
   // Add the civ size based achivements to the front of the data, so that they come first.
-  for (i = window.vm.civSizes.length - 1; i > 0; --i) {
+  for (i = window.vm.$store.state.civSizes.length - 1; i > 0; --i) {
     civData.unshift(new Achievement({
-      id: `${window.vm.civSizes[i].id}Ach`,
-      name: window.vm.civSizes[i].name,
+      id: `${window.vm.$store.state.civSizes[i].id}Ach`,
+      name: window.vm.$store.state.civSizes[i].name,
       test: testCivSizeAch,
     }))
   }

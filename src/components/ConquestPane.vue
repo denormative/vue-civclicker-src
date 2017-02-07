@@ -30,7 +30,7 @@ import { mapState } from 'vuex'
 
 export default {
   name:  'conquest-pane',
-  props: ['armyUnits', 'civSizes'],
+  props: ['armyUnits'],
   data() {
     return {}
   },
@@ -39,19 +39,17 @@ export default {
       window.vm.addUITable(window.vm.armyUnits, 'party') // Dynamically create the party controls table.
     })
   },
-  computed: mapState({
-    settings: state => state.settings,
-  }),
-  methods: {
+  computed: mapState(['settings', 'civSizes']),
+  methods:  {
     invade(ecivtype) {
       // invades a certain type of civilisation based on the button clicked
       window.vm.curCiv.raid.raiding = true
       window.vm.curCiv.raid.last = ecivtype
 
-      window.vm.curCiv.raid.epop = window.vm.civSizes[ecivtype].max_pop + 1
+      window.vm.curCiv.raid.epop = this.civSizes[ecivtype].max_pop + 1
       // If no max pop, use 2x min pop.
       if (window.vm.curCiv.raid.epop === Infinity) {
-        window.vm.curCiv.raid.epop = window.vm.civSizes[ecivtype].min_pop * 2
+        window.vm.curCiv.raid.epop = this.civSizes[ecivtype].min_pop * 2
       }
       if (window.vm.civData.glory.timer > 0) {
         window.vm.curCiv.raid.epop *= 2
@@ -81,13 +79,13 @@ export default {
       let plunderMsg = ''
 
       // If we fought our largest eligible foe, but not the largest possible, raise the limit.
-      if ((window.vm.curCiv.raid.targetMax !== window.vm.civSizes[window.vm.civSizes.length - 1].id) &&
+      if ((window.vm.curCiv.raid.targetMax !== this.civSizes[this.civSizes.length - 1].id) &&
         window.vm.curCiv.raid.last === window.vm.curCiv.raid.targetMax) {
-        window.vm.curCiv.raid.targetMax = window.vm.civSizes[window.vm.civSizes[window.vm.curCiv.raid.targetMax].idx + 1].id
+        window.vm.curCiv.raid.targetMax = this.civSizes[this.civSizes[window.vm.curCiv.raid.targetMax].idx + 1].id
       }
 
       // Improve morale based on size of defeated foe.
-      window.adjustMorale((window.vm.civSizes[window.vm.curCiv.raid.last].idx + 1) / 100)
+      window.adjustMorale((this.civSizes[window.vm.curCiv.raid.last].idx + 1) / 100)
 
       // Lamentation
       if (window.vm.civData.lament.owned) {
@@ -100,7 +98,7 @@ export default {
       // Create message to notify player
       plunderMsg =
         `
-        ${window.vm.civSizes[window.vm.curCiv.raid.last].name} defeated!
+        ${this.civSizes[window.vm.curCiv.raid.last].name} defeated!
         Plundered ${window.getReqText(window.vm.curCiv.raid.plunderLoot)}.
       `
       window.gameLog(plunderMsg)

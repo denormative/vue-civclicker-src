@@ -101,8 +101,6 @@ export default {
     //   '',
     // ]}
     workerCostInfo() {
-      // const vm = this
-      // console.log(this)
       return function(numWorkers) { // eslint-disable-line
         const msg = (numWorkers === 1) ? 'Recruit a new worker' : `Recruit ${numWorkers} new workers`
 

@@ -3,6 +3,8 @@ import Vuex from 'vuex'
 
 Vue.use(Vuex)
 
+/* global indexArrayByAttr */
+
 const storeState = {
   /* beautify preserve:start */
   // These are settings that should probably be tied to the browser.
@@ -25,6 +27,7 @@ const storeState = {
     healthy:   0,
     totalSick: 0,
   },
+  civSizes:    [],
   // Caches the total number of each wonder, so that we don't have to recount repeatedly.
   wonderCount: {},
   // then set material and requested amount
@@ -36,7 +39,15 @@ const storeState = {
 }
 
 const storeGetters = {
-  doneTodos: state => state.todos.filter(todo => todo.done),
+  doneTodos:  state => state.todos.filter(todo => todo.done),
+  getCivSize: (state) => (popcnt) => {
+    for (let i = 0; i < state.civSizes.length; ++i) {
+      if (popcnt <= state.civSizes[i].max_pop) {
+        return state.civSizes[i]
+      }
+    }
+    return state.civSizes[0]
+  },
 }
 
 const storeMutations = {
@@ -102,8 +113,17 @@ const storeMutations = {
   setUseIcons(state, val) {
     state.settings.useIcons = val
   },
-  populate(state, tradeItems) {
+  populate(state, { tradeItems, civSizes }) {
     state.tradeItems = tradeItems
+
+    indexArrayByAttr(civSizes, 'id')
+    state.civSizes = civSizes
+
+    // Annotate with max population and index.
+    state.civSizes.forEach((elem, i, arr) => {
+      elem.max_pop = (i + 1 < arr.length) ? (arr[i + 1].min_pop - 1) : Infinity
+      elem.idx = i
+    })
   },
   ADD_NOTE(state) {
     const newNote = {
