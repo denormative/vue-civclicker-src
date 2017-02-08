@@ -7,11 +7,11 @@
         <table class="table-sm">
           <tr>
             <th scope="row">Current Population: </th>
-            <td class="number"><span data-action="display_pop" data-target="current">0</span></td>
+            <td class="number">{{population.current | prettyint}}</td>
           </tr>
           <tr>
             <th scope="row">Maximum Population: </th>
-            <td class="number"><span data-action="display_pop" data-target="limit">0</span></td>
+            <td class="number">{{population.limit | prettyint}}</td>
           </tr>
           <tr id="zombieWorkers">
             <th scope="row">Zombies: </th>
@@ -94,9 +94,7 @@ export default {
     this.$nextTick(() => {})
   },
   computed: {
-    ...mapState({
-      settings: state => state.settings,
-    }),
+    ...mapState(['settings', 'population']),
     // ...mapGetters([
     //   '',
     // ]}

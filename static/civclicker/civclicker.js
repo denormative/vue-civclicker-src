@@ -535,23 +535,6 @@ function updatePopulation() {
 
 // Update page with numbers
 function updatePopulationUI() {
-  let i
-  let elem
-  let elems
-
-  // Scan the HTML document for elements with a "data-action" element of
-  // "display_pop".  The "data-target" of such elements is presumed to contain
-  // the population subproperty to be displayed as the element's content.
-  // xxx This selector should probably require data-target too.
-  // xxx Note that relatively few values are still stored in the population
-  // struct; most of them are now updated by the 'display' action run
-  // by updateResourceTotals().
-  const displayElems = document.querySelectorAll("[data-action='display_pop']")
-  for (i = 0; i < displayElems.length; ++i) {
-    elem = displayElems[i]
-    elem.innerHTML = window.vm.prettify(Math.floor(window.vm.$store.state.population[dataset(elem, 'target')]))
-  }
-
   window.vm.civData.house.update() // xxx Effect might change dynamically.  Need a more general way to do this.
 
   setElemDisplay('graveTotal', (window.vm.curCiv.grave.owned > 0))
@@ -571,44 +554,44 @@ function updatePopulationUI() {
   // xxx These should be reset in reset()
   if (window.vm.$store.state.population.current + window.vm.curCiv.zombie.owned >= 10) {
     if (!window.vm.$store.state.settings.customIncr) {
-      elems = document.getElementsByClassName('unit10')
-      for (i = 0; i < elems.length; i++) {
+      const elems = document.getElementsByClassName('unit10')
+      for (let i = 0; i < elems.length; i++) {
         setElemDisplay(elems[i], !window.vm.$store.state.settings.customincr)
       }
     }
   }
   if (window.vm.$store.state.population.current + window.vm.curCiv.zombie.owned >= 100) {
     if (!window.vm.$store.state.settings.customIncr) {
-      elems = document.getElementsByClassName('building10')
-      for (i = 0; i < elems.length; i++) {
+      let elems = document.getElementsByClassName('building10')
+      for (let i = 0; i < elems.length; i++) {
         setElemDisplay(elems[i], !window.vm.$store.state.settings.customincr)
       }
       elems = document.getElementsByClassName('unit100')
-      for (i = 0; i < elems.length; i++) {
+      for (let i = 0; i < elems.length; i++) {
         setElemDisplay(elems[i], !window.vm.$store.state.settings.customincr)
       }
     }
   }
   if (window.vm.$store.state.population.current + window.vm.curCiv.zombie.owned >= 1000) {
     if (!window.vm.$store.state.settings.customIncr) {
-      elems = document.getElementsByClassName('building100')
-      for (i = 0; i < elems.length; i++) {
+      let elems = document.getElementsByClassName('building100')
+      for (let i = 0; i < elems.length; i++) {
         setElemDisplay(elems[i], !window.vm.$store.state.settings.customincr)
       }
       elems = document.getElementsByClassName('unit1000')
-      for (i = 0; i < elems.length; i++) {
+      for (let i = 0; i < elems.length; i++) {
         setElemDisplay(elems[i], !window.vm.$store.state.settings.customincr)
       }
       elems = document.getElementsByClassName('unitInfinity')
-      for (i = 0; i < elems.length; i++) {
+      for (let i = 0; i < elems.length; i++) {
         setElemDisplay(elems[i], !window.vm.$store.state.settings.customincr)
       }
     }
   }
   if (window.vm.$store.state.population.current + window.vm.curCiv.zombie.owned >= 10000) {
     if (!window.vm.$store.state.settings.customIncr) {
-      elems = document.getElementsByClassName('building1000')
-      for (i = 0; i < elems.length; i++) {
+      const elems = document.getElementsByClassName('building1000')
+      for (let i = 0; i < elems.length; i++) {
         setElemDisplay(elems[i], !window.vm.$store.state.settings.customincr)
       }
     }

@@ -1082,6 +1082,7 @@ new Vue({
       const enemyFlag = (purchaseObj.alignment === 'enemy') ? ' enemy' : ''
       s += `<td class='itemname${enemyFlag}'>${purchaseObj.getQtyName(0)}: </td>`
 
+      // TODO: remove display_pop
       const action = (window.isValid(window.vm.$store.state.population[objId])) ? 'display_pop' : 'display' // xxx Hack
       s += `<td class='number'><span data-action='${action}'>0</span></td>`;
 
