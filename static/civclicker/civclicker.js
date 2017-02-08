@@ -1582,14 +1582,14 @@ function load(loadType) { // eslint-disable-line
 
   let saveVersion = new VersionData(1, 0, 0, 'legacy')
   saveVersion = mergeObj(saveVersion, loadVar.versionData)
-  if (saveVersion.toNumber() > window.vm.versionData.toNumber()) {
+  if (saveVersion.toNumber() > window.vm.$store.state.versionData.toNumber()) {
     // Refuse to load saved games from future versions.
-    const alertStr = `Cannot load; saved game version ${saveVersion} is newer than game version ${window.vm.versionData}`
+    const alertStr = `Cannot load; saved game version ${saveVersion} is newer than game version ${window.vm.$store.state.versionData}` // eslint-disable-line max-len
     console.error(alertStr)
     alert(alertStr) // eslint-disable-line no-alert
     return false
   }
-  if (saveVersion.toNumber() < window.vm.versionData.toNumber()) {
+  if (saveVersion.toNumber() < window.vm.$store.state.versionData.toNumber()) {
     // Migrate saved game data from older versions.
     const settingsVarReturn = {
       val: {},
@@ -1641,7 +1641,7 @@ function save(savetype) { // eslint-disable-line no-unused-vars
   let xmlhttp
 
   const saveVar = {
-    versionData: window.vm.versionData, // Version information header
+    versionData: window.vm.$store.state.versionData, // Version information header
     curCiv:      window.vm.curCiv, // Game data
   }
 
@@ -1703,7 +1703,7 @@ function save(savetype) { // eslint-disable-line no-unused-vars
     xmlhttp.onreadystatechange = function() { // eslint-disable-line func-names
       if (xmlhttp.readyState === 4) {
         const sVersion = parseInt(xmlhttp.responseText, 10)
-        if (window.vm.version < sVersion) {
+        if (window.vm.$store.state.version < sVersion) {
           versionAlert()
         }
       }

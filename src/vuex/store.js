@@ -3,7 +3,7 @@ import Vuex from 'vuex'
 
 Vue.use(Vuex)
 
-/* global indexArrayByAttr */
+/* global indexArrayByAttr VersionData */
 
 const storeState = {
   /* beautify preserve:start */
@@ -35,6 +35,8 @@ const storeState = {
   tradeItems:  [],
   notes:       [],
   activeNote:  {},
+  version:     19, // This is an ordinal used to trigger reloads.
+  versionData: new VersionData(1, 1, 59, 'alpha'),
   /* beautify preserve:end */
 }
 

@@ -27,8 +27,6 @@ new Vue({
     />`,
   data() {
     return {
-      version:         0, // This is an ordinal used to trigger reloads.
-      versionData:     {},
       saveTag:         '',
       saveTag2:        '', // For old saves.
       saveSettingsTag: '',
@@ -74,10 +72,6 @@ new Vue({
   },
   methods: {
     preLoad() {
-      this.version = 19 // This is an ordinal used to trigger reloads.
-
-      this.versionData = new VersionData(1, 1, 59, 'alpha')
-
       this.saveTag = 'civ'
       this.saveTag2 = `${this.saveTag}2` // For old saves.
       this.saveSettingsTag = 'civSettings'

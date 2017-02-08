@@ -5,6 +5,8 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
+
 import Hello from './components/Hello'
 import Root from './Root'
 
@@ -16,8 +18,11 @@ export default {
     Hello,
     Root,
   },
+  computed: {
+    ...mapState(['versionData']),
+  },
   created() {
-    document.title = `CivClicker (${window.vm.versionData})`
+    document.title = `CivClicker (${this.versionData})`
 
     window.addEventListener('keydown', (event) => {
       switch (event.keyCode) {
