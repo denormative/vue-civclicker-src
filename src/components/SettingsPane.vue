@@ -48,9 +48,7 @@ export default {
     this.$nextTick(() => {})
   },
   computed: {
-    ...mapState({
-      settings: state => state.settings,
-    }),
+    ...mapState(['settings', 'curCiv']),
     customIncr: {
       get() { return this.settings.customIncr },
       set(v) { this.$store.commit("setCustomIncr", v) },
@@ -127,7 +125,7 @@ export default {
     'settings.customIncr': function() {
       let elems
 
-      const curPop = this.$store.state.population.current + window.vm.curCiv.zombie.owned
+      const curPop = this.$store.state.population.current + this.curCiv.zombie.owned
 
       elems = document.getElementsByClassName('unit10')
       for (let i = 0; i < elems.length; ++i) {

@@ -1256,7 +1256,7 @@ function civDataTable() { // eslint-disable-line no-unused-vars
       },
       require: {
         piety: 1000,
-      }, // xxx This is not fixed; see window.vm.curCiv.graceCost
+      }, // xxx This is not fixed; see window.vm.$store.state.curCiv.graceCost
       init(fullInit) {
         Upgrade.prototype.init.call(this, fullInit)
         this.cost = 1000
@@ -1654,7 +1654,7 @@ function civDataTable() { // eslint-disable-line no-unused-vars
       id: 'raiderAch',
       name: 'Raider',
       test() {
-        return window.vm.curCiv.raid.victory
+        return window.vm.$store.state.curCiv.raid.victory
       },
     }),
     // xxx Technically this also gives credit for capturing a siege engine.
@@ -1670,8 +1670,8 @@ function civDataTable() { // eslint-disable-line no-unused-vars
       id: 'dominationAch',
       name: 'Domi&shy;nation',
       test() {
-        return window.vm.curCiv.raid.victory &&
-          (window.vm.curCiv.raid.last === window.vm.$store.state.civSizes[window.vm.$store.state.civSizes.length - 1].id)
+        return window.vm.$store.state.curCiv.raid.victory &&
+          (window.vm.$store.state.curCiv.raid.last === window.vm.$store.state.civSizes[window.vm.$store.state.civSizes.length - 1].id)
       },
     }),
     // Morale
@@ -1679,14 +1679,14 @@ function civDataTable() { // eslint-disable-line no-unused-vars
       id: 'hatedAch',
       name: 'Hated',
       test() {
-        return window.vm.curCiv.morale.efficiency <= 0.5
+        return window.vm.$store.state.curCiv.morale.efficiency <= 0.5
       },
     }),
     new Achievement({
       id: 'lovedAch',
       name: 'Loved',
       test() {
-        return window.vm.curCiv.morale.efficiency >= 1.5
+        return window.vm.$store.state.curCiv.morale.efficiency >= 1.5
       },
     }),
     // cats
@@ -1771,14 +1771,14 @@ function civDataTable() { // eslint-disable-line no-unused-vars
       id: 'wonderAch',
       name: 'Wonder',
       test() {
-        return window.vm.curCiv.curWonder.stage === 3
+        return window.vm.$store.state.curCiv.curWonder.stage === 3
       },
     }),
     new Achievement({
       id: 'sevenAch',
       name: 'Seven!',
       test() {
-        return window.vm.curCiv.wonders.length >= 7
+        return window.vm.$store.state.curCiv.wonders.length >= 7
       },
     }),
     // trading
@@ -1793,7 +1793,7 @@ function civDataTable() { // eslint-disable-line no-unused-vars
       id: 'rushedAch',
       name: 'Rushed',
       test() {
-        return window.vm.curCiv.curWonder.rushed
+        return window.vm.$store.state.curCiv.curWonder.rushed
       },
     }),
     // other
@@ -1801,7 +1801,7 @@ function civDataTable() { // eslint-disable-line no-unused-vars
       id: 'neverclickAch',
       name: 'Never&shy;click',
       test() {
-        return window.vm.curCiv.curWonder.stage === 3 && window.vm.curCiv.resourceClicks <= 22
+        return window.vm.$store.state.curCiv.curWonder.stage === 3 && window.vm.$store.state.curCiv.resourceClicks <= 22
       },
     }),
   ]

@@ -129,6 +129,8 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
+
 export default {
   name: 'deity-pane',
   data() {
@@ -137,18 +139,20 @@ export default {
   mounted() {
     this.$nextTick(() => {})
   },
+  computed: {
+    ...mapState(['curCiv']),
+  },
   methods: {
     iconoclasmList() { // eslint-disable-line no-unused-vars
-      let i
       // Lists the deities for removing
       if (window.vm.civData.piety.owned >= 1000) {
         window.vm.civData.piety.owned -= 1000
         window.updateResourceTotals()
         document.getElementById('iconoclasm').disabled = true
         let append = '<br>'
-        for (i = 1; i < window.vm.curCiv.deities.length; ++i) {
+        for (let i = 1; i < this.curCiv.deities.length; ++i) {
           append += `<button class="btn btn-danger btn-sm" onclick="iconoclasm(${i})">`
-          append += window.vm.curCiv.deities[i].name
+          append += this.curCiv.deities[i].name
           append += '</button><br>'
         }
         append += '<br><button class="btn btn-primary btn-sm" onclick=\'iconoclasm("cancel")\'>Cancel</button>'

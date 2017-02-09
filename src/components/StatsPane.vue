@@ -27,16 +27,19 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import { prettyint } from '../helpers'
 
 export default {
-  name:  'stats-pane',
-  props: ['curCiv'],
+  name: 'stats-pane',
   data() {
     return {}
   },
   mounted() {
     this.$nextTick(() => {})
+  },
+  computed: {
+    ...mapState(['curCiv']),
   },
   filters: {
     prettyint,

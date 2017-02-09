@@ -12,9 +12,10 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
+
 export default {
-  name:  'current-deity-pane',
-  props: ['curCiv'],
+  name: 'current-deity-pane',
   data() {
     return {}
   },
@@ -22,6 +23,7 @@ export default {
     this.$nextTick(() => {})
   },
   computed: {
+    ...mapState(['curCiv']),
     hasDeity() {
       return this.curCiv.deities[0].name
     },

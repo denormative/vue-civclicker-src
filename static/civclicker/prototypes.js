@@ -1,5 +1,3 @@
-
-
 /* global copyProps isValid */
 function VersionData(major, minor, sub, mod) {
   this.major = major
@@ -29,18 +27,18 @@ function CivObj(props, asProto) {
 // xxx TODO: Add save/load methods.
 CivObj.prototype = {
   constructor: CivObj,
-  subType: 'normal',
-  get data() { return window.vm.curCiv[this.id] },
-  set data(value) { window.vm.curCiv[this.id] = value },
+  subType:     'normal',
+  get data() { return window.vm.$store.state.curCiv[this.id] },
+  set data(value) { window.vm.$store.state.curCiv[this.id] = value },
   get owned() { return +this.data.owned },
   set owned(value) { this.data.owned = +value },
-  prereqs: {},
-  require: {}, // Default to free.  If this is undefined, makes the item unpurchaseable
-  salable: false,
-  vulnerable: true,
-  effectText: '',
-  prestige: false,
-  initOwned: 0,  // Override this to undefined to inhibit initialization.  Also determines the type of the 'owned' property.
+  prereqs:     {},
+  require:     {}, // Default to free.  If this is undefined, makes the item unpurchaseable
+  salable:     false,
+  vulnerable:  true,
+  effectText:  '',
+  prestige:    false,
+  initOwned:   0,  // Override this to undefined to inhibit initialization.  Also determines the type of the 'owned' property.
   init(fullInitArg) {
     const fullInit = (fullInitArg === undefined) ? true : fullInitArg
     if (fullInit || !this.prestige) {
@@ -88,15 +86,15 @@ function Resource(props) { // props is an object containing the desired properti
   return this
 }
 Resource.prototype = new CivObj({
-  constructor: Resource,
-  type: 'resource',
+  constructor:     Resource,
+  type:            'resource',
     // 'net' accessor always exists, even if the underlying value is undefined for most resources.
   get net() { return +this.data.net },
   set net(value) { this.data.net = +value },
-  increment: 0,
-  specialChance: 0,
+  increment:       0,
+  specialChance:   0,
   specialMaterial: '',
-  activity: 'gathering', // I18N
+  activity:        'gathering', // I18N
 }, true)
 
 function Building(props) { // props is an object containing the desired properties.
@@ -110,9 +108,9 @@ function Building(props) { // props is an object containing the desired properti
 // Common Properties: type="building",customQtyId
 Building.prototype = new CivObj({
   constructor: Building,
-  type: 'building',
-  alignment: 'player',
-  place: 'home',
+  type:        'building',
+  alignment:   'player',
+  place:       'home',
   get vulnerable() { return this.subType !== 'altar' }, // Altars can't be sacked.
   set vulnerable(value) { return this.vulnerable }, // Only here for JSLint.
   customQtyId: 'buildingCustomQty',
@@ -130,9 +128,9 @@ function Upgrade(props) { // props is an object containing the desired propertie
 // Common Properties: type="upgrade"
 Upgrade.prototype = new CivObj({
   constructor: Upgrade,
-  type: 'upgrade',
-  initOwned: false,
-  vulnerable: false,
+  type:        'upgrade',
+  initOwned:   false,
+  vulnerable:  false,
   get limit() { return +1 }, // Can't re-buy these.
   set limit(value) { return +this.limit }, // Only here for JSLint.
 }, true)
@@ -149,14 +147,14 @@ function Unit(props) { // props is an object containing the desired properties.
 // Common Properties: type="unit"
 Unit.prototype = new CivObj({
   constructor: Unit,
-  type: 'unit',
-  salable: true,
+  type:        'unit',
+  salable:     true,
   get customQtyId() { return `${this.place}CustomQty` },
   set customQtyId(value) { return this.customQtyId }, // Only here for JSLint.
-  alignment: 'player', // Also: "enemy"
-  species: 'human', // Also:  "animal", "mechanical", "undead"
-  place: 'home', // Also:  "party"
-  combatType: '',  // Default noncombatant.  Also "infantry","cavalry","animal"
+  alignment:   'player', // Also: "enemy"
+  species:     'human', // Also:  "animal", "mechanical", "undead"
+  place:       'home', // Also:  "party"
+  combatType:  '',  // Default noncombatant.  Also "infantry","cavalry","animal"
   onWin() { }, // Do nothing.
   get vulnerable() { return ((this.place === 'home') && (this.alignment === 'player') && (this.subType === 'normal')) },
   set vulnerable(value) { return this.vulnerable }, // Only here for JSLint.
@@ -168,11 +166,11 @@ Unit.prototype = new CivObj({
     }
     return true
   },
-    // xxx Right now, ill numbers are being stored as a separate structure inside window.vm.curCiv.
+    // xxx Right now, ill numbers are being stored as a separate structure inside window.vm.$store.state.curCiv.
     // It would probably be better to make it an actual 'ill' property of the Unit.
     // That will require migration code.
-  get illObj() { return window.vm.curCiv[`${this.id}Ill`] },
-  set illObj(value) { window.vm.curCiv[`${this.id}Ill`] = value },
+  get illObj() { return window.vm.$store.state.curCiv[`${this.id}Ill`] },
+  set illObj(value) { window.vm.$store.state.curCiv[`${this.id}Ill`] = value },
   get ill() { return isValid(this.illObj) ? this.illObj.owned : undefined },
   set ill(value) { if (isValid(this.illObj)) { this.illObj.owned = value } },
   get partyObj() { return window.vm.civData[`${this.id}Party`] },
@@ -204,10 +202,10 @@ function Achievement(props) { // props is an object containing the desired prope
 // Common Properties: type="achievement"
 Achievement.prototype = new CivObj({
   constructor: Achievement,
-  type: 'achievement',
-  initOwned: false,
-  prestige: true, // Achievements are not lost on reset.
-  vulnerable: false,
+  type:        'achievement',
+  initOwned:   false,
+  prestige:    true, // Achievements are not lost on reset.
+  vulnerable:  false,
   get limit() { return +1 }, // Can't re-buy these.
   set limit(value) { return +this.limit }, // Only here for JSLint.
 }, true)

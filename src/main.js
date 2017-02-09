@@ -1,6 +1,7 @@
 // The Vue build version to load with the `import` command
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
+import { mapState } from 'vuex'
 import store from './vuex/store'
 import App from './App'
 
@@ -16,7 +17,6 @@ new Vue({
   el:       '#app',
   template: `
     <App
-      :curCiv="curCiv"
       :basicResources="basicResources"
       :homeBuildings="homeBuildings"
       :homeUnits="homeUnits"
@@ -31,7 +31,6 @@ new Vue({
       saveTag2:        '', // For old saves.
       saveSettingsTag: '',
       logRepeat:       0,
-      curCiv:          {},
       civData:         [],
       // Build a variety of additional indices so that we can iterate over specific
       // subsets of our civ objects.
@@ -70,71 +69,15 @@ new Vue({
   components: {
     App,
   },
+  computed: {
+    ...mapState(['curCiv']),
+  },
   methods: {
     preLoad() {
       this.saveTag = 'civ'
       this.saveTag2 = `${this.saveTag}2` // For old saves.
       this.saveSettingsTag = 'civSettings'
       this.logRepeat = 1
-
-      // Declare variables here so they can be referenced later.
-      this.curCiv = {
-        civName:   'Woodstock',
-        rulerName: 'Orteil',
-
-        zombie: {
-          owned: 0,
-        },
-        grave: {
-          owned: 0,
-        },
-        enemySlain: {
-          owned: 0,
-        },
-        morale: {
-          mod: 1.0,
-        },
-
-        resourceClicks: 0, // For NeverClick
-        attackCounter:  0, // How long since last attack?
-
-        trader: {
-          materialId: '',
-          requested:  0,
-          timer:      0,
-          counter:    0, // How long since last trader?
-        },
-
-        raid: {
-          raiding:     false, // Are we in a raid right now?
-          victory:     false, // Are we in a "raid succeeded" (Plunder-enabled) state right now?
-          epop:        0, // Population of enemy we're raiding.
-          plunderLoot: {}, // Loot we get if we win.
-          last:        '',
-          targetMax:   window.vm.$store.state.civSizes[0].id, // Largest target allowed
-        },
-
-        curWonder: {
-          name:     '',
-          stage:    0, // 0 = Not started, 1 = Building, 2 = Built, awaiting selection, 3 = Finished.
-          progress: 0, // Percentage completed.
-          rushed:   false,
-        },
-        wonders: [], // Array of {name: name, resourceId: resourceId} for all wonders.
-
-        // Known deities.  The 0th element is the current game's deity.
-        // If the name is "", no deity has been created (can also check for worship upgrade)
-        // If the name is populated but the domain is not, the domain has not been selected.
-        deities: [{
-          name:   '',
-          domain: '',
-          maxDev: 0,
-        }], // array of { name, domain, maxDev }
-
-        // xxx We're still accessing many of the properties put here by this.civData
-        // elements without going through the this.civData accessors.  That should
-        // change.
-      }
 
       // Initialize Data
       this.civData = civDataTable()
@@ -277,7 +220,7 @@ new Vue({
     },
     // Handling raids
     doRaid(place, attackerID, defenderID) {
-      if (!window.vm.curCiv.raid.raiding) {
+      if (!this.curCiv.raid.raiding) {
         return
       } // We're not raiding right now.
 
@@ -292,10 +235,10 @@ new Vue({
             elem.owned = 0
           })
 
-        if (!window.vm.curCiv.raid.victory) {
+        if (!this.curCiv.raid.victory) {
           window.gameLog('Raid victorious!')
         } // Notify player on initial win.
-        window.vm.curCiv.raid.victory = true // Flag victory for future handling
+        this.curCiv.raid.victory = true // Flag victory for future handling
       }
 
       if (!attackers.length && defenders.length) { // Loss check.
@@ -336,12 +279,12 @@ new Vue({
     doFarmers() {
       const specialChance = window.vm.civData.food.specialChance + (0.1 * window.vm.civData.flensing.owned)
       let millMod = 1
-      if (window.vm.$store.state.population.current > 0 || window.vm.curCiv.zombie.owned > 0) {
+      if (window.vm.$store.state.population.current > 0 || this.curCiv.zombie.owned > 0) {
         millMod = this.$store.state.population.current /
-          (this.$store.state.population.current + window.vm.curCiv.zombie.owned)
+          (this.$store.state.population.current + this.curCiv.zombie.owned)
       }
       window.vm.civData.food.net = window.vm.civData.farmer.owned *
-        (1 + (window.vm.civData.farmer.efficiency * window.vm.curCiv.morale.efficiency)) *
+        (1 + (window.vm.civData.farmer.efficiency * this.curCiv.morale.efficiency)) *
         ((window.vm.civData.pestControl.timer > 0) ? 1.01 : 1) * window.getWonderBonus(window.vm.civData.food) *
         (1 + (window.vm.civData.walk.rate / 120)) * (1 + ((window.vm.civData.mill.owned * millMod) / 200)) // Farmers farm food
       window.vm.civData.food.net -= this.$store.state.population.current // The living population eats food.
@@ -355,7 +298,7 @@ new Vue({
     },
     doWoodcutters() {
       window.vm.civData.wood.net = window.vm.civData.woodcutter.owned *
-        (window.vm.civData.woodcutter.efficiency * window.vm.curCiv.morale.efficiency) *
+        (window.vm.civData.woodcutter.efficiency * this.curCiv.morale.efficiency) *
         window.getWonderBonus(window.vm.civData.wood) // Woodcutters cut wood
       window.vm.civData.wood.owned += window.vm.civData.wood.net
       if (window.vm.civData.harvesting.owned && window.vm.civData.woodcutter.owned > 0) { // and sometimes get herbs
@@ -368,7 +311,7 @@ new Vue({
     doMiners() {
       const specialChance = window.vm.civData.stone.specialChance + (window.vm.civData.macerating.owned ? 0.1 : 0)
       window.vm.civData.stone.net = window.vm.civData.miner.owned *
-        (window.vm.civData.miner.efficiency * window.vm.curCiv.morale.efficiency) * window.getWonderBonus(window.vm.civData.stone) // Miners mine stone
+        (window.vm.civData.miner.efficiency * this.curCiv.morale.efficiency) * window.getWonderBonus(window.vm.civData.stone) // Miners mine stone
       window.vm.civData.stone.owned += window.vm.civData.stone.net
       if (window.vm.civData.prospecting.owned && window.vm.civData.miner.owned > 0) { // and sometimes get ore
         const numOre = specialChance * (window.vm.civData.stone.increment +
@@ -379,13 +322,13 @@ new Vue({
     },
     doBlacksmiths() {
       const numUsed = Math.min(window.vm.civData.ore.owned,
-        (window.vm.civData.blacksmith.owned * window.vm.civData.blacksmith.efficiency * window.vm.curCiv.morale.efficiency))
+        (window.vm.civData.blacksmith.owned * window.vm.civData.blacksmith.efficiency * this.curCiv.morale.efficiency))
       window.vm.civData.ore.owned -= numUsed
       window.vm.civData.metal.owned += numUsed * window.getWonderBonus(window.vm.civData.metal)
     },
     doTanners() {
       const numUsed = Math.min(window.vm.civData.skins.owned,
-        (window.vm.civData.tanner.owned * window.vm.civData.tanner.efficiency * window.vm.curCiv.morale.efficiency))
+        (window.vm.civData.tanner.owned * window.vm.civData.tanner.efficiency * this.curCiv.morale.efficiency))
       window.vm.civData.skins.owned -= numUsed
       window.vm.civData.leather.owned += numUsed * window.getWonderBonus(window.vm.civData.leather)
     },
@@ -393,7 +336,7 @@ new Vue({
       window.vm.civData.piety.owned += window.vm.civData.cleric.owned *
         (window.vm.civData.cleric.efficiency + (window.vm.civData.cleric.efficiency *
           (window.vm.civData.writing.owned))) * (1 + ((window.vm.civData.secrets.owned) *
-          (1 - (100 / (window.vm.civData.graveyard.owned + 100))))) * window.vm.curCiv.morale.efficiency *
+          (1 - (100 / (window.vm.civData.graveyard.owned + 100))))) * this.curCiv.morale.efficiency *
         window.getWonderBonus(window.vm.civData.piety)
     },
     // Picks the next worker to starve.  Kills the sick first, then the healthy.
@@ -483,7 +426,7 @@ new Vue({
       let msg = ''
 
       if (num === undefined) { // By default, base numbers on current population
-        const maxMob = ((this.$store.state.population.current + window.vm.curCiv.zombie.owned) / 50)
+        const maxMob = ((this.$store.state.population.current + this.curCiv.zombie.owned) / 50)
         num = Math.ceil(maxMob * Math.random())
       }
 
@@ -544,7 +487,7 @@ new Vue({
         (defender.alignment === 'player') ? attackerCas : 0)
 
       // Increments enemies slain, corpses, and piety
-      window.vm.curCiv.enemySlain.owned += playerCredit
+      this.curCiv.enemySlain.owned += playerCredit
       if (window.vm.civData.throne.owned) {
         window.vm.civData.throne.count += playerCredit
       }
@@ -561,16 +504,16 @@ new Vue({
       // xxx Perhaps this should go after the mobs attack, so we give 1 turn's warning?
       let mobType
       let choose
-      if (this.$store.state.population.current + window.vm.curCiv.zombie.owned > 0) {
-        window.vm.curCiv.attackCounter += 1
+      if (this.$store.state.population.current + this.curCiv.zombie.owned > 0) {
+        this.curCiv.attackCounter += 1
       } // No attacks if deserted.
-      if (this.$store.state.population.current + window.vm.curCiv.zombie.owned > 0 &&
-        window.vm.curCiv.attackCounter > (60 * 5)) { // Minimum 5 minutes
+      if (this.$store.state.population.current + this.curCiv.zombie.owned > 0 &&
+        this.curCiv.attackCounter > (60 * 5)) { // Minimum 5 minutes
         if (600 * Math.random() < 1) {
-          window.vm.curCiv.attackCounter = 0
+          this.curCiv.attackCounter = 0
           // Choose which kind of mob will attack
           mobType = 'wolf' // Default to wolves
-          if (this.$store.state.population.current + window.vm.curCiv.zombie.owned >= 10000) {
+          if (this.$store.state.population.current + this.curCiv.zombie.owned >= 10000) {
             choose = Math.random()
             if (choose > 0.5) {
               mobType = 'barbarian'
@@ -579,7 +522,7 @@ new Vue({
               mobType = 'bandit'
             }
           }
-          else if (this.$store.state.population.current + window.vm.curCiv.zombie.owned >= 1000) {
+          else if (this.$store.state.population.current + this.curCiv.zombie.owned >= 1000) {
             if (Math.random() > 0.5) {
               mobType = 'bandit'
             }
@@ -687,12 +630,12 @@ new Vue({
     },
     doGraveyards() {
       let i
-      if (window.vm.civData.corpses.owned > 0 && window.vm.curCiv.grave.owned > 0) {
+      if (window.vm.civData.corpses.owned > 0 && this.curCiv.grave.owned > 0) {
         // Clerics will bury corpses if there are graves to fill and corpses lying around
         for (i = 0; i < window.vm.civData.cleric.owned; i++) {
-          if (window.vm.civData.corpses.owned > 0 && window.vm.curCiv.grave.owned > 0) {
+          if (window.vm.civData.corpses.owned > 0 && this.curCiv.grave.owned > 0) {
             window.vm.civData.corpses.owned -= 1
-            window.vm.curCiv.grave.owned -= 1
+            this.curCiv.grave.owned -= 1
           }
         }
         window.updatePopulationUI()
@@ -735,7 +678,7 @@ new Vue({
       const numHealers = window.vm.civData.healer.owned + (window.vm.civData.cat.owned * (window.vm.civData.companion.owned))
 
       // How much healing can we do?
-      window.vm.civData.healer.cureCount += (numHealers * window.vm.civData.healer.efficiency * window.vm.curCiv.morale.efficiency)
+      window.vm.civData.healer.cureCount += (numHealers * window.vm.civData.healer.efficiency * this.curCiv.morale.efficiency)
 
       // We can't cure more sick people than there are
       window.vm.civData.healer.cureCount = Math.min(window.vm.civData.healer.cureCount, this.$store.state.population.totalSick)
@@ -830,11 +773,11 @@ new Vue({
       window.updatePopulationUI()
     },
     doLabourers() {
-      if (window.vm.curCiv.curWonder.stage !== 1) {
+      if (this.curCiv.curWonder.stage !== 1) {
         return
       }
 
-      if (window.vm.curCiv.curWonder.progress >= 100) {
+      if (this.curCiv.curWonder.progress >= 100) {
         // Wonder is finished! First, send workers home
         window.vm.civData.unemployed.owned += window.vm.civData.labourer.owned
         window.vm.civData.unemployed.ill += window.vm.civData.labourer.ill
@@ -844,7 +787,7 @@ new Vue({
         // hide limited notice
         document.getElementById('lowResources').style.display = 'none'
         // then set wonder.stage so things will be updated appropriately
-        window.vm.curCiv.curWonder.stage += 1
+        this.curCiv.curWonder.stage += 1
       }
       else {
         // we're still building
@@ -861,7 +804,7 @@ new Vue({
         })
 
         // increase progress
-        window.vm.curCiv.curWonder.progress += num / (1000000 * window.getWonderCostMultiplier())
+        this.curCiv.curWonder.progress += num / (1000000 * window.getWonderCostMultiplier())
 
         // show/hide limited notice
         window.setElemDisplay('lowResources', (num < window.vm.civData.labourer.owned))
@@ -882,40 +825,40 @@ new Vue({
     },
     tradeTimer() {
       // Set timer length (10 sec + 5 sec/upgrade)
-      window.vm.curCiv.trader.timer = 10 + (5 * (window.vm.civData.currency.owned +
+      this.curCiv.trader.timer = 10 + (5 * (window.vm.civData.currency.owned +
         window.vm.civData.commerce.owned + window.vm.civData.stay.owned))
 
       const selected = window.vm.$store.state.tradeItems[
         Math.floor(Math.random() * window.vm.$store.state.tradeItems.length)
       ]
       // Randomly select and merge one of the above.
-      window.vm.curCiv.trader.materialId = selected.materialId
-      window.vm.curCiv.trader.requested = selected.requested * (Math.ceil(Math.random() * 20)) // Up to 20x amount
+      this.curCiv.trader.materialId = selected.materialId
+      this.curCiv.trader.requested = selected.requested * (Math.ceil(Math.random() * 20)) // Up to 20x amount
 
       document.getElementById('tradeContainer').style.display = 'block'
       document.getElementById('tradeType').innerHTML =
-        window.vm.civData[window.vm.curCiv.trader.materialId].getQtyName(window.vm.curCiv.trader.requested)
-      document.getElementById('tradeRequested').innerHTML = window.vm.prettify(window.vm.curCiv.trader.requested)
+        window.vm.civData[this.curCiv.trader.materialId].getQtyName(this.curCiv.trader.requested)
+      document.getElementById('tradeRequested').innerHTML = window.vm.prettify(this.curCiv.trader.requested)
     },
     tickTraders() {
       // traders occasionally show up
-      if (window.vm.$store.state.population.current + window.vm.curCiv.zombie.owned > 0) {
-        window.vm.curCiv.trader.counter += 1
+      if (window.vm.$store.state.population.current + this.curCiv.zombie.owned > 0) {
+        this.curCiv.trader.counter += 1
       }
       const delayMult = 60 * (3 - ((window.vm.civData.currency.owned) + (window.vm.civData.commerce.owned)))
       let check
-      if (window.vm.$store.state.population.current + window.vm.curCiv.zombie.owned > 0 &&
-        window.vm.curCiv.trader.counter > delayMult) {
+      if (window.vm.$store.state.population.current + this.curCiv.zombie.owned > 0 &&
+        this.curCiv.trader.counter > delayMult) {
         check = Math.random() * delayMult
         if (check < (1 + (0.2 * (window.vm.civData.comfort.owned)))) {
-          window.vm.curCiv.trader.counter = 0
+          this.curCiv.trader.counter = 0
           this.tradeTimer()
         }
       }
 
       // Trader stuff
-      if (window.vm.curCiv.trader.timer > 0) {
-        if (--window.vm.curCiv.trader.timer <= 0) { // eslint-disable-line no-plusplus
+      if (this.curCiv.trader.timer > 0) {
+        if (--this.curCiv.trader.timer <= 0) { // eslint-disable-line no-plusplus
           window.setElemDisplay('tradeContainer', false)
         }
       }

@@ -19,11 +19,11 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import Menus from './Menus'
 
 export default {
   name:       'civ-title',
-  props:      ['curCiv'],
   components: {
     Menus,
   },
@@ -31,6 +31,9 @@ export default {
     return {
       appellation: 'mighty',
     }
+  },
+  computed: {
+    ...mapState(['curCiv']),
   },
 }
 </script>

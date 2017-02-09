@@ -40,9 +40,11 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
+
 export default {
   name:  'wonders-pane',
-  props: ['curCiv', 'wonderInProgress', 'wonderCompleted'],
+  props: ['wonderInProgress', 'wonderCompleted'],
   data() {
     return {}
   },
@@ -62,6 +64,7 @@ export default {
     })
   },
   computed: {
+    ...mapState(['curCiv']),
     progressDisplay() {
       return this.curCiv.curWonder.progress.toFixed(2)
     },
@@ -85,26 +88,26 @@ export default {
       wcElem.innerHTML = s
     },
     startWonder() { // eslint-disable-line no-unused-vars
-      if (window.vm.curCiv.curWonder.stage !== 0) {
+      if (this.curCiv.curWonder.stage !== 0) {
         return
       }
-      window.vm.curCiv.curWonder.stage += 1
+      this.curCiv.curWonder.stage += 1
       this.renameWonder()
       window.updateWonder()
     },
     renameWonder() {
       // Can't rename before you start, or after you finish.
-      if (window.vm.curCiv.curWonder.stage === 0 || window.vm.curCiv.curWonder.stage > 2) {
+      if (this.curCiv.curWonder.stage === 0 || this.curCiv.curWonder.stage > 2) {
         return
       }
-      const n = prompt('Please name your Wonder:', window.vm.curCiv.curWonder.name) // eslint-disable-line no-alert
+      const n = prompt('Please name your Wonder:', this.curCiv.curWonder.name) // eslint-disable-line no-alert
       if (!n) {
         return
       }
-      window.vm.curCiv.curWonder.name = n
+      this.curCiv.curWonder.name = n
       const wc = document.getElementById('wonderNameC')
       if (wc) {
-        wc.innerHTML = window.vm.curCiv.curWonder.name
+        wc.innerHTML = this.curCiv.curWonder.name
       }
     },
     speedWonder() { // eslint-disable-line no-unused-vars
@@ -113,8 +116,8 @@ export default {
       }
       window.vm.civData.gold.owned -= 100
 
-      window.vm.curCiv.curWonder.progress += 1 / window.getWonderCostMultiplier()
-      window.vm.curCiv.curWonder.rushed = true
+      this.curCiv.curWonder.progress += 1 / window.getWonderCostMultiplier()
+      this.curCiv.curWonder.rushed = true
       window.updateWonder()
     },
   },

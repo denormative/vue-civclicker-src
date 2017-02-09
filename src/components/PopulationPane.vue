@@ -76,8 +76,7 @@ import { mapState } from 'vuex'
 import { prettyint } from '../helpers'
 
 export default {
-  name:  'population-pane',
-  props: ['curCiv'],
+  name: 'population-pane',
   data() {
     return {}
   },

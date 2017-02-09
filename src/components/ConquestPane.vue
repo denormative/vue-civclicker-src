@@ -39,38 +39,44 @@ export default {
       window.vm.addUITable(window.vm.armyUnits, 'party') // Dynamically create the party controls table.
     })
   },
-  computed: mapState(['settings', 'civSizes']),
+  computed: mapState(['settings', 'civSizes', 'curCiv']),
   methods:  {
     invade(ecivtype) {
       // invades a certain type of civilisation based on the button clicked
-      window.vm.curCiv.raid.raiding = true
-      window.vm.curCiv.raid.last = ecivtype
-
-      window.vm.curCiv.raid.epop = this.civSizes[ecivtype].max_pop + 1
-      // If no max pop, use 2x min pop.
-      if (window.vm.curCiv.raid.epop === Infinity) {
-        window.vm.curCiv.raid.epop = this.civSizes[ecivtype].min_pop * 2
+      const newRaid = {
+        raiding:     true,
+        last:        ecivtype,
+        epop:        this.civSizes[ecivtype].max_pop + 1,
+        plunderLoot: {
+          freeLand: 0,
+        },
       }
+
+      // If no max pop, use 2x min pop.
+      if (newRaid.epop === Infinity) {
+        newRaid.epop = this.civSizes[ecivtype].min_pop * 2
+      }
+      // doubles soldiers fought
       if (window.vm.civData.glory.timer > 0) {
-        window.vm.curCiv.raid.epop *= 2
-      } // doubles soldiers fought
+        newRaid.epop *= 2
+      }
 
       // 5-25% of enemy population is soldiers.
-      window.vm.civData.esoldier.owned += (window.vm.curCiv.raid.epop / 20) +
-        Math.floor(Math.random() * (window.vm.curCiv.raid.epop / 5))
-      window.vm.civData.efort.owned += Math.floor(Math.random() * (window.vm.curCiv.raid.epop / 5000))
+      window.vm.civData.esoldier.owned += (newRaid.epop / 20) + Math.floor(Math.random() * (newRaid.epop / 5))
+      window.vm.civData.efort.owned += Math.floor(Math.random() * (this.curCiv.raid.epop / 5000))
 
       // Glory redoubles rewards (doubled here because doubled already above)
-      const baseLoot = window.vm.curCiv.raid.epop / (1 + (window.vm.civData.glory.timer <= 0))
+      const baseLoot = newRaid.epop / (1 + (window.vm.civData.glory.timer <= 0))
 
       // Set rewards of land and other random plunder.
       // xxx Maybe these should be partially proportionate to the actual number of defenders?
-      window.vm.curCiv.raid.plunderLoot = {
-        freeLand: Math.round(baseLoot * (1 + (window.vm.civData.administration.owned))),
-      }
+      newRaid.plunderLoot.freeLand = Math.round(baseLoot * (1 + (window.vm.civData.administration.owned)))
+
       window.vm.lootable.forEach((elem) => {
-        window.vm.curCiv.raid.plunderLoot[elem.id] = Math.round(baseLoot * Math.random())
+        newRaid.plunderLoot[elem.id] = Math.round(baseLoot * Math.random())
       })
+
+      this.$store.commit('startRaid', newRaid)
 
       window.updateTargets() // Hides raid buttons until the raid is finished
       window.updatePartyButtons()
@@ -79,27 +85,27 @@ export default {
       let plunderMsg = ''
 
       // If we fought our largest eligible foe, but not the largest possible, raise the limit.
-      if ((window.vm.curCiv.raid.targetMax !== this.civSizes[this.civSizes.length - 1].id) &&
-        window.vm.curCiv.raid.last === window.vm.curCiv.raid.targetMax) {
-        window.vm.curCiv.raid.targetMax = this.civSizes[this.civSizes[window.vm.curCiv.raid.targetMax].idx + 1].id
+      if ((this.curCiv.raid.targetMax !== this.civSizes[this.civSizes.length - 1].id) &&
+        this.curCiv.raid.last === this.curCiv.raid.targetMax) {
+        this.curCiv.raid.targetMax = this.civSizes[this.civSizes[this.curCiv.raid.targetMax].idx + 1].id
       }
 
       // Improve morale based on size of defeated foe.
-      window.adjustMorale((this.civSizes[window.vm.curCiv.raid.last].idx + 1) / 100)
+      window.adjustMorale((this.civSizes[this.curCiv.raid.last].idx + 1) / 100)
 
       // Lamentation
       if (window.vm.civData.lament.owned) {
-        window.vm.curCiv.attackCounter -= Math.ceil(window.vm.curCiv.raid.epop / 2000)
+        this.curCiv.attackCounter -= Math.ceil(this.curCiv.raid.epop / 2000)
       }
 
       // Collect loot
-      window.payFor(window.vm.curCiv.raid.plunderLoot, -1) // We pay for -1 of these to receive them.
+      window.payFor(this.curCiv.raid.plunderLoot, -1) // We pay for -1 of these to receive them.
 
       // Create message to notify player
       plunderMsg =
         `
-        ${this.civSizes[window.vm.curCiv.raid.last].name} defeated!
-        Plundered ${window.getReqText(window.vm.curCiv.raid.plunderLoot)}.
+        ${this.civSizes[this.curCiv.raid.last].name} defeated!
+        Plundered ${window.getReqText(this.curCiv.raid.plunderLoot)}.
       `
       window.gameLog(plunderMsg)
 

@@ -1,6 +1,6 @@
 <template>
 <div class="root">
-  <civ-title :curCiv="curCiv"></civ-title>
+  <civ-title></civ-title>
   <!-- built files will be auto injected -->
   <div class="container-fluid">
     <div class="row">
@@ -43,17 +43,17 @@
             <trade-pane :civData="civData"></trade-pane>
             <achievements-pane :achData="achData"></achievements-pane>
             <settings-pane></settings-pane>
-            <stats-pane :curCiv="curCiv"></stats-pane>
+            <stats-pane></stats-pane>
           </div>
         </div>
       </div>
       <div class="col">
-        <population-pane :curCiv="curCiv"></population-pane>
+        <population-pane></population-pane>
         <jobs-pane :homeUnits="homeUnits"></jobs-pane>
         <current-trade-pane></current-trade-pane>
         <events-pane></events-pane>
-        <current-deity-pane :curCiv="curCiv"></current-deity-pane>
-        <wonders-pane :curCiv="curCiv" :wonderInProgress="wonderInProgress" :wonderCompleted="wonderCompleted"></wonders-pane>
+        <current-deity-pane></current-deity-pane>
+        <wonders-pane :wonderInProgress="wonderInProgress" :wonderCompleted="wonderCompleted"></wonders-pane>
       </div>
     </div>
   </div>
@@ -61,6 +61,8 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
+
 import CivTitle from './components/CivTitle'
 import BasicResources from './components/BasicResources'
 import SpecialResources from './components/SpecialResources'
@@ -81,7 +83,7 @@ import StatsPane from './components/StatsPane'
 
 export default {
   name:  'root',
-  props: ['curCiv', 'basicResources', 'homeBuildings',
+  props: ['basicResources', 'homeBuildings',
     'homeUnits', 'armyUnits', 'normalUpgrades', 'achData', 'civData'],
   components: {
     CivTitle,
@@ -106,6 +108,7 @@ export default {
     return {}
   },
   computed: {
+    ...mapState(['curCiv']),
     wonderInProgress() {
       return this.curCiv.curWonder.stage === 1
     },
