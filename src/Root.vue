@@ -6,11 +6,22 @@
     <div class="row">
       <div class="col">
         <basic-resources :basicResources="basicResources"></basic-resources>
-        <special-resources></special-resources>
+        <special-resources :civData="civData"></special-resources>
+        <events-pane></events-pane>
+        <current-deity-pane></current-deity-pane>
+        <wonders-pane :wonderInProgress="wonderInProgress" :wonderCompleted="wonderCompleted"></wonders-pane>
+
+      </div>
+      <div class="col">
+        <population-pane></population-pane>
+        <current-trade-pane></current-trade-pane>
 
         <ul class="nav nav-tabs">
           <li class="nav-item">
             <a class="nav-link active" data-toggle="tab" href="#buildingsPane">Buildings</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="#jobsPane">Jobs</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" data-toggle="tab" href="#upgradesPane">Upgrades</a>
@@ -37,6 +48,7 @@
         <div class="container-fluid">
           <div class="tab-content">
             <buildings-pane :homeBuildings="homeBuildings"></buildings-pane>
+            <jobs-pane :homeUnits="homeUnits"></jobs-pane>
             <upgrade-pane :normalUpgrades="normalUpgrades"></upgrade-pane>
             <deity-pane></deity-pane>
             <conquest-pane :armyUnits="armyUnits"></conquest-pane>
@@ -46,14 +58,6 @@
             <stats-pane></stats-pane>
           </div>
         </div>
-      </div>
-      <div class="col">
-        <population-pane></population-pane>
-        <jobs-pane :homeUnits="homeUnits"></jobs-pane>
-        <current-trade-pane></current-trade-pane>
-        <events-pane></events-pane>
-        <current-deity-pane></current-deity-pane>
-        <wonders-pane :wonderInProgress="wonderInProgress" :wonderCompleted="wonderCompleted"></wonders-pane>
       </div>
     </div>
   </div>

@@ -45,21 +45,16 @@
   margin: 2px 0 -2px 0;
 }
 
-
 .net {
   padding-left: 1em;
 }
-
-/* Put the column breaks where we want them */
-
-/*xxx Unfortunately, support for these properties is very sketchy. */
 
 .devcost {
   padding-right: 1em;
 }
 
 .note {
-  /*width: 380px;*/
+  /* width: 380px; */
   text-align: right;
   font-style: italic;
   color: #555;
@@ -78,10 +73,6 @@
 
 .number {
   text-align: right;
-}
-
-.icon {
-  padding-right: 10px;
 }
 
 .deityDomain {
@@ -104,10 +95,21 @@
 
 .buycustom button {
   width: 7.5em !important;
+
   /* Need to make this override the above */
 }
 
-.building10, .building100, .building1000, .buildingInfinity, .unit10, .unit100, .unit1000, .unitInfinity, .buycustom {
+.building10,
+.building100,
+.building1000,
+.building10000,
+.buildingInfinity,
+.unit10,
+.unit100,
+.unit1000,
+.unit10000,
+.unitInfinity,
+.buycustom {
   display: none;
 }
 

@@ -439,10 +439,6 @@ function updateResourceTotals() {
     elem.innerHTML = window.vm.prettify(val.toFixed(1))
   }
 
-  if (window.vm.civData.gold.owned >= 1) {
-    setElemDisplay('goldRow', true)
-  }
-
   // Update page with building numbers, also stockpile limits.
   document.getElementById('maxfood').innerHTML = window.vm.prettify(window.vm.civData.food.limit)
   document.getElementById('maxwood').innerHTML = window.vm.prettify(window.vm.civData.wood.limit)
@@ -476,8 +472,9 @@ function updateResourceTotals() {
   }
 
   // Need to have enough resources to trade
-  document.getElementById('trader').disabled = !window.vm.$store.state.curCiv.trader || !window.vm.$store.state.curCiv.trader.timer ||
-    (window.vm.civData[window.vm.$store.state.curCiv.trader.materialId].owned < window.vm.$store.state.curCiv.trader.requested)
+  document.getElementById('trader').disabled = (!window.vm.$store.state.curCiv.trader ||
+    !window.vm.$store.state.curCiv.trader.timer ||
+    (window.vm.civData[window.vm.$store.state.curCiv.trader.materialId].owned < window.vm.$store.state.curCiv.trader.requested))
 
   // Cheaters don't get names.
   document.getElementById('renameRuler').disabled = (window.vm.$store.state.curCiv.rulerName === 'Cheater')
@@ -550,7 +547,9 @@ function updatePopulationUI() {
   if (window.vm.$store.state.population.current === 0 && window.vm.$store.state.population.limit >= 1000) {
     civType = 'Ghost Town'
   }
-  if (window.vm.$store.state.curCiv.zombie.owned >= 1000 && window.vm.$store.state.curCiv.zombie.owned >= 2 * window.vm.$store.state.population.current) { // easter egg
+  // easter egg
+  if (window.vm.$store.state.curCiv.zombie.owned >= 1000 &&
+    window.vm.$store.state.curCiv.zombie.owned >= 2 * window.vm.$store.state.population.current) {
     civType = 'Necropolis'
   }
   document.getElementById('civType').innerHTML = civType
@@ -862,7 +861,7 @@ function updateWonderList() {
   let wonderhtml = '<tr><td><strong>Name</strong></td><td><strong>Type</strong></td></tr>'
   for (i = (window.vm.$store.state.curCiv.wonders.length - 1); i >= 0; --i) {
     try {
-      wonderhtml += `<tr><td>${window.vm.$store.state.curCiv.wonders[i].name}</td><td>${window.vm.$store.state.curCiv.wonders[i].resourceId}</td></tr>`
+      wonderhtml += `<tr><td>${window.vm.$store.state.curCiv.wonders[i].name}</td><td>${window.vm.$store.state.curCiv.wonders[i].resourceId}</td></tr>` // eslint-disable-line max-len
     }
     catch (err) {
       console.error(`Could not build wonder row ${i}`)
@@ -1193,7 +1192,8 @@ function summonShade() { // eslint-disable-line no-unused-vars
     return 0
   }
 
-  const num = Math.ceil((window.vm.$store.state.curCiv.enemySlain.owned / 4) + (Math.random() * (window.vm.$store.state.curCiv.enemySlain.owned / 4)))
+  const num = Math.ceil((window.vm.$store.state.curCiv.enemySlain.owned / 4) +
+    (Math.random() * (window.vm.$store.state.curCiv.enemySlain.owned / 4)))
   window.vm.$store.state.curCiv.enemySlain.owned -= num
   window.vm.civData.shade.owned += num
 
@@ -1437,7 +1437,8 @@ function wonderSelect(resourceId) { // eslint-disable-line no-unused-vars
 
 function trade() { // eslint-disable-line no-unused-vars
   // check we have enough of the right type of resources to trade
-  if (!window.vm.$store.state.curCiv.trader.materialId || (window.vm.$store.state.curCiv.trader.materialId.owned < window.vm.$store.state.curCiv.trader.requested)) {
+  if (!window.vm.$store.state.curCiv.trader.materialId ||
+    (window.vm.$store.state.curCiv.trader.materialId.owned < window.vm.$store.state.curCiv.trader.requested)) {
     gameLog('Not enough resources to trade.')
     return
   }
@@ -1448,7 +1449,7 @@ function trade() { // eslint-disable-line no-unused-vars
   material.owned -= window.vm.$store.state.curCiv.trader.requested
   window.vm.civData.gold.owned += 1
   updateResourceTotals()
-  gameLog(`Traded ${window.vm.$store.state.curCiv.trader.requested} ${material.getQtyName(window.vm.$store.state.curCiv.trader.requested)}`)
+  gameLog(`Traded ${window.vm.$store.state.curCiv.trader.requested} ${material.getQtyName(window.vm.$store.state.curCiv.trader.requested)}`) // eslint-disable-line max-len
 }
 
 // Based on the most wonders in any single resource.
@@ -1774,7 +1775,8 @@ function renameDeity(newNameArg) { // eslint-disable-line no-unused-vars
   let i = false
   while (!newName) {
     // Default to ruler's name.  Hey, despots tend to have big egos.
-    newName = prompt('Whom do your people worship?', (newName || window.vm.$store.state.curCiv.deities[0].name || window.vm.$store.state.curCiv.rulerName)) // eslint-disable-line no-alert
+    newName = prompt('Whom do your people worship?', // eslint-disable-line no-alert
+      (newName || window.vm.$store.state.curCiv.deities[0].name || window.vm.$store.state.curCiv.rulerName))
     if ((newName === null) && (window.vm.$store.state.curCiv.deities[0].name)) {
       return
     } // Cancelled

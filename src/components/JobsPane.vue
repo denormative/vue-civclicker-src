@@ -1,5 +1,5 @@
 <template>
-<div class="jobs-pane card">
+<div role="tabpanel" id="jobsPane" class="jobs-pane tab-pane card">
   <h4 class="card-header">Jobs</h4>
   <div class="card-block">
     <p v-show="settings.customIncr">
