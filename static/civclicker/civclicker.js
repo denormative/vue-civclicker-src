@@ -1636,7 +1636,6 @@ function load(loadType) { // eslint-disable-line
   updateMorale()
   updateWonder()
   updateWonderCount()
-  document.getElementById('wonderNameC').innerHTML = window.vm.$store.state.curCiv.curWonder.name
 
   return true
 }

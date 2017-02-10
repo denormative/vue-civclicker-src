@@ -15,7 +15,7 @@
         </button>
       </div>
       <div id="wonderCompleted" v-show="wonderCompleted" class="col">
-        <h5 class="text-success text-center"><b><span id="wonderNameC">Wonder</span></b> Completed!</h5>
+        <h5 class="text-success text-center"><b>{{curCiv.curWonder.name}}</b> Completed!</h5>
         <div>Choose Bonus:</div>
       </div>
       <div v-show="wonderInProgress" class="col">
@@ -105,10 +105,6 @@ export default {
         return
       }
       this.$store.setWonderName(n)
-      const wc = document.getElementById('wonderNameC')
-      if (wc) {
-        wc.innerHTML = this.curCiv.curWonder.name
-      }
     },
     speedWonder() { // eslint-disable-line no-unused-vars
       if (window.vm.civData.gold.owned < 100) {
