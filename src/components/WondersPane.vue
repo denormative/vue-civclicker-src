@@ -91,7 +91,7 @@ export default {
       if (this.curCiv.curWonder.stage !== 0) {
         return
       }
-      this.curCiv.curWonder.stage += 1
+      this.$store.setWonderStage(this.curCiv.curWonder.stage + 1)
       this.renameWonder()
       window.updateWonder()
     },
@@ -104,7 +104,7 @@ export default {
       if (!n) {
         return
       }
-      this.curCiv.curWonder.name = n
+      this.$store.setWonderName(n)
       const wc = document.getElementById('wonderNameC')
       if (wc) {
         wc.innerHTML = this.curCiv.curWonder.name
@@ -116,8 +116,7 @@ export default {
       }
       window.vm.civData.gold.owned -= 100
 
-      this.curCiv.curWonder.progress += 1 / window.getWonderCostMultiplier()
-      this.curCiv.curWonder.rushed = true
+      this.$store.rushWonder(1 / window.getWonderCostMultiplier())
       window.updateWonder()
     },
   },

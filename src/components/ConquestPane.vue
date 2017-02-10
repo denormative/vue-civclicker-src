@@ -87,7 +87,7 @@ export default {
       // If we fought our largest eligible foe, but not the largest possible, raise the limit.
       if ((this.curCiv.raid.targetMax !== this.civSizes[this.civSizes.length - 1].id) &&
         this.curCiv.raid.last === this.curCiv.raid.targetMax) {
-        this.curCiv.raid.targetMax = this.civSizes[this.civSizes[this.curCiv.raid.targetMax].idx + 1].id
+        this.$store.commit('setMaxRaidTarget', this.civSizes[this.civSizes[this.curCiv.raid.targetMax].idx + 1].id)
       }
 
       // Improve morale based on size of defeated foe.
@@ -95,7 +95,7 @@ export default {
 
       // Lamentation
       if (window.vm.civData.lament.owned) {
-        this.curCiv.attackCounter -= Math.ceil(this.curCiv.raid.epop / 2000)
+        this.$store.commit('setAttackCounter', this.curCiv.attackCounter - Math.ceil(this.curCiv.raid.epop / 2000))
       }
 
       // Collect loot

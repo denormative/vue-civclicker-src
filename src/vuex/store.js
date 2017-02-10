@@ -204,6 +204,25 @@ const storeMutations = {
     state.curCiv.raid.epop = newRaid.epop
     state.curCiv.raid.plunderLoot = newRaid.plunderLoot
   },
+  setMaxRaidTarget(state, target) {
+    state.curCiv.raid.targetMax = target
+  },
+  setAttackCounter(state, counter) {
+    state.curCiv.attackCounter = counter
+  },
+  setWonderStage(state, stage) {
+    state.curCiv.curWonder.stage = stage
+  },
+  setWonderName(state, name) {
+    state.curCiv.curWonder.name = name
+  },
+  setWonderProgress(state, progress) {
+    state.curCiv.curWonder.progress = progress
+  },
+  rushWonder(state, progress) {
+    state.curCiv.curWonder.progress += progress
+    state.curCiv.curWonder.rushed = true
+  },
   ADD_NOTE(state) {
     const newNote = {
       text:     'New note',
