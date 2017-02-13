@@ -1,6 +1,6 @@
 <template>
 <div role="tabpanel" id="tradePane" class="trade-pane tab-pane card">
-  <h4 class="card-header">Trade</h4>
+  <h4 class="card-header" v-show="settings.showHeaders">Trade</h4>
   <div class="card-block">
     <span id="tradeRow"></span>
     <div id="tradeUpgradeContainer">
@@ -32,7 +32,7 @@ export default {
     this.$nextTick(() => {})
   },
   computed: {
-    ...mapState(['tradeItems']),
+    ...mapState(['settings', 'tradeItems']),
   },
   methods: {
     buy(materialId) { // eslint-disable-line no-unused-vars

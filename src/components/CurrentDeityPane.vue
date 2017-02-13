@@ -1,6 +1,6 @@
 <template>
 <div class="current-deity-pane card" v-show="hasDeity">
-  <h4 class="card-header">Current Deity</h4>
+  <h4 class="card-header" v-show="settings.showHeaders">Current Deity</h4>
   <div class="card-block">
     <table id="activeDeity">
       <tr>
@@ -23,7 +23,7 @@ export default {
     this.$nextTick(() => {})
   },
   computed: {
-    ...mapState(['curCiv']),
+    ...mapState(['settings', 'curCiv']),
     hasDeity() {
       return this.curCiv.deities[0].name
     },

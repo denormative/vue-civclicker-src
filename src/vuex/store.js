@@ -31,6 +31,7 @@ const storeState = {
     notes:           true,
     worksafe:        false,
     useIcons:        true,
+    showHeaders:     true,
   },
   // These are not saved, but we need them up here for the asset data to init properly.
   population: {
@@ -154,7 +155,7 @@ const storeMutations = {
     state.settings.autosave = false
   },
   loadSettings(state, savedSettings) {
-    state.settings = savedSettings
+    state.settings = Object.assign({}, state.settings, savedSettings)
   },
   setCustomIncr(state, val) {
     state.settings.customIncr = val
@@ -176,6 +177,9 @@ const storeMutations = {
   },
   setUseIcons(state, val) {
     state.settings.useIcons = val
+  },
+  setShowHeaders(state, val) {
+    state.settings.showHeaders = val
   },
   populate(state, { tradeItems, civSizes }) {
     state.tradeItems = tradeItems

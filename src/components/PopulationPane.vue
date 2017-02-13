@@ -1,6 +1,6 @@
 <template>
 <div class="population-pane card">
-  <h4 class="card-header">Population</h4>
+  <h4 class="card-header" v-show="settings.showHeaders">Population</h4>
   <div class="card-block">
     <div class="row">
       <div class="col">

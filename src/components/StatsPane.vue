@@ -1,6 +1,6 @@
 <template>
 <div role="tabpanel" id="statsPane" class="stats-pane tab-pane card">
-  <h4 class="card-header">Stats</h4>
+  <h4 class="card-header" v-show="settings.showHeaders">Stats</h4>
   <div class="card-block">
     <table class="table-sm">
       <tbody>
@@ -39,7 +39,7 @@ export default {
     this.$nextTick(() => {})
   },
   computed: {
-    ...mapState(['curCiv']),
+    ...mapState(['settings', 'curCiv']),
   },
   filters: {
     prettyint,

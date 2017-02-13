@@ -1,6 +1,6 @@
 <template>
 <div class="events-pane card">
-  <h4 class="card-header">Events</h4>
+  <h4 class="card-header" v-show="settings.showHeaders">Events</h4>
   <div id="eventsContainer" class="card-block">
     <table id="logTable">
       <tr id="log0">
@@ -31,6 +31,8 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
+
 export default {
   name: 'events-pane',
   data() {
@@ -38,6 +40,9 @@ export default {
   },
   mounted() {
     this.$nextTick(() => {})
+  },
+  computed: {
+    ...mapState(['settings']),
   },
 }
 </script>

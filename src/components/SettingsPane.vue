@@ -1,6 +1,6 @@
 <template>
 <div role="tabpanel" id="settingsPane" class="settings-pane tab-pane card">
-  <h4 class="card-header">Settings</h4>
+  <h4 class="card-header" v-show="settings.showHeaders">Settings</h4>
   <div class="card-block">
     <div id="settings">
       <button class="btn btn-primary btn-sm" onmousedown="save('manual')" title="Save your current stats">Manual Save</button>
@@ -30,6 +30,7 @@
       <label><input id="toggleNotes" type="checkbox" v-model="notes" title="Toggle Notes"/>Show Notes</label><br>
       <label><input id="toggleWorksafe" type="checkbox" v-model="worksafe" title="Toggle Worksafe Mode"/>Worksafe Mode</label><br>
       <label><input id="toggleIcons" type="checkbox" v-model="useIcons" title="Toggle Icons"/>Use Icons</label><br>
+      <label><input id="showHeaders" type="checkbox" v-model="showHeaders" title="Show Headers"/>Show Headers</label><br>
     </div>
   </div>
 </div>
@@ -39,8 +40,7 @@
 import { mapState } from 'vuex'
 
 export default {
-  name:  'settings-pane',
-  props: [],
+  name: 'settings-pane',
   data() {
     return {}
   },
@@ -76,6 +76,10 @@ export default {
     useIcons: {
       get() { return this.settings.useIcons },
       set(v) { this.$store.commit("setUseIcons", v) },
+    },
+    showHeaders: {
+      get() { return this.settings.showHeaders },
+      set(v) { this.$store.commit("setShowHeaders", v) },
     },
   },
   methods: {

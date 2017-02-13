@@ -1,6 +1,6 @@
 <template>
 <div class="special-resources card">
-  <h4 class="card-header">Special Resources</h4>
+  <h4 class="card-header" v-show="settings.showHeaders">Special Resources</h4>
   <div id="specialResourcesContainer" class="card-block">
     <div class="row">
       <div class="col-4" v-for="specialItem in specialItems">
@@ -18,6 +18,8 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
+
 export default {
   name:  'special-resources',
   props: ['civData'],
@@ -36,6 +38,9 @@ export default {
   },
   mounted() {
     this.$nextTick(() => {})
+  },
+  computed: {
+    ...mapState(['settings']),
   },
 }
 </script>

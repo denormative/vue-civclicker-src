@@ -838,7 +838,6 @@ new Vue({
       document.getElementById('tradeContainer').style.display = 'block'
       document.getElementById('tradeType').innerHTML =
         window.vm.civData[this.curCiv.trader.materialId].getQtyName(this.curCiv.trader.requested)
-      document.getElementById('tradeRequested').innerHTML = window.vm.prettify(this.curCiv.trader.requested)
     },
     tickTraders() {
       // traders occasionally show up
@@ -856,12 +855,7 @@ new Vue({
         }
       }
 
-      // Trader stuff
-      if (this.curCiv.trader.timer > 0) {
-        if (--this.curCiv.trader.timer <= 0) { // eslint-disable-line no-plusplus
-          window.setElemDisplay('tradeContainer', false)
-        }
-      }
+      --this.curCiv.trader.timer // eslint-disable-line no-plusplus
     },
     testAchievements() {
       window.vm.achData.forEach((achObj) => {
