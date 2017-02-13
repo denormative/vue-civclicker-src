@@ -74,7 +74,7 @@ function resetRaiding() {
 }
 
 function playerCombatMods() { // eslint-disable-line no-unused-vars
-  return (0.01 * ((window.vm.civData.riddle.owned) + (window.vm.civData.weaponry.owned) + (window.vm.civData.shields.owned)))
+  return (0.01 * ((window.vm.$store.state.civData.riddle.owned) + (window.vm.$store.state.civData.weaponry.owned) + (window.vm.$store.state.civData.shields.owned)))
 }
 
 // Get an object's requirements in text form.
@@ -98,7 +98,7 @@ function getReqText(costObjArg, qty) {
     if (text) {
       text += ', '
     }
-    text += `${window.vm.prettify(Math.round(num))} ${window.vm.civData[i].getQtyName(num)}`
+    text += `${window.vm.prettify(Math.round(num))} ${window.vm.$store.state.civData[i].getQtyName(num)}`
   }
 
   return text
@@ -125,8 +125,8 @@ function meetsPrereqs(prereqObj) {
         return false
       }
     }
-    else if (isValid(window.vm.civData[i]) && isValid(window.vm.civData[i].owned)) { // Resource/Building/Upgrade
-      if (window.vm.civData[i].owned < prereqObj[i]) {
+    else if (isValid(window.vm.$store.state.civData[i]) && isValid(window.vm.$store.state.civData[i].owned)) { // Resource/Building/Upgrade
+      if (window.vm.$store.state.civData[i].owned < prereqObj[i]) {
         return false
       }
     }
@@ -166,7 +166,7 @@ function canAfford(costObj, qtyArg) {
       qty = Math.max(0, Math.min(1, qty))
     }
 
-    qty = Math.min(qty, Math.floor(window.vm.civData[i].owned / valOf(costObj[i])))
+    qty = Math.min(qty, Math.floor(window.vm.$store.state.civData[i].owned / valOf(costObj[i])))
     if (qty === 0) {
       return qty
     }
@@ -203,7 +203,7 @@ function payFor(costObjArg, qtyArg) {
     if (!num) {
       continue
     }
-    window.vm.civData[i].owned -= num
+    window.vm.$store.state.civData[i].owned -= num
   }
 
   return qty
@@ -233,7 +233,7 @@ function canPurchase(purchaseObj, qtyArg) {
 
   // If this is a relocation, can't shift more than our source pool.
   if (purchaseObj.source) {
-    qty = Math.min(qty, window.vm.civData[purchaseObj.source].owned)
+    qty = Math.min(qty, window.vm.$store.state.civData[purchaseObj.source].owned)
   }
 
   // If this is a destination item, it's just a relocation of an existing
@@ -411,7 +411,7 @@ function updateResourceTotals() {
   displayElems = document.querySelectorAll("[data-action='display']")
   for (i = 0; i < displayElems.length; ++i) {
     elem = displayElems[i]
-    // xxx Have to use window.vm.$store.state.curCiv here because of zombies and other non-window.vm.civData displays.
+    // xxx Have to use window.vm.$store.state.curCiv here because of zombies and other non-window.vm.$store.state.civData displays.
     elem.innerHTML = window.vm.prettify(Math.floor(window.vm.$store.state.curCiv[dataset(elem, 'target')].owned))
   }
 
@@ -420,7 +420,7 @@ function updateResourceTotals() {
   displayElems = document.querySelectorAll("[data-action='displayNet']")
   for (i = 0; i < displayElems.length; ++i) {
     elem = displayElems[i]
-    val = window.vm.civData[dataset(elem, 'target')].net
+    val = window.vm.$store.state.civData[dataset(elem, 'target')].net
     if (!isValid(val)) {
       continue
     }
@@ -440,9 +440,9 @@ function updateResourceTotals() {
   }
 
   // Update page with building numbers, also stockpile limits.
-  document.getElementById('maxfood').innerHTML = window.vm.prettify(window.vm.civData.food.limit)
-  document.getElementById('maxwood').innerHTML = window.vm.prettify(window.vm.civData.wood.limit)
-  document.getElementById('maxstone').innerHTML = window.vm.prettify(window.vm.civData.stone.limit)
+  document.getElementById('maxfood').innerHTML = window.vm.prettify(window.vm.$store.state.civData.food.limit)
+  document.getElementById('maxwood').innerHTML = window.vm.prettify(window.vm.$store.state.civData.wood.limit)
+  document.getElementById('maxstone').innerHTML = window.vm.prettify(window.vm.$store.state.civData.stone.limit)
 
   // Update land values
   let buildingCount = 0
@@ -461,20 +461,20 @@ function updateResourceTotals() {
   // Unlock advanced control tabs as they become enabled (they never disable)
   // Temples unlock Deity, barracks unlock Conquest, having gold unlocks Trade.
   // Deity is also unlocked if there are any prior deities present.
-  if ((window.vm.civData.temple.owned > 0) || (window.vm.$store.state.curCiv.deities.length > 1)) {
+  if ((window.vm.$store.state.civData.temple.owned > 0) || (window.vm.$store.state.curCiv.deities.length > 1)) {
     setElemDisplay('deitySelect', true)
   }
-  if (window.vm.civData.barracks.owned > 0) {
+  if (window.vm.$store.state.civData.barracks.owned > 0) {
     setElemDisplay('conquestSelect', true)
   }
-  if (window.vm.civData.gold.owned > 0) {
+  if (window.vm.$store.state.civData.gold.owned > 0) {
     setElemDisplay('tradeSelect', true)
   }
 
   // Need to have enough resources to trade
   document.getElementById('trader').disabled = (!window.vm.$store.state.curCiv.trader ||
     !window.vm.$store.state.curCiv.trader.timer ||
-    (window.vm.civData[window.vm.$store.state.curCiv.trader.materialId].owned < window.vm.$store.state.curCiv.trader.requested))
+    (window.vm.$store.state.civData[window.vm.$store.state.curCiv.trader.materialId].owned < window.vm.$store.state.curCiv.trader.requested))
 
   // Cheaters don't get names.
   document.getElementById('renameRuler').disabled = (window.vm.$store.state.curCiv.rulerName === 'Cheater')
@@ -485,10 +485,10 @@ function updateResourceTotals() {
 
 function updatePopulation() {
   // Update population limit by multiplying out housing numbers
-  window.vm.$store.commit('setPopulationLimit', window.vm.civData.tent.owned +
-    (window.vm.civData.hut.owned * 3) + (window.vm.civData.cottage.owned * 6) +
-    (window.vm.civData.house.owned * (10 + ((window.vm.civData.tenements.owned) * 2) +
-      ((window.vm.civData.slums.owned) * 2))) + (window.vm.civData.mansion.owned * 50))
+  window.vm.$store.commit('setPopulationLimit', window.vm.$store.state.civData.tent.owned +
+    (window.vm.$store.state.civData.hut.owned * 3) + (window.vm.$store.state.civData.cottage.owned * 6) +
+    (window.vm.$store.state.civData.house.owned * (10 + ((window.vm.$store.state.civData.tenements.owned) * 2) +
+      ((window.vm.$store.state.civData.slums.owned) * 2))) + (window.vm.$store.state.civData.mansion.owned * 50))
   // Update sick workers
   let totalSick = 0
   window.vm.unitData.forEach(function(elem) { // eslint-disable-line
@@ -537,7 +537,7 @@ function updatePopulation() {
 
 // Update page with numbers
 function updatePopulationUI() {
-  window.vm.civData.house.update() // xxx Effect might change dynamically.  Need a more general way to do this.
+  window.vm.$store.state.civData.house.update() // xxx Effect might change dynamically.  Need a more general way to do this.
 
   setElemDisplay('graveTotal', (window.vm.$store.state.curCiv.grave.owned > 0))
 
@@ -604,7 +604,7 @@ function updatePopulationUI() {
   // Turning on/off buttons based on free space.
   const maxSpawn = Math.max(0, Math.min(
     (window.vm.$store.state.population.limit - window.vm.$store.state.population.current),
-    logSearchFn(calcWorkerCost, window.vm.civData.food.owned)))
+    logSearchFn(calcWorkerCost, window.vm.$store.state.civData.food.owned)))
 
   document.getElementById('spawn1button').disabled = (maxSpawn < 1)
   document.getElementById('spawnCustomButton').disabled = (maxSpawn < 1)
@@ -613,8 +613,8 @@ function updatePopulationUI() {
   document.getElementById('spawn100button').disabled = (maxSpawn < 100)
   document.getElementById('spawn1000button').disabled = (maxSpawn < 1000)
 
-  const canRaise = (getCurDeityDomain() === 'underworld' && window.vm.civData.devotion.owned >= 20)
-  const maxRaise = canRaise ? logSearchFn(calcZombieCost, window.vm.civData.piety.owned) : 0
+  const canRaise = (getCurDeityDomain() === 'underworld' && window.vm.$store.state.civData.devotion.owned >= 20)
+  const maxRaise = canRaise ? logSearchFn(calcZombieCost, window.vm.$store.state.civData.piety.owned) : 0
   setElemDisplay('raiseDeadRow', canRaise)
   document.getElementById('raiseDead').disabled = (maxRaise < 1)
   document.getElementById('raiseDeadMax').disabled = (maxRaise < 1)
@@ -658,32 +658,32 @@ function updateUpgrades() {
   })
 
   // deity techs
-  document.getElementById('renameDeity').disabled = (!window.vm.civData.worship.owned)
-  setElemDisplay('deityDomains', ((window.vm.civData.worship.owned) && (getCurDeityDomain() === '')))
+  document.getElementById('renameDeity').disabled = (!window.vm.$store.state.civData.worship.owned)
+  setElemDisplay('deityDomains', ((window.vm.$store.state.civData.worship.owned) && (getCurDeityDomain() === '')))
   setElemDisplay('battleUpgrades', (getCurDeityDomain() === 'battle'))
   setElemDisplay('fieldsUpgrades', (getCurDeityDomain() === 'fields'))
   setElemDisplay('underworldUpgrades', (getCurDeityDomain() === 'underworld'))
   setElemDisplay('zombieWorkers', (window.vm.$store.state.curCiv.zombie.owned > 0))
   setElemDisplay('catsUpgrades', (getCurDeityDomain() === 'cats'))
 
-  const deitySpecEnable = window.vm.civData.worship.owned && (getCurDeityDomain() === '') && (window.vm.civData.piety.owned >= 500)
+  const deitySpecEnable = window.vm.$store.state.civData.worship.owned && (getCurDeityDomain() === '') && (window.vm.$store.state.civData.piety.owned >= 500)
   document.getElementById('battleDeity').disabled = !deitySpecEnable
   document.getElementById('fieldsDeity').disabled = !deitySpecEnable
   document.getElementById('underworldDeity').disabled = !deitySpecEnable
   document.getElementById('catsDeity').disabled = !deitySpecEnable
 
   // standard
-  setElemDisplay('conquest', window.vm.civData.standard.owned)
+  setElemDisplay('conquest', window.vm.$store.state.civData.standard.owned)
 
   // Trade
-  setElemDisplay('tradeUpgradeContainer', window.vm.civData.trade.owned)
+  setElemDisplay('tradeUpgradeContainer', window.vm.$store.state.civData.trade.owned)
 }
 
 function updateDeity() {
   // Update page with deity details
   document.getElementById('deityAName').innerHTML = window.vm.$store.state.curCiv.deities[0].name
   document.getElementById('deityADomain').innerHTML = getCurDeityDomain() ? `, deity of ${idToType(getCurDeityDomain())}` : ''
-  document.getElementById('deityADevotion').innerHTML = window.vm.civData.devotion.owned
+  document.getElementById('deityADevotion').innerHTML = window.vm.$store.state.civData.devotion.owned
 
   // Display if we have an active deity, or any old ones.
   setElemDisplay('oldDeities', (window.vm.$store.state.curCiv.deities[0].name || window.vm.$store.state.curCiv.deities.length > 1))
@@ -730,7 +730,7 @@ function makeDeitiesTables() {
 // Enables or disables availability of activated religious powers.
 // Passive religious benefits are handled by the upgrade system.
 function updateDevotion() {
-  document.getElementById('deityADevotion').innerHTML = window.vm.civData.devotion.owned
+  document.getElementById('deityADevotion').innerHTML = window.vm.$store.state.civData.devotion.owned
 
   // Process altars
   window.vm.buildingData.forEach((elem) => {
@@ -760,7 +760,7 @@ function updateDevotion() {
     document.getElementById('walk').disabled = true
   }
 
-  document.getElementById('ceaseWalk').disabled = (window.vm.civData.walk.rate === 0)
+  document.getElementById('ceaseWalk').disabled = (window.vm.$store.state.civData.walk.rate === 0)
 }
 
 // Displays achievements if they are unlocked
@@ -788,7 +788,7 @@ function updateTargets() {
     for (i = 0; i < raidButtons.length; ++i) {
       // Disable if we have no standard, no army, or they are too big a target.
       curElem = raidButtons[i]
-      curElem.disabled = (!window.vm.civData.standard.owned || !haveArmy ||
+      curElem.disabled = (!window.vm.$store.state.civData.standard.owned || !haveArmy ||
         (window.vm.$store.state.civSizes[dataset(curElem, 'target')].idx >
           window.vm.$store.state.civSizes[window.vm.$store.state.curCiv.raid.targetMax].idx))
     }
@@ -830,7 +830,7 @@ function updateMorale() {
 
 // updates the display of wonders and wonder building
 function updateWonder() {
-  const haveTech = (window.vm.civData.architecture.owned && window.vm.civData.civilservice.owned)
+  const haveTech = (window.vm.$store.state.civData.architecture.owned && window.vm.$store.state.civData.civilservice.owned)
 
   // Display this section if we have any wonders or could build one.
   setElemDisplay('wondersContainer', (haveTech || window.vm.$store.state.curCiv.wonders.length > 0))
@@ -871,10 +871,10 @@ function updateWonderList() {
 }
 
 function updateReset() {
-  setElemDisplay('resetNote', (window.vm.civData.worship.owned || window.vm.$store.state.curCiv.curWonder.stage === 3))
-  setElemDisplay('resetDeity', (window.vm.civData.worship.owned))
+  setElemDisplay('resetNote', (window.vm.$store.state.civData.worship.owned || window.vm.$store.state.curCiv.curWonder.stage === 3))
+  setElemDisplay('resetDeity', (window.vm.$store.state.civData.worship.owned))
   setElemDisplay('resetWonder', (window.vm.$store.state.curCiv.curWonder.stage === 3))
-  setElemDisplay('resetBoth', (window.vm.civData.worship.owned && window.vm.$store.state.curCiv.curWonder.stage === 3))
+  setElemDisplay('resetBoth', (window.vm.$store.state.civData.worship.owned && window.vm.$store.state.curCiv.curWonder.stage === 3))
 }
 
 function update() {
@@ -914,7 +914,7 @@ function update() {
 
 // This function is called every time a player clicks on a primary resource button
 function increment(objId) {
-  const purchaseObj = window.vm.civData[objId]
+  const purchaseObj = window.vm.$store.state.civData[objId]
   if (!purchaseObj) {
     console.error(`Unknown purchase: ${objId}`)
     return
@@ -929,23 +929,23 @@ function increment(objId) {
   }) // Nationalism adds military units.
 
   purchaseObj.owned += purchaseObj.increment +
-    (purchaseObj.increment * 9 * (window.vm.civData.civilservice.owned)) +
-    (purchaseObj.increment * 40 * (window.vm.civData.feudalism.owned)) +
-    ((window.vm.civData.serfs.owned) * Math.floor(Math.log((window.vm.civData.unemployed.owned * 10) + 1))) +
-    ((window.vm.civData.nationalism.owned) * Math.floor(Math.log((numArmy * 10) + 1)))
+    (purchaseObj.increment * 9 * (window.vm.$store.state.civData.civilservice.owned)) +
+    (purchaseObj.increment * 40 * (window.vm.$store.state.civData.feudalism.owned)) +
+    ((window.vm.$store.state.civData.serfs.owned) * Math.floor(Math.log((window.vm.$store.state.civData.unemployed.owned * 10) + 1))) +
+    ((window.vm.$store.state.civData.nationalism.owned) * Math.floor(Math.log((numArmy * 10) + 1)))
 
   // Handles random collection of special resources.
   let specialChance = purchaseObj.specialChance
-  if (specialChance && purchaseObj.specialMaterial && window.vm.civData[purchaseObj.specialMaterial]) {
-    if ((purchaseObj === window.vm.civData.food) && (window.vm.civData.flensing.owned)) {
+  if (specialChance && purchaseObj.specialMaterial && window.vm.$store.state.civData[purchaseObj.specialMaterial]) {
+    if ((purchaseObj === window.vm.$store.state.civData.food) && (window.vm.$store.state.civData.flensing.owned)) {
       specialChance += 0.1
     }
-    if ((purchaseObj === window.vm.civData.stone) && (window.vm.civData.macerating.owned)) {
+    if ((purchaseObj === window.vm.$store.state.civData.stone) && (window.vm.$store.state.civData.macerating.owned)) {
       specialChance += 0.1
     }
     if (Math.random() < specialChance) {
-      const specialMaterial = window.vm.civData[purchaseObj.specialMaterial]
-      const specialQty = purchaseObj.increment * (1 + (9 * (window.vm.civData.guilds.owned)))
+      const specialMaterial = window.vm.$store.state.civData[purchaseObj.specialMaterial]
+      const specialQty = purchaseObj.increment * (1 + (9 * (window.vm.$store.state.civData.guilds.owned)))
       specialMaterial.owned += specialQty
       gameLog(`Found ${specialMaterial.getQtyName(specialQty)} while ${purchaseObj.activity}`) // I18N
     }
@@ -976,7 +976,7 @@ function onIncrement(control) {
 // Pass "custom" or "-custom" to use the custom increment.
 // Returns the actual number bought or sold (negative if fired).
 function doPurchase(objId, numArg) {
-  const purchaseObj = window.vm.civData[objId]
+  const purchaseObj = window.vm.$store.state.civData[objId]
   if (!purchaseObj) {
     console.error(`Unknown purchase: ${objId}`)
     return 0
@@ -999,7 +999,7 @@ function doPurchase(objId, numArg) {
   // Do the actual purchase; coerce to the proper type if needed
   purchaseObj.owned = matchType(purchaseObj.owned + num, purchaseObj.initOwned)
   if (purchaseObj.source) {
-    window.vm.civData[purchaseObj.source].owned -= num
+    window.vm.$store.state.civData[purchaseObj.source].owned -= num
   }
 
   // Post-purchase triggers
@@ -1009,18 +1009,18 @@ function doPurchase(objId, numArg) {
 
   // Increase devotion if the purchase provides it.
   if (isValid(purchaseObj.devotion)) {
-    window.vm.civData.devotion.owned += purchaseObj.devotion * num
+    window.vm.$store.state.civData.devotion.owned += purchaseObj.devotion * num
     // If we've exceeded this deity's prior max, raise it too.
-    if (window.vm.$store.state.curCiv.deities[0].maxDev < window.vm.civData.devotion.owned) {
-      window.vm.$store.state.curCiv.deities[0].maxDev = window.vm.civData.devotion.owned
+    if (window.vm.$store.state.curCiv.deities[0].maxDev < window.vm.$store.state.civData.devotion.owned) {
+      window.vm.$store.state.curCiv.deities[0].maxDev = window.vm.$store.state.civData.devotion.owned
       makeDeitiesTables()
     }
   }
 
   // Then check for overcrowding
-  if ((purchaseObj.type === 'building') && --window.vm.civData.freeLand.owned < 0) { // eslint-disable-line no-plusplus
+  if ((purchaseObj.type === 'building') && --window.vm.$store.state.civData.freeLand.owned < 0) { // eslint-disable-line no-plusplus
     gameLog('You are suffering from overcrowding.') // I18N
-    adjustMorale(Math.max(num, -window.vm.civData.freeLand.owned) * -0.0025 * (window.vm.civData.codeoflaws.owned ? 0.5 : 1.0))
+    adjustMorale(Math.max(num, -window.vm.$store.state.civData.freeLand.owned) * -0.0025 * (window.vm.$store.state.civData.codeoflaws.owned ? 0.5 : 1.0))
   }
 
   updateRequirements(purchaseObj) // Increases buildings' costs
@@ -1091,13 +1091,13 @@ function calcZombieCost(num) {
 
 // Create a cat
 function spawnCat() {
-  window.vm.civData.cat.owned += 1
+  window.vm.$store.state.civData.cat.owned += 1
   gameLog('Found a cat!')
 }
 
 // Creates or destroys workers
 function spawn(numArg) { // eslint-disable-line no-unused-vars
-  const jobObj = window.vm.civData.unemployed
+  const jobObj = window.vm.$store.state.civData.unemployed
   let num = numArg
   if (num === 'custom') {
     num = getCustomNumber(jobObj)
@@ -1108,17 +1108,17 @@ function spawn(numArg) { // eslint-disable-line no-unused-vars
 
   // Find the most workers we can spawn
   num = Math.max(num, -jobObj.owned) // Cap firing by # in that job.
-  num = Math.min(num, logSearchFn(calcWorkerCost, window.vm.civData.food.owned))
+  num = Math.min(num, logSearchFn(calcWorkerCost, window.vm.$store.state.civData.food.owned))
 
   // Apply population limit, and only allow whole workers.
   num = Math.min(num, (window.vm.$store.state.population.limit - window.vm.$store.state.population.current))
 
   // Update numbers and resource levels
-  window.vm.civData.food.owned -= calcWorkerCost(num)
+  window.vm.$store.state.civData.food.owned -= calcWorkerCost(num)
 
   // New workers enter as farmers, but we only destroy idle ones.
   if (num >= 0) {
-    window.vm.civData.farmer.owned += num
+    window.vm.$store.state.civData.farmer.owned += num
   }
   else {
     jobObj.owned += num
@@ -1126,7 +1126,7 @@ function spawn(numArg) { // eslint-disable-line no-unused-vars
   updatePopulation() // Run through the population->job update cycle
 
   // This is intentionally independent of the number of workers spawned
-  if (Math.random() * 100 < 1 + (window.vm.civData.lure.owned)) {
+  if (Math.random() * 100 < 1 + (window.vm.$store.state.civData.lure.owned)) {
     spawnCat()
   }
 
@@ -1146,22 +1146,22 @@ function spawn(numArg) { // eslint-disable-line no-unused-vars
 function raiseDead(numArg) { // eslint-disable-line no-unused-vars
   let num = (numArg === undefined) ? 1 : numArg
   if (num === 'custom') {
-    num = getCustomNumber(window.vm.civData.unemployed)
+    num = getCustomNumber(window.vm.$store.state.civData.unemployed)
   }
   if (num === '-custom') {
-    num = -getCustomNumber(window.vm.civData.unemployed)
+    num = -getCustomNumber(window.vm.$store.state.civData.unemployed)
   }
 
   // Find the most zombies we can raise
-  num = Math.min(num, window.vm.civData.corpses.owned)
+  num = Math.min(num, window.vm.$store.state.civData.corpses.owned)
   num = Math.max(num, -window.vm.$store.state.curCiv.zombie.owned) // Cap firing by # in that job.
-  num = Math.min(num, logSearchFn(calcZombieCost, window.vm.civData.piety.owned))
+  num = Math.min(num, logSearchFn(calcZombieCost, window.vm.$store.state.civData.piety.owned))
 
   // Update numbers and resource levels
-  window.vm.civData.piety.owned -= calcZombieCost(num)
+  window.vm.$store.state.civData.piety.owned -= calcZombieCost(num)
   window.vm.$store.state.curCiv.zombie.owned += num
-  window.vm.civData.unemployed.owned += num
-  window.vm.civData.corpses.owned -= num
+  window.vm.$store.state.civData.unemployed.owned += num
+  window.vm.$store.state.civData.corpses.owned -= num
 
   // Notify player
   if (num === 1) {
@@ -1188,14 +1188,14 @@ function summonShade() { // eslint-disable-line no-unused-vars
   if (window.vm.$store.state.curCiv.enemySlain.owned <= 0) {
     return 0
   }
-  if (!payFor(window.vm.civData.summonShade.require)) {
+  if (!payFor(window.vm.$store.state.civData.summonShade.require)) {
     return 0
   }
 
   const num = Math.ceil((window.vm.$store.state.curCiv.enemySlain.owned / 4) +
     (Math.random() * (window.vm.$store.state.curCiv.enemySlain.owned / 4)))
   window.vm.$store.state.curCiv.enemySlain.owned -= num
-  window.vm.civData.shade.owned += num
+  window.vm.$store.state.civData.shade.owned += num
 
   return num
 }
@@ -1203,10 +1203,10 @@ function summonShade() { // eslint-disable-line no-unused-vars
 // Deity Domains upgrades
 function selectDeity(domain, force) {
   if (!force) {
-    if (window.vm.civData.piety.owned < 500) {
+    if (window.vm.$store.state.civData.piety.owned < 500) {
       return
     } // Can't pay
-    window.vm.civData.piety.owned -= 500
+    window.vm.$store.state.civData.piety.owned -= 500
   }
   window.vm.$store.state.curCiv.deities[0].domain = domain
 
@@ -1230,7 +1230,7 @@ function randomHealthyWorker() {
   let chance = 0
   let i
   for (i = 0; i < window.vm.killable.length; ++i) {
-    chance += window.vm.civData[window.vm.killable[i].id].owned
+    chance += window.vm.$store.state.civData[window.vm.killable[i].id].owned
     if (chance > num) {
       return window.vm.killable[i].id
     }
@@ -1272,10 +1272,10 @@ function wickerman() { // eslint-disable-line no-unused-vars
   }
 
   // Pay the price
-  if (!payFor(window.vm.civData.wickerman.require)) {
+  if (!payFor(window.vm.$store.state.civData.wickerman.require)) {
     return
   }
-  window.vm.civData[job].owned -= 1
+  window.vm.$store.state.civData[job].owned -= 1
   updatePopulation() // Removes killed worker
 
   // Select a random window.vm.lootable resource
@@ -1288,7 +1288,7 @@ function wickerman() { // eslint-disable-line no-unused-vars
   } // Guaranteed to at least restore initial cost.
   rewardObj.owned += qty
 
-  gameLog(`Burned a ${window.vm.civData[job].getQtyName(1)}. ${getRewardMessage(rewardObj, qty)}`)
+  gameLog(`Burned a ${window.vm.$store.state.civData[job].getQtyName(1)}. ${getRewardMessage(rewardObj, qty)}`)
   updateResourceTotals() // Adds new resources
   updatePopulationUI()
 }
@@ -1297,25 +1297,25 @@ function walk(incrementArg) { // eslint-disable-line no-unused-vars
   let inc = (incrementArg === undefined) ? 1 : incrementArg
   if (inc === false) {
     inc = 0
-    window.vm.civData.walk.rate = 0
+    window.vm.$store.state.civData.walk.rate = 0
   }
 
-  window.vm.civData.walk.rate += inc
+  window.vm.$store.state.civData.walk.rate += inc
 
   // xxx This needs to move into the main loop in case it's reloaded.
-  document.getElementById('walkStat').innerHTML = window.vm.prettify(window.vm.civData.walk.rate)
-  document.getElementById('ceaseWalk').disabled = (window.vm.civData.walk.rate === 0)
-  setElemDisplay('walkGroup', (window.vm.civData.walk.rate > 0))
+  document.getElementById('walkStat').innerHTML = window.vm.prettify(window.vm.$store.state.civData.walk.rate)
+  document.getElementById('ceaseWalk').disabled = (window.vm.$store.state.civData.walk.rate === 0)
+  setElemDisplay('walkGroup', (window.vm.$store.state.civData.walk.rate > 0))
 }
 
 // Give a temporary bonus based on the number of cats owned.
 function pestControl(lengthArg) { // eslint-disable-line no-unused-vars
   const length = (lengthArg === undefined) ? 10 : lengthArg
-  if (window.vm.civData.piety.owned < (10 * length)) {
+  if (window.vm.$store.state.civData.piety.owned < (10 * length)) {
     return
   }
-  window.vm.civData.piety.owned -= (10 * length)
-  window.vm.civData.pestControl.timer = length * window.vm.civData.cat.owned
+  window.vm.$store.state.civData.piety.owned -= (10 * length)
+  window.vm.$store.state.civData.pestControl.timer = length * window.vm.$store.state.civData.cat.owned
   gameLog('The vermin are exterminated.')
 }
 
@@ -1327,12 +1327,12 @@ function iconoclasm(index) { // eslint-disable-line no-unused-vars
   document.getElementById('iconoclasm').disabled = false
   if ((index === 'cancel') || (index >= window.vm.$store.state.curCiv.deities.length)) {
     // return the piety
-    window.vm.civData.piety.owned += 1000
+    window.vm.$store.state.civData.piety.owned += 1000
     return
   }
 
   // give gold
-  window.vm.civData.gold.owned += Math.floor((window.vm.$store.state.curCiv.deities[index].maxDev ** (1 / 1.25)))
+  window.vm.$store.state.civData.gold.owned += Math.floor((window.vm.$store.state.curCiv.deities[index].maxDev ** (1 / 1.25)))
 
   // remove the deity
   window.vm.$store.state.curCiv.deities.splice(index, 1)
@@ -1346,25 +1346,25 @@ function smiteMob(mobObj) {
   if (!isValid(mobObj.owned) || mobObj.owned <= 0) {
     return 0
   }
-  const num = Math.min(mobObj.owned, Math.floor(window.vm.civData.piety.owned / 100))
-  window.vm.civData.piety.owned -= num * 100
+  const num = Math.min(mobObj.owned, Math.floor(window.vm.$store.state.civData.piety.owned / 100))
+  window.vm.$store.state.civData.piety.owned -= num * 100
   mobObj.owned -= num
-  window.vm.civData.corpses.owned += num // xxx Should dead wolves count as corpses?
+  window.vm.$store.state.civData.corpses.owned += num // xxx Should dead wolves count as corpses?
   window.vm.$store.state.curCiv.enemySlain.owned += num
-  if (window.vm.civData.throne.owned) {
-    window.vm.civData.throne.count += num
+  if (window.vm.$store.state.civData.throne.owned) {
+    window.vm.$store.state.civData.throne.count += num
   }
-  if (window.vm.civData.book.owned) {
-    window.vm.civData.piety.owned += num * 10
+  if (window.vm.$store.state.civData.book.owned) {
+    window.vm.$store.state.civData.piety.owned += num * 10
   }
   gameLog(`Struck down ${num} ${mobObj.getQtyName(num)}`) // L10N
   return num
 }
 
 function smite() { // eslint-disable-line no-unused-vars
-  smiteMob(window.vm.civData.barbarian)
-  smiteMob(window.vm.civData.bandit)
-  smiteMob(window.vm.civData.wolf)
+  smiteMob(window.vm.$store.state.civData.barbarian)
+  smiteMob(window.vm.$store.state.civData.bandit)
+  smiteMob(window.vm.$store.state.civData.wolf)
   updateResourceTotals()
   updateJobButtons()
 }
@@ -1373,22 +1373,22 @@ function smite() { // eslint-disable-line no-unused-vars
 
 function glory(timeArg) { // eslint-disable-line no-unused-vars
   const time = (timeArg === undefined) ? 180 : timeArg
-  if (!payFor(window.vm.civData.glory.require)) {
+  if (!payFor(window.vm.$store.state.civData.glory.require)) {
     return
   } // check it can be bought
 
-  window.vm.civData.glory.timer = time // set timer
+  window.vm.$store.state.civData.glory.timer = time // set timer
   // xxx This needs to move into the main loop in case it's reloaded.
-  document.getElementById('gloryTimer').innerHTML = window.vm.civData.glory.timer // update timer to player
+  document.getElementById('gloryTimer').innerHTML = window.vm.$store.state.civData.glory.timer // update timer to player
   document.getElementById('gloryGroup').style.display = 'block'
 }
 
 function grace(deltaArg) { // eslint-disable-line no-unused-vars
   const delta = (deltaArg === undefined) ? 0.1 : deltaArg
-  if (window.vm.civData.piety.owned >= window.vm.civData.grace.cost) {
-    window.vm.civData.piety.owned -= window.vm.civData.grace.cost
-    window.vm.civData.grace.cost = Math.floor(window.vm.civData.grace.cost * 1.2)
-    document.getElementById('graceCost').innerHTML = window.vm.prettify(window.vm.civData.grace.cost)
+  if (window.vm.$store.state.civData.piety.owned >= window.vm.$store.state.civData.grace.cost) {
+    window.vm.$store.state.civData.piety.owned -= window.vm.$store.state.civData.grace.cost
+    window.vm.$store.state.civData.grace.cost = Math.floor(window.vm.$store.state.civData.grace.cost * 1.2)
+    document.getElementById('graceCost').innerHTML = window.vm.prettify(window.vm.$store.state.civData.grace.cost)
     adjustMorale(delta)
     updateResourceTotals()
     updateMorale()
@@ -1444,10 +1444,10 @@ function trade() { // eslint-disable-line no-unused-vars
   }
 
   // subtract resources, add gold
-  const material = window.vm.civData[window.vm.$store.state.curCiv.trader.materialId]
+  const material = window.vm.$store.state.civData[window.vm.$store.state.curCiv.trader.materialId]
 
   material.owned -= window.vm.$store.state.curCiv.trader.requested
-  window.vm.civData.gold.owned += 1
+  window.vm.$store.state.civData.gold.owned += 1
   updateResourceTotals()
   gameLog(`Traded ${window.vm.$store.state.curCiv.trader.requested} ${material.getQtyName(window.vm.$store.state.curCiv.trader.requested)}`) // eslint-disable-line max-len
 }
@@ -1619,12 +1619,12 @@ function load(loadType) { // eslint-disable-line
   }
 
   adjustMorale(0)
-  updateRequirements(window.vm.civData.mill)
-  updateRequirements(window.vm.civData.fortification)
-  updateRequirements(window.vm.civData.battleAltar)
-  updateRequirements(window.vm.civData.fieldsAltar)
-  updateRequirements(window.vm.civData.underworldAltar)
-  updateRequirements(window.vm.civData.catAltar)
+  updateRequirements(window.vm.$store.state.civData.mill)
+  updateRequirements(window.vm.$store.state.civData.fortification)
+  updateRequirements(window.vm.$store.state.civData.battleAltar)
+  updateRequirements(window.vm.$store.state.civData.fieldsAltar)
+  updateRequirements(window.vm.$store.state.civData.underworldAltar)
+  updateRequirements(window.vm.$store.state.civData.catAltar)
   updateResourceTotals()
   updateJobButtons()
   makeDeitiesTables()
@@ -1812,7 +1812,7 @@ function reset() { // eslint-disable-line no-unused-vars
   } // declined
 
   // Let each data subpoint re-init.
-  window.vm.civData.forEach((elem) => {
+  window.vm.$store.state.civData.forEach((elem) => {
     if (elem instanceof CivObj) {
       elem.reset()
     }
@@ -1838,12 +1838,12 @@ function reset() { // eslint-disable-line no-unused-vars
     maxDev: 0,
   })
 
-  updateRequirements(window.vm.civData.mill)
-  updateRequirements(window.vm.civData.fortification)
-  updateRequirements(window.vm.civData.battleAltar)
-  updateRequirements(window.vm.civData.fieldsAltar)
-  updateRequirements(window.vm.civData.underworldAltar)
-  updateRequirements(window.vm.civData.catAltar)
+  updateRequirements(window.vm.$store.state.civData.mill)
+  updateRequirements(window.vm.$store.state.civData.fortification)
+  updateRequirements(window.vm.$store.state.civData.battleAltar)
+  updateRequirements(window.vm.$store.state.civData.fieldsAltar)
+  updateRequirements(window.vm.$store.state.civData.underworldAltar)
+  updateRequirements(window.vm.$store.state.civData.catAltar)
 
   window.vm.$store.commit('setPopulationCurrent', 0)
   window.vm.$store.commit('setPopulationLimit', 0)
@@ -1863,7 +1863,7 @@ function reset() { // eslint-disable-line no-unused-vars
   window.vm.$store.state.curCiv.curWonder.rushed = false
   window.vm.$store.state.curCiv.curWonder.progress = 0
 
-  document.getElementById('graceCost').innerHTML = window.vm.prettify(window.vm.civData.grace.cost)
+  document.getElementById('graceCost').innerHTML = window.vm.prettify(window.vm.$store.state.civData.grace.cost)
   // Update page with all new values
   updateResourceTotals()
   updateUpgrades()
@@ -1898,9 +1898,9 @@ function reset() { // eslint-disable-line no-unused-vars
   document.getElementById('glory').disabled = 'true'
   document.getElementById('summonShade').disabled = 'true'
 
-  setElemDisplay('deitySelect', (window.vm.civData.temple.owned > 0))
-  setElemDisplay('conquestSelect', (window.vm.civData.barracks.owned > 0))
-  setElemDisplay('tradeSelect', (window.vm.civData.gold.owned > 0))
+  setElemDisplay('deitySelect', (window.vm.$store.state.civData.temple.owned > 0))
+  setElemDisplay('conquestSelect', (window.vm.$store.state.civData.barracks.owned > 0))
+  setElemDisplay('tradeSelect', (window.vm.$store.state.civData.gold.owned > 0))
 
   document.getElementById('conquest').style.display = 'none'
 
@@ -1931,12 +1931,12 @@ function doSlaughter(attacker) {
       attacker.owned -= 1
     }
 
-    window.vm.civData[target].owned -= 1
+    window.vm.$store.state.civData[target].owned -= 1
 
     if (attacker.species !== 'animal') {
-      window.vm.civData.corpses.owned += 1
+      window.vm.$store.state.civData.corpses.owned += 1
     } // Animals will eat the corpse
-    gameLog(`${window.vm.civData[target].getQtyName(1)} ${killVerb} by ${attacker.getQtyName(attacker.owned)}`)
+    gameLog(`${window.vm.$store.state.civData[target].getQtyName(1)} ${killVerb} by ${attacker.getQtyName(attacker.owned)}`)
   }
   else { // Attackers slowly leave once everyone is dead
     const leaving = Math.ceil(attacker.owned * Math.random() * attacker.killFatigue)
@@ -1973,13 +1973,13 @@ function doSack(attacker) {
 
   // Slightly different phrasing for fortifications
   let destroyVerb = 'burned'
-  if (target === window.vm.civData.fortification) {
+  if (target === window.vm.$store.state.civData.fortification) {
     destroyVerb = 'damaged'
   }
 
   if (target.owned > 0) {
     target.owned -= 1
-    window.vm.civData.freeLand.owned += 1
+    window.vm.$store.state.civData.freeLand.owned += 1
     gameLog(`${target.getQtyName(1)} ${destroyVerb} by ${attacker.getQtyName(attacker.owned)}`)
   }
   else {
@@ -2067,19 +2067,19 @@ function updateTest() { // eslint-disable-line no-unused-vars
 
 function ruinFun() { // eslint-disable-line no-unused-vars
   // Debug function adds loads of stuff for free to help with testing.
-  window.vm.civData.food.owned += 1000000
-  window.vm.civData.wood.owned += 1000000
-  window.vm.civData.stone.owned += 1000000
-  window.vm.civData.barn.owned += 5000
-  window.vm.civData.woodstock.owned += 5000
-  window.vm.civData.stonestock.owned += 5000
-  window.vm.civData.herbs.owned += 1000000
-  window.vm.civData.skins.owned += 1000000
-  window.vm.civData.ore.owned += 1000000
-  window.vm.civData.leather.owned += 1000000
-  window.vm.civData.metal.owned += 1000000
-  window.vm.civData.piety.owned += 1000000
-  window.vm.civData.gold.owned += 10000
+  window.vm.$store.state.civData.food.owned += 1000000
+  window.vm.$store.state.civData.wood.owned += 1000000
+  window.vm.$store.state.civData.stone.owned += 1000000
+  window.vm.$store.state.civData.barn.owned += 5000
+  window.vm.$store.state.civData.woodstock.owned += 5000
+  window.vm.$store.state.civData.stonestock.owned += 5000
+  window.vm.$store.state.civData.herbs.owned += 1000000
+  window.vm.$store.state.civData.skins.owned += 1000000
+  window.vm.$store.state.civData.ore.owned += 1000000
+  window.vm.$store.state.civData.leather.owned += 1000000
+  window.vm.$store.state.civData.metal.owned += 1000000
+  window.vm.$store.state.civData.piety.owned += 1000000
+  window.vm.$store.state.civData.gold.owned += 10000
   renameRuler('Cheater')
   updatePopulation()
   updateUpgrades()

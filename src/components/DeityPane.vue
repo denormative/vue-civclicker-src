@@ -140,13 +140,13 @@ export default {
     this.$nextTick(() => {})
   },
   computed: {
-    ...mapState(['curCiv']),
+    ...mapState(['curCiv', 'civData']),
   },
   methods: {
     iconoclasmList() { // eslint-disable-line no-unused-vars
       // Lists the deities for removing
-      if (window.vm.civData.piety.owned >= 1000) {
-        window.vm.civData.piety.owned -= 1000
+      if (this.civData.piety.owned >= 1000) {
+        this.civData.piety.owned -= 1000
         window.updateResourceTotals()
         document.getElementById('iconoclasm').disabled = true
         let append = '<br>'

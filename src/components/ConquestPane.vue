@@ -39,7 +39,7 @@ export default {
       window.vm.addUITable(window.vm.armyUnits, 'party') // Dynamically create the party controls table.
     })
   },
-  computed: mapState(['settings', 'civSizes', 'curCiv']),
+  computed: mapState(['settings', 'civSizes', 'curCiv', 'civData']),
   methods:  {
     invade(ecivtype) {
       // invades a certain type of civilisation based on the button clicked
@@ -57,20 +57,20 @@ export default {
         newRaid.epop = this.civSizes[ecivtype].min_pop * 2
       }
       // doubles soldiers fought
-      if (window.vm.civData.glory.timer > 0) {
+      if (this.civData.glory.timer > 0) {
         newRaid.epop *= 2
       }
 
       // 5-25% of enemy population is soldiers.
-      window.vm.civData.esoldier.owned += (newRaid.epop / 20) + Math.floor(Math.random() * (newRaid.epop / 5))
-      window.vm.civData.efort.owned += Math.floor(Math.random() * (this.curCiv.raid.epop / 5000))
+      this.civData.esoldier.owned += (newRaid.epop / 20) + Math.floor(Math.random() * (newRaid.epop / 5))
+      this.civData.efort.owned += Math.floor(Math.random() * (this.curCiv.raid.epop / 5000))
 
       // Glory redoubles rewards (doubled here because doubled already above)
-      const baseLoot = newRaid.epop / (1 + (window.vm.civData.glory.timer <= 0))
+      const baseLoot = newRaid.epop / (1 + (this.civData.glory.timer <= 0))
 
       // Set rewards of land and other random plunder.
       // xxx Maybe these should be partially proportionate to the actual number of defenders?
-      newRaid.plunderLoot.freeLand = Math.round(baseLoot * (1 + (window.vm.civData.administration.owned)))
+      newRaid.plunderLoot.freeLand = Math.round(baseLoot * (1 + (this.civData.administration.owned)))
 
       window.vm.lootable.forEach((elem) => {
         newRaid.plunderLoot[elem.id] = Math.round(baseLoot * Math.random())
@@ -94,7 +94,7 @@ export default {
       window.adjustMorale((this.civSizes[this.curCiv.raid.last].idx + 1) / 100)
 
       // Lamentation
-      if (window.vm.civData.lament.owned) {
+      if (this.civData.lament.owned) {
         this.$store.commit('setAttackCounter', this.curCiv.attackCounter - Math.ceil(this.curCiv.raid.epop / 2000))
       }
 

@@ -96,10 +96,11 @@ const storeState = {
       maxDev: 0,
     }], // array of { name, domain, maxDev }
 
-    // xxx We're still accessing many of the properties put here by this.civData
-    // elements without going through the this.civData accessors.  That should
+    // xxx We're still accessing many of the properties put here by civData
+    // elements without going through the civData accessors.  That should
     // change.
   },
+  civData: [],
   /* beautify preserve:end */
 }
 
@@ -113,6 +114,15 @@ const storeGetters = {
     }
     return state.civSizes[0]
   },
+  getOwned: (state) => (id) => state[id].owned, // {
+    // return state[id].owned
+    // for (let i = 0; i < state.civSizes.length; ++i) {
+    //   if (popcnt <= state.civSizes[i].max_pop) {
+    //     return state.civSizes[i]
+    //   }
+    // }
+    // return state.civSizes[0]
+  // },
 }
 
 const storeMutations = {
@@ -181,7 +191,7 @@ const storeMutations = {
   setShowHeaders(state, val) {
     state.settings.showHeaders = val
   },
-  populate(state, { tradeItems, civSizes }) {
+  populateBeforeCreate(state, { tradeItems, civSizes }) {
     state.tradeItems = tradeItems
 
     indexArrayByAttr(civSizes, 'id')
@@ -194,6 +204,23 @@ const storeMutations = {
     })
 
     state.curCiv.raid.targetMax = state.civSizes[0].id
+  },
+  populatePreLoad(state, { civData }) {
+    state.civData.forEach((elem) => {
+      if (state.curCiv[elem.id] === undefined) {
+        state.curCiv[elem.id] = { owned: 0, limit: 0 }
+      }
+
+      if (state.curCiv[elem.id].owned === undefined) {
+        state.curCiv[elem.id].owned = 0
+      }
+
+      if (state.curCiv[elem.id].limit === undefined) {
+        state.curCiv[elem.id].limit = 0
+      }
+    })
+
+    state.civData = civData
   },
   startRaid(state, newRaid) {
     state.curCiv.raid.raiding = newRaid.raiding

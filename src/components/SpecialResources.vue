@@ -21,8 +21,7 @@
 import { mapState } from 'vuex'
 
 export default {
-  name:  'special-resources',
-  props: ['civData'],
+  name: 'special-resources',
   data() {
     return {
       specialItems: [
@@ -40,7 +39,7 @@ export default {
     this.$nextTick(() => {})
   },
   computed: {
-    ...mapState(['settings']),
+    ...mapState(['settings', 'civData']),
   },
 }
 </script>

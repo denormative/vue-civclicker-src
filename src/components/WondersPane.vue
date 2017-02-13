@@ -107,10 +107,10 @@ export default {
       this.$store.setWonderName(n)
     },
     speedWonder() { // eslint-disable-line no-unused-vars
-      if (window.vm.civData.gold.owned < 100) {
+      if (this.civData.gold.owned < 100) {
         return
       }
-      window.vm.civData.gold.owned -= 100
+      this.civData.gold.owned -= 100
 
       this.$store.rushWonder(1 / window.getWonderCostMultiplier())
       window.updateWonder()

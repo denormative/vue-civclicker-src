@@ -23,8 +23,7 @@
 import { mapState } from 'vuex'
 
 export default {
-  name:  'trade-pane',
-  props: ['civData'],
+  name: 'trade-pane',
   data() {
     return {}
   },
@@ -32,7 +31,7 @@ export default {
     this.$nextTick(() => {})
   },
   computed: {
-    ...mapState(['settings', 'tradeItems']),
+    ...mapState(['settings', 'tradeItems', 'civData']),
   },
   methods: {
     buy(materialId) { // eslint-disable-line no-unused-vars

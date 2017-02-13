@@ -23,7 +23,6 @@ new Vue({
       :armyUnits="armyUnits"
       :normalUpgrades="normalUpgrades"
       :achData="achData"
-      :civData="civData"
     />`,
   data() {
     return {
@@ -31,7 +30,6 @@ new Vue({
       saveTag2:        '', // For old saves.
       saveSettingsTag: '',
       logRepeat:       0,
-      civData:         [],
       // Build a variety of additional indices so that we can iterate over specific
       // subsets of our civ objects.
       resourceData:    [], // All resources
@@ -52,7 +50,7 @@ new Vue({
     }
   },
   beforeCreate() {
-    this.$store.commit('populate', {
+    this.$store.commit('populateBeforeCreate', {
       tradeItems,
       civSizes,
     })
@@ -70,7 +68,7 @@ new Vue({
     App,
   },
   computed: {
-    ...mapState(['curCiv']),
+    ...mapState(['curCiv', 'civData']),
   },
   methods: {
     preLoad() {
@@ -80,9 +78,14 @@ new Vue({
       this.logRepeat = 1
 
       // Initialize Data
-      this.civData = civDataTable()
+      const civData = civDataTable()
+      console.log(42)
 
-      this.civData.forEach((elem) => {
+      this.$store.commit('populatePreLoad', {
+        civData,
+      })
+
+      civData.forEach((elem) => {
         if (!(elem instanceof CivObj)) {
           return
         } // Unknown type
@@ -262,7 +265,7 @@ new Vue({
       })
 
       // Handle siege engines
-      this.doSiege(window.vm.civData.siege, window.vm.civData.efort)
+      this.doSiege(this.civData.siege, this.civData.efort)
     },
     tickAutosave() {
       if (this.$store.state.settings.autosave &&
@@ -277,67 +280,67 @@ new Vue({
     },
     // xxx Need to improve 'net' handling.
     doFarmers() {
-      const specialChance = window.vm.civData.food.specialChance + (0.1 * window.vm.civData.flensing.owned)
+      const specialChance = this.civData.food.specialChance + (0.1 * this.civData.flensing.owned)
       let millMod = 1
       if (window.vm.$store.state.population.current > 0 || this.curCiv.zombie.owned > 0) {
         millMod = this.$store.state.population.current /
           (this.$store.state.population.current + this.curCiv.zombie.owned)
       }
-      window.vm.civData.food.net = window.vm.civData.farmer.owned *
-        (1 + (window.vm.civData.farmer.efficiency * this.curCiv.morale.efficiency)) *
-        ((window.vm.civData.pestControl.timer > 0) ? 1.01 : 1) * window.getWonderBonus(window.vm.civData.food) *
-        (1 + (window.vm.civData.walk.rate / 120)) * (1 + ((window.vm.civData.mill.owned * millMod) / 200)) // Farmers farm food
-      window.vm.civData.food.net -= this.$store.state.population.current // The living population eats food.
-      window.vm.civData.food.owned += window.vm.civData.food.net
-      if (window.vm.civData.skinning.owned && window.vm.civData.farmer.owned > 0) { // and sometimes get skins
-        const numSkins = specialChance * (window.vm.civData.food.increment +
-            ((window.vm.civData.butchering.owned * window.vm.civData.farmer.owned) / 15.0)) *
-          window.getWonderBonus(window.vm.civData.skins)
-        window.vm.civData.skins.owned += window.rndRound(numSkins)
+      this.civData.food.net = this.civData.farmer.owned *
+        (1 + (this.civData.farmer.efficiency * this.curCiv.morale.efficiency)) *
+        ((this.civData.pestControl.timer > 0) ? 1.01 : 1) * window.getWonderBonus(this.civData.food) *
+        (1 + (this.civData.walk.rate / 120)) * (1 + ((this.civData.mill.owned * millMod) / 200)) // Farmers farm food
+      this.civData.food.net -= this.$store.state.population.current // The living population eats food.
+      this.civData.food.owned += this.civData.food.net
+      if (this.civData.skinning.owned && this.civData.farmer.owned > 0) { // and sometimes get skins
+        const numSkins = specialChance * (this.civData.food.increment +
+            ((this.civData.butchering.owned * this.civData.farmer.owned) / 15.0)) *
+          window.getWonderBonus(this.civData.skins)
+        this.civData.skins.owned += window.rndRound(numSkins)
       }
     },
     doWoodcutters() {
-      window.vm.civData.wood.net = window.vm.civData.woodcutter.owned *
-        (window.vm.civData.woodcutter.efficiency * this.curCiv.morale.efficiency) *
-        window.getWonderBonus(window.vm.civData.wood) // Woodcutters cut wood
-      window.vm.civData.wood.owned += window.vm.civData.wood.net
-      if (window.vm.civData.harvesting.owned && window.vm.civData.woodcutter.owned > 0) { // and sometimes get herbs
-        const numHerbs = window.vm.civData.wood.specialChance * (window.vm.civData.wood.increment +
-            ((window.vm.civData.gardening.owned * window.vm.civData.woodcutter.owned) / 5.0)) *
-          window.getWonderBonus(window.vm.civData.herbs)
-        window.vm.civData.herbs.owned += window.rndRound(numHerbs)
+      this.civData.wood.net = this.civData.woodcutter.owned *
+        (this.civData.woodcutter.efficiency * this.curCiv.morale.efficiency) *
+        window.getWonderBonus(this.civData.wood) // Woodcutters cut wood
+      this.civData.wood.owned += this.civData.wood.net
+      if (this.civData.harvesting.owned && this.civData.woodcutter.owned > 0) { // and sometimes get herbs
+        const numHerbs = this.civData.wood.specialChance * (this.civData.wood.increment +
+            ((this.civData.gardening.owned * this.civData.woodcutter.owned) / 5.0)) *
+          window.getWonderBonus(this.civData.herbs)
+        this.civData.herbs.owned += window.rndRound(numHerbs)
       }
     },
     doMiners() {
-      const specialChance = window.vm.civData.stone.specialChance + (window.vm.civData.macerating.owned ? 0.1 : 0)
-      window.vm.civData.stone.net = window.vm.civData.miner.owned *
-        (window.vm.civData.miner.efficiency * this.curCiv.morale.efficiency) * window.getWonderBonus(window.vm.civData.stone) // Miners mine stone
-      window.vm.civData.stone.owned += window.vm.civData.stone.net
-      if (window.vm.civData.prospecting.owned && window.vm.civData.miner.owned > 0) { // and sometimes get ore
-        const numOre = specialChance * (window.vm.civData.stone.increment +
-            ((window.vm.civData.extraction.owned * window.vm.civData.miner.owned) / 5.0)) *
-          window.getWonderBonus(window.vm.civData.ore)
-        window.vm.civData.ore.owned += window.rndRound(numOre)
+      const specialChance = this.civData.stone.specialChance + (this.civData.macerating.owned ? 0.1 : 0)
+      this.civData.stone.net = this.civData.miner.owned *
+        (this.civData.miner.efficiency * this.curCiv.morale.efficiency) * window.getWonderBonus(this.civData.stone) // Miners mine stone
+      this.civData.stone.owned += this.civData.stone.net
+      if (this.civData.prospecting.owned && this.civData.miner.owned > 0) { // and sometimes get ore
+        const numOre = specialChance * (this.civData.stone.increment +
+            ((this.civData.extraction.owned * this.civData.miner.owned) / 5.0)) *
+          window.getWonderBonus(this.civData.ore)
+        this.civData.ore.owned += window.rndRound(numOre)
       }
     },
     doBlacksmiths() {
-      const numUsed = Math.min(window.vm.civData.ore.owned,
-        (window.vm.civData.blacksmith.owned * window.vm.civData.blacksmith.efficiency * this.curCiv.morale.efficiency))
-      window.vm.civData.ore.owned -= numUsed
-      window.vm.civData.metal.owned += numUsed * window.getWonderBonus(window.vm.civData.metal)
+      const numUsed = Math.min(this.civData.ore.owned,
+        (this.civData.blacksmith.owned * this.civData.blacksmith.efficiency * this.curCiv.morale.efficiency))
+      this.civData.ore.owned -= numUsed
+      this.civData.metal.owned += numUsed * window.getWonderBonus(this.civData.metal)
     },
     doTanners() {
-      const numUsed = Math.min(window.vm.civData.skins.owned,
-        (window.vm.civData.tanner.owned * window.vm.civData.tanner.efficiency * this.curCiv.morale.efficiency))
-      window.vm.civData.skins.owned -= numUsed
-      window.vm.civData.leather.owned += numUsed * window.getWonderBonus(window.vm.civData.leather)
+      const numUsed = Math.min(this.civData.skins.owned,
+        (this.civData.tanner.owned * this.civData.tanner.efficiency * this.curCiv.morale.efficiency))
+      this.civData.skins.owned -= numUsed
+      this.civData.leather.owned += numUsed * window.getWonderBonus(this.civData.leather)
     },
     doClerics() {
-      window.vm.civData.piety.owned += window.vm.civData.cleric.owned *
-        (window.vm.civData.cleric.efficiency + (window.vm.civData.cleric.efficiency *
-          (window.vm.civData.writing.owned))) * (1 + ((window.vm.civData.secrets.owned) *
-          (1 - (100 / (window.vm.civData.graveyard.owned + 100))))) * this.curCiv.morale.efficiency *
-        window.getWonderBonus(window.vm.civData.piety)
+      this.civData.piety.owned += this.civData.cleric.owned *
+        (this.civData.cleric.efficiency + (this.civData.cleric.efficiency *
+          (this.civData.writing.owned))) * (1 + ((this.civData.secrets.owned) *
+          (1 - (100 / (this.civData.graveyard.owned + 100))))) * this.curCiv.morale.efficiency *
+        window.getWonderBonus(this.civData.piety)
     },
     // Picks the next worker to starve.  Kills the sick first, then the healthy.
     // Deployed military starve last.
@@ -353,17 +356,17 @@ new Vue({
 
       for (modNum = 0; modNum < modList.length; ++modNum) {
         for (jobNum = 0; jobNum < jobList.length; ++jobNum) {
-          if (window.vm.civData[jobList[jobNum]][modList[modNum]] > 0) {
-            return window.vm.civData[jobList[jobNum]]
+          if (this.civData[jobList[jobNum]][modList[modNum]] > 0) {
+            return this.civData[jobList[jobNum]]
           }
         }
       }
       // These don't have Ill variants at the moment.
-      if (window.vm.civData.cavalryParty.owned > 0) {
-        return window.vm.civData.cavalryParty
+      if (this.civData.cavalryParty.owned > 0) {
+        return this.civData.cavalryParty
       }
-      if (window.vm.civData.soldierParty.owned > 0) {
-        return window.vm.civData.soldierParty
+      if (this.civData.soldierParty.owned > 0) {
+        return this.civData.soldierParty
       }
 
       return null
@@ -389,10 +392,10 @@ new Vue({
         }
         window.updatePopulation()
 
-        window.vm.civData.corpses.owned += 1 // Increments corpse number
+        this.civData.corpses.owned += 1 // Increments corpse number
         // Workers dying may trigger Book of the Dead
-        if (window.vm.civData.book.owned) {
-          window.vm.civData.piety.owned += 10
+        if (this.civData.book.owned) {
+          this.civData.piety.owned += 10
         }
       }
 
@@ -401,13 +404,13 @@ new Vue({
     doStarve() {
       let corpsesEaten
       let numStarve
-      if (window.vm.civData.food.owned < 0 && window.vm.civData.waste.owned) { // Workers eat corpses if needed
-        corpsesEaten = Math.min(window.vm.civData.corpses.owned, -window.vm.civData.food.owned)
-        window.vm.civData.corpses.owned -= corpsesEaten
-        window.vm.civData.food.owned += corpsesEaten
+      if (this.civData.food.owned < 0 && this.civData.waste.owned) { // Workers eat corpses if needed
+        corpsesEaten = Math.min(this.civData.corpses.owned, -this.civData.food.owned)
+        this.civData.corpses.owned -= corpsesEaten
+        this.civData.food.owned += corpsesEaten
       }
 
-      if (window.vm.civData.food.owned < 0) { // starve if there's not enough food.
+      if (this.civData.food.owned < 0) { // starve if there's not enough food.
         // xxx This is very kind.  Only 0.1% deaths no matter how big the shortage?
         numStarve = this.starve(Math.ceil(this.$store.state.population.current / 1000))
         if (numStarve === 1) {
@@ -417,7 +420,7 @@ new Vue({
           window.gameLog(`${window.vm.prettify(numStarve)} workers starved to death`)
         }
         window.adjustMorale(-0.01)
-        window.vm.civData.food.owned = 0
+        this.civData.food.owned = 0
       }
     },
     spawnMob(mobObj, numArg) {
@@ -440,11 +443,11 @@ new Vue({
       }
 
       mobObj.owned += num
-      window.vm.civData.esiege.owned += numSge
+      this.civData.esiege.owned += numSge
 
       msg = `${window.vm.prettify(num)} ${mobObj.getQtyName(num)} attacked` // xxx L10N
       if (numSge > 0) {
-        msg += `, with ${window.vm.prettify(numSge)} ${window.vm.civData.esiege.getQtyName(numSge)}`
+        msg += `, with ${window.vm.prettify(numSge)} ${this.civData.esiege.getQtyName(numSge)}`
       } // xxx L10N
       window.gameLog(msg)
 
@@ -466,10 +469,10 @@ new Vue({
 
       // Defenses vary depending on whether the player is attacking or defending.
       const fortMod = (defender.alignment === 'player' ?
-        (window.vm.civData.fortification.owned * window.vm.civData.fortification.efficiency) :
-        (window.vm.civData.efort.owned * window.vm.civData.efort.efficiency))
+        (this.civData.fortification.owned * this.civData.fortification.efficiency) :
+        (this.civData.efort.owned * this.civData.efort.efficiency))
       const palisadeMod = ((defender.alignment === 'player') &&
-        (window.vm.civData.palisade.owned)) * window.vm.civData.palisade.efficiency
+        (this.civData.palisade.owned)) * this.civData.palisade.efficiency
 
       // Determine casualties on each side.  Round fractional casualties
       // probabilistically, and don't inflict more than 100% casualties.
@@ -488,12 +491,12 @@ new Vue({
 
       // Increments enemies slain, corpses, and piety
       this.curCiv.enemySlain.owned += playerCredit
-      if (window.vm.civData.throne.owned) {
-        window.vm.civData.throne.count += playerCredit
+      if (this.civData.throne.owned) {
+        this.civData.throne.count += playerCredit
       }
-      window.vm.civData.corpses.owned += (attackerCas + defenderCas)
-      if (window.vm.civData.book.owned) {
-        window.vm.civData.piety.owned += (attackerCas + defenderCas) * 10
+      this.civData.corpses.owned += (attackerCas + defenderCas)
+      if (this.civData.book.owned) {
+        this.civData.piety.owned += (attackerCas + defenderCas) * 10
       }
 
       // Updates population figures (including total population)
@@ -527,7 +530,7 @@ new Vue({
               mobType = 'bandit'
             }
           }
-          this.spawnMob(window.vm.civData[mobType])
+          this.spawnMob(this.civData[mobType])
         }
       }
 
@@ -550,21 +553,21 @@ new Vue({
     },
     doPestControl() {
       // Decrements the pestControl Timer
-      if (window.vm.civData.pestControl.timer > 0) {
-        window.vm.civData.pestControl.timer -= 1
+      if (this.civData.pestControl.timer > 0) {
+        this.civData.pestControl.timer -= 1
       }
     },
     tickGlory() {
       // Handles the Glory bonus
-      if (window.vm.civData.glory.timer > 0) {
-        document.getElementById('gloryTimer').innerHTML = window.vm.civData.glory.timer-- // eslint-disable-line no-plusplus
+      if (this.civData.glory.timer > 0) {
+        document.getElementById('gloryTimer').innerHTML = this.civData.glory.timer-- // eslint-disable-line no-plusplus
       }
       else {
         document.getElementById('gloryGroup').style.display = 'none'
       }
     },
     doShades() {
-      const defender = window.vm.civData.shade
+      const defender = this.civData.shade
       if (defender.owned <= 0) {
         return
       }
@@ -615,9 +618,9 @@ new Vue({
       if (!window.getCombatants(siegeObj.place, siegeObj.alignment).length &&
         window.getCombatants(targetObj.place, targetObj.alignment).length) {
         // the siege engines are undefended; maybe capture them.
-        if ((targetObj.alignment === 'player') && window.vm.civData.mathematics.owned) { // Can we use them?
+        if ((targetObj.alignment === 'player') && this.civData.mathematics.owned) { // Can we use them?
           window.gameLog(`Captured ${window.vm.prettify(siegeObj.owned)} enemy siege engines.`)
-          window.vm.civData.siege.owned += siegeObj.owned // capture them
+          this.civData.siege.owned += siegeObj.owned // capture them
         }
         siegeObj.owned = 0
       }
@@ -630,11 +633,11 @@ new Vue({
     },
     doGraveyards() {
       let i
-      if (window.vm.civData.corpses.owned > 0 && this.curCiv.grave.owned > 0) {
+      if (this.civData.corpses.owned > 0 && this.curCiv.grave.owned > 0) {
         // Clerics will bury corpses if there are graves to fill and corpses lying around
-        for (i = 0; i < window.vm.civData.cleric.owned; i++) {
-          if (window.vm.civData.corpses.owned > 0 && this.curCiv.grave.owned > 0) {
-            window.vm.civData.corpses.owned -= 1
+        for (i = 0; i < this.civData.cleric.owned; i++) {
+          if (this.civData.corpses.owned > 0 && this.curCiv.grave.owned > 0) {
+            this.civData.corpses.owned -= 1
             this.curCiv.grave.owned -= 1
           }
         }
@@ -649,7 +652,7 @@ new Vue({
         'woodcutter', 'miner', 'tanner', 'blacksmith', 'unemployed',
       ]
       for (i = 0; i < jobs.length; ++i) {
-        if (window.vm.civData[jobs[i]].ill > 0) {
+        if (this.civData[jobs[i]].ill > 0) {
           return jobs[i]
         }
       }
@@ -664,10 +667,10 @@ new Vue({
       }
       let num = (numArg === undefined) ? 1 : numArg
 
-      num = Math.min(num, window.vm.civData[job].ill)
-      num = Math.max(num, -window.vm.civData[job].owned)
-      window.vm.civData[job].ill -= num
-      window.vm.civData[job].owned += num
+      num = Math.min(num, this.civData[job].ill)
+      num = Math.max(num, -this.civData[job].owned)
+      this.civData[job].ill -= num
+      this.civData[job].owned += num
       window.vm.$store.commit('healSick', num)
 
       return num
@@ -675,23 +678,23 @@ new Vue({
     doHealers() {
       let job
       let numHealed = 0
-      const numHealers = window.vm.civData.healer.owned + (window.vm.civData.cat.owned * (window.vm.civData.companion.owned))
+      const numHealers = this.civData.healer.owned + (this.civData.cat.owned * (this.civData.companion.owned))
 
       // How much healing can we do?
-      window.vm.civData.healer.cureCount += (numHealers * window.vm.civData.healer.efficiency * this.curCiv.morale.efficiency)
+      this.civData.healer.cureCount += (numHealers * this.civData.healer.efficiency * this.curCiv.morale.efficiency)
 
       // We can't cure more sick people than there are
-      window.vm.civData.healer.cureCount = Math.min(window.vm.civData.healer.cureCount, this.$store.state.population.totalSick)
+      this.civData.healer.cureCount = Math.min(this.civData.healer.cureCount, this.$store.state.population.totalSick)
 
       // Cure people until we run out of healing capacity or herbs
-      while (window.vm.civData.healer.cureCount >= 1 && window.vm.civData.herbs.owned >= 1) {
+      while (this.civData.healer.cureCount >= 1 && this.civData.herbs.owned >= 1) {
         job = this.getNextPatient()
         if (!job) {
           break
         }
         this.heal(job)
-        window.vm.civData.healer.cureCount -= 1
-        window.vm.civData.herbs.owned -= 1
+        this.civData.healer.cureCount -= 1
+        this.civData.herbs.owned -= 1
         numHealed += 1
       }
 
@@ -711,13 +714,13 @@ new Vue({
       return actualNum
     },
     doCorpses() {
-      if (window.vm.civData.corpses.owned <= 0) {
+      if (this.civData.corpses.owned <= 0) {
         return
       }
 
       // Corpses lying around will occasionally make people sick.
       // 1-in-50 chance (1-in-100 with feast)
-      const sickChance = 50 * Math.random() * (1 + window.vm.civData.feast.owned)
+      const sickChance = 50 * Math.random() * (1 + this.civData.feast.owned)
       if (sickChance >= 1) {
         return
       }
@@ -735,36 +738,36 @@ new Vue({
       }
     },
     doThrone() {
-      if (window.vm.civData.throne.count >= 100) {
+      if (this.civData.throne.count >= 100) {
         // If sufficient enemies have been slain, build new temples for free
-        window.vm.civData.temple.owned += Math.floor(window.vm.civData.throne.count / 100)
-        window.vm.civData.throne.count = 0 // xxx This loses the leftovers.
+        this.civData.temple.owned += Math.floor(this.civData.throne.count / 100)
+        this.civData.throne.count = 0 // xxx This loses the leftovers.
         window.updateResourceTotals()
       }
     },
     tickGrace() {
-      if (window.vm.civData.grace.cost > 1000) {
-        window.vm.civData.grace.cost = Math.floor(--window.vm.civData.grace.cost) // eslint-disable-line no-plusplus
-        document.getElementById('graceCost').innerHTML = window.vm.prettify(window.vm.civData.grace.cost)
+      if (this.civData.grace.cost > 1000) {
+        this.civData.grace.cost = Math.floor(--this.civData.grace.cost) // eslint-disable-line no-plusplus
+        document.getElementById('graceCost').innerHTML = window.vm.prettify(this.civData.grace.cost)
       }
     },
     tickWalk() {
       let i
       let target = ''
-      if (window.vm.civData.walk.rate > this.$store.state.population.healthy) {
-        window.vm.civData.walk.rate = this.$store.state.population.healthy
+      if (this.civData.walk.rate > this.$store.state.population.healthy) {
+        this.civData.walk.rate = this.$store.state.population.healthy
         document.getElementById('ceaseWalk').disabled = true
       }
-      if (window.vm.civData.walk.rate <= 0) {
+      if (this.civData.walk.rate <= 0) {
         return
       }
 
-      for (i = 0; i < window.vm.civData.walk.rate; ++i) {
+      for (i = 0; i < this.civData.walk.rate; ++i) {
         target = window.randomHealthyWorker() // xxx Need to modify this to do them all at once.
         if (!target) {
           break
         }
-        window.vm.civData[target].owned -= 1
+        this.civData[target].owned -= 1
         // We don't want to do UpdatePopulation() in a loop, so we just do the
         // relevent adjustments directly.
         window.vm.$store.commit('kill', 1)
@@ -779,10 +782,10 @@ new Vue({
 
       if (this.curCiv.curWonder.progress >= 100) {
         // Wonder is finished! First, send workers home
-        window.vm.civData.unemployed.owned += window.vm.civData.labourer.owned
-        window.vm.civData.unemployed.ill += window.vm.civData.labourer.ill
-        window.vm.civData.labourer.owned = 0
-        window.vm.civData.labourer.ill = 0
+        this.civData.unemployed.owned += this.civData.labourer.owned
+        this.civData.unemployed.ill += this.civData.labourer.ill
+        this.civData.labourer.owned = 0
+        this.civData.labourer.ill = 0
         window.updatePopulation()
         // hide limited notice
         document.getElementById('lowResources').style.display = 'none'
@@ -793,7 +796,7 @@ new Vue({
         // we're still building
 
         // First, check our labourers and other resources to see if we're limited.
-        let num = window.vm.civData.labourer.owned
+        let num = this.civData.labourer.owned
         window.vm.wonderResources.forEach((elem) => {
           num = Math.min(num, elem.owned)
         })
@@ -807,7 +810,7 @@ new Vue({
         this.curCiv.curWonder.progress += num / (1000000 * window.getWonderCostMultiplier())
 
         // show/hide limited notice
-        window.setElemDisplay('lowResources', (num < window.vm.civData.labourer.owned))
+        window.setElemDisplay('lowResources', (num < this.civData.labourer.owned))
 
         let lowItem = null
         let i = 0
@@ -825,8 +828,8 @@ new Vue({
     },
     tradeTimer() {
       // Set timer length (10 sec + 5 sec/upgrade)
-      this.curCiv.trader.timer = 10 + (5 * (window.vm.civData.currency.owned +
-        window.vm.civData.commerce.owned + window.vm.civData.stay.owned))
+      this.curCiv.trader.timer = 10 + (5 * (this.civData.currency.owned +
+        this.civData.commerce.owned + this.civData.stay.owned))
 
       const selected = window.vm.$store.state.tradeItems[
         Math.floor(Math.random() * window.vm.$store.state.tradeItems.length)
@@ -837,19 +840,19 @@ new Vue({
 
       document.getElementById('tradeContainer').style.display = 'block'
       document.getElementById('tradeType').innerHTML =
-        window.vm.civData[this.curCiv.trader.materialId].getQtyName(this.curCiv.trader.requested)
+        this.vm.civData[this.curCiv.trader.materialId].getQtyName(this.curCiv.trader.requested)
     },
     tickTraders() {
       // traders occasionally show up
       if (window.vm.$store.state.population.current + this.curCiv.zombie.owned > 0) {
         this.curCiv.trader.counter += 1
       }
-      const delayMult = 60 * (3 - ((window.vm.civData.currency.owned) + (window.vm.civData.commerce.owned)))
+      const delayMult = 60 * (3 - ((this.civData.currency.owned) + (this.civData.commerce.owned)))
       let check
       if (window.vm.$store.state.population.current + this.curCiv.zombie.owned > 0 &&
         this.curCiv.trader.counter > delayMult) {
         check = Math.random() * delayMult
-        if (check < (1 + (0.2 * (window.vm.civData.comfort.owned)))) {
+        if (check < (1 + (0.2 * (this.civData.comfort.owned)))) {
           this.curCiv.trader.counter = 0
           this.tradeTimer()
         }
@@ -859,13 +862,13 @@ new Vue({
     },
     testAchievements() {
       window.vm.achData.forEach((achObj) => {
-        if (window.vm.civData[achObj.id].owned) {
+        if (this.civData[achObj.id].owned) {
           return true
         }
         if (window.isValid(achObj.test) && !achObj.test()) {
           return false
         }
-        window.vm.civData[achObj.id].owned = true
+        this.civData[achObj.id].owned = true
         window.gameLog(`Achievement Unlocked: ${achObj.getQtyName()}`)
         return true
       })

@@ -15,11 +15,12 @@ function civDataTable() { // eslint-disable-line no-unused-vars
       verb: 'gather',
       activity: 'foraging', // I18N
       get limit() {
-        return 200 + (window.vm.civData.barn.owned * (window.vm.civData.granaries.owned ? 2 : 1) * 200)
+        // return 200 + (window.vm.$store.getters.getOwned('barn') * (window.vm.$store.getters.getOwned('granaries') ? 2 : 1) * 200)
+        return 200 + (window.vm.$store.state.civData.barn.owned * (window.vm.$store.state.civData.granaries.owned ? 2 : 1) * 200)
       },
-      set limit(value) {
-        return this.limit
-      }, // Only here for JSLint.
+      // set limit(value) {
+      //   return this.limit
+      // }, // Only here for JSLint.
     }),
     new Resource({
       id: 'wood',
@@ -31,7 +32,7 @@ function civDataTable() { // eslint-disable-line no-unused-vars
       verb: 'cut',
       activity: 'woodcutting', // I18N
       get limit() {
-        return 200 + (window.vm.civData.woodstock.owned * 200)
+        return 200 + (window.vm.$store.state.civData.woodstock.owned * 200)
       },
       set limit(value) {
         return this.limit
@@ -47,7 +48,7 @@ function civDataTable() { // eslint-disable-line no-unused-vars
       verb: 'mine',
       activity: 'mining', // I18N
       get limit() {
-        return 200 + (window.vm.civData.stonestock.owned * 200)
+        return 200 + (window.vm.$store.state.civData.stonestock.owned * 200)
       },
       set limit(value) {
         return this.limit
@@ -153,7 +154,7 @@ function civDataTable() { // eslint-disable-line no-unused-vars
         stone: 70,
       },
       get effectText() {
-        const num = 10 + (2 * (window.vm.civData.slums.owned + window.vm.civData.tenements.owned))
+        const num = 10 + (2 * (window.vm.$store.state.civData.slums.owned + window.vm.$store.state.civData.tenements.owned))
         return `+${num} max pop.`
       },
       set effectText(value) {
@@ -261,7 +262,7 @@ function civDataTable() { // eslint-disable-line no-unused-vars
       // If purchase was a temple and aesthetics has been activated, increase morale
       // If population is large, temples have less effect.
       onGain(num) {
-        if (window.vm.civData.aesthetics && window.vm.civData.aesthetics.owned && num) {
+        if (window.vm.$store.state.civData.aesthetics && window.vm.$store.state.civData.aesthetics.owned && num) {
           adjustMorale(num * (25 / window.vm.$store.state.population.current))
         }
       },
@@ -1308,9 +1309,9 @@ function civDataTable() { // eslint-disable-line no-unused-vars
       efficiency_base: 0.2,
       get efficiency() {
         return this.efficiency_base + (0.1 *
-          (+window.vm.civData.domestication.owned + window.vm.civData.ploughshares.owned + window.vm.civData.irrigation.owned +
-          window.vm.civData.croprotation.owned + window.vm.civData.selectivebreeding.owned + window.vm.civData.fertilisers.owned +
-          window.vm.civData.blessing.owned))
+          (+window.vm.$store.state.civData.domestication.owned + window.vm.$store.state.civData.ploughshares.owned + window.vm.$store.state.civData.irrigation.owned +
+          window.vm.$store.state.civData.croprotation.owned + window.vm.$store.state.civData.selectivebreeding.owned + window.vm.$store.state.civData.fertilisers.owned +
+          window.vm.$store.state.civData.blessing.owned))
       },
       set efficiency(value) {
         this.efficiency_base = value
@@ -1343,7 +1344,7 @@ function civDataTable() { // eslint-disable-line no-unused-vars
         tannery: 1,
       },
       get limit() {
-        return window.vm.civData.tannery.owned
+        return window.vm.$store.state.civData.tannery.owned
       },
       set limit(value) {
         return this.limit
@@ -1360,7 +1361,7 @@ function civDataTable() { // eslint-disable-line no-unused-vars
         smithy: 1,
       },
       get limit() {
-        return window.vm.civData.smithy.owned
+        return window.vm.$store.state.civData.smithy.owned
       },
       set limit(value) {
         return this.limit
@@ -1381,7 +1382,7 @@ function civDataTable() { // eslint-disable-line no-unused-vars
         this.cureCount = 0
       },
       get limit() {
-        return window.vm.civData.apothecary.owned
+        return window.vm.$store.state.civData.apothecary.owned
       },
       set limit(value) {
         return this.limit
@@ -1404,7 +1405,7 @@ function civDataTable() { // eslint-disable-line no-unused-vars
         temple: 1,
       },
       get limit() {
-        return window.vm.civData.temple.owned
+        return window.vm.$store.state.civData.temple.owned
       },
       set limit(value) {
         return this.limit
@@ -1443,7 +1444,7 @@ function civDataTable() { // eslint-disable-line no-unused-vars
         metal: 10,
       },
       get limit() {
-        return 10 * window.vm.civData.barracks.owned
+        return 10 * window.vm.$store.state.civData.barracks.owned
       },
       set limit(value) {
         return this.limit
@@ -1471,7 +1472,7 @@ function civDataTable() { // eslint-disable-line no-unused-vars
         leather: 20,
       },
       get limit() {
-        return 10 * window.vm.civData.stable.owned
+        return 10 * window.vm.$store.state.civData.stable.owned
       },
       set limit(value) {
         return this.limit
@@ -1662,7 +1663,7 @@ function civDataTable() { // eslint-disable-line no-unused-vars
       id: 'engineerAch',
       name: 'Engi&shy;neer',
       test() {
-        return window.vm.civData.siege.owned > 0
+        return window.vm.$store.state.civData.siege.owned > 0
       },
     }),
     // If we beat the largest possible opponent, grant bonus achievement.
@@ -1694,21 +1695,21 @@ function civDataTable() { // eslint-disable-line no-unused-vars
       id: 'catAch',
       name: 'Cat!',
       test() {
-        return window.vm.civData.cat.owned >= 1
+        return window.vm.$store.state.civData.cat.owned >= 1
       },
     }),
     new Achievement({
       id: 'glaringAch',
       name: 'Glaring',
       test() {
-        return window.vm.civData.cat.owned >= 10
+        return window.vm.$store.state.civData.cat.owned >= 10
       },
     }),
     new Achievement({
       id: 'clowderAch',
       name: 'Clowder',
       test() {
-        return window.vm.civData.cat.owned >= 100
+        return window.vm.$store.state.civData.cat.owned >= 100
       },
     }),
     // other population
@@ -1762,8 +1763,8 @@ function civDataTable() { // eslint-disable-line no-unused-vars
       id: 'fullHouseAch',
       name: 'Full House',
       test() {
-        return window.vm.civData.battleAch.owned && window.vm.civData.fieldsAch.owned &&
-          window.vm.civData.underworldAch.owned && window.vm.civData.catsAch.owned
+        return window.vm.$store.state.civData.battleAch.owned && window.vm.$store.state.civData.fieldsAch.owned &&
+          window.vm.$store.state.civData.underworldAch.owned && window.vm.$store.state.civData.catsAch.owned
       },
     }),
     // wonders
@@ -1786,7 +1787,7 @@ function civDataTable() { // eslint-disable-line no-unused-vars
       id: 'merchantAch',
       name: 'Merch&shy;ant',
       test() {
-        return window.vm.civData.gold.owned > 0
+        return window.vm.$store.state.civData.gold.owned > 0
       },
     }),
     new Achievement({
@@ -1808,7 +1809,7 @@ function civDataTable() { // eslint-disable-line no-unused-vars
 
   augmentCivData(civData)
 
-  // Create 'window.vm.civData.foo' entries as aliases for the window.vm.civData element with
+  // Create 'window.vm.$store.state.civData.foo' entries as aliases for the window.vm.$store.state.civData element with
   // id = "foo".  This makes it a lot easier to refer to the array
   // elements in a readable fashion.
   indexArrayByAttr(civData, 'id')

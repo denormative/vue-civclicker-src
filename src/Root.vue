@@ -6,7 +6,7 @@
     <div class="row">
       <div class="col">
         <basic-resources :basicResources="basicResources"></basic-resources>
-        <special-resources :civData="civData"></special-resources>
+        <special-resources></special-resources>
         <events-pane></events-pane>
         <current-deity-pane></current-deity-pane>
         <wonders-pane :wonderInProgress="wonderInProgress" :wonderCompleted="wonderCompleted"></wonders-pane>
@@ -52,7 +52,7 @@
             <upgrade-pane :normalUpgrades="normalUpgrades"></upgrade-pane>
             <deity-pane></deity-pane>
             <conquest-pane :armyUnits="armyUnits"></conquest-pane>
-            <trade-pane :civData="civData"></trade-pane>
+            <trade-pane></trade-pane>
             <achievements-pane :achData="achData"></achievements-pane>
             <settings-pane></settings-pane>
             <stats-pane></stats-pane>

@@ -173,21 +173,21 @@ Unit.prototype = new CivObj({
   set illObj(value) { window.vm.$store.state.curCiv[`${this.id}Ill`] = value },
   get ill() { return isValid(this.illObj) ? this.illObj.owned : undefined },
   set ill(value) { if (isValid(this.illObj)) { this.illObj.owned = value } },
-  get partyObj() { return window.vm.civData[`${this.id}Party`] },
+  get partyObj() { return window.vm.$store.state.civData[`${this.id}Party`] },
   set partyObj(value) { return this.partyObj }, // Only here for JSLint.
   get party() { return isValid(this.partyObj) ? this.partyObj.owned : undefined },
   set party(value) { if (isValid(this.partyObj)) { this.partyObj.owned = value } },
     // Is this unit just some other sort of unit in a different place (but in the same limit pool)?
-  isDest() { return (this.source !== undefined) && (window.vm.civData[this.source].partyObj === this) },
+  isDest() { return (this.source !== undefined) && (window.vm.$store.state.civData[this.source].partyObj === this) },
   get limit() {
-    return +((this.isDest()) ? window.vm.civData[this.source].limit :
+    return +((this.isDest()) ? window.vm.$store.state.civData[this.source].limit :
                                              Object.getOwnPropertyDescriptor(CivObj.prototype, 'limit').get.call(this))
   },
   set limit(value) { return +this.limit }, // Only here for JSLint.
 
     // The total quantity of this unit, regardless of status or place.
   get total() {
-    return (this.isDest()) ? window.vm.civData[this.source].total : (this.owned + (this.ill || 0) + (this.party || 0))
+    return (this.isDest()) ? window.vm.$store.state.civData[this.source].total : (this.owned + (this.ill || 0) + (this.party || 0))
   },
   set total(value) { return this.total }, // Only here for JSLint.
 }, true)
