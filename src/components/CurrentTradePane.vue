@@ -1,5 +1,5 @@
 <template>
-<div class="current-trade-pane">
+<div class="current-trade-pane card">
   <div id="tradeContainer" class="card-block" v-show="curCiv.trader.timer >= 0">
     Trader offers 1 gold for {{curCiv.trader.requested}} <span id="tradeType">food</span><br>
     <button class="btn btn-primary" id="trader" onmousedown="trade()">Trade</button>

@@ -21,9 +21,9 @@ export default {
       window.vm.addUITable(window.vm.homeBuildings, 'buildings') // Dynamically create the building controls table.
     })
   },
-  computed: mapState({
-    settings: state => state.settings,
-  }),
+  computed: {
+    ...mapState(['settings']),
+  },
 }
 </script>
 
