@@ -1,10 +1,12 @@
 <template>
 <div role="tabpanel" id="jobsPane" class="jobs-pane tab-pane card">
-  <h4 class="card-header" v-show="settings.showHeaders">Jobs</h4>
+  <div class="card-header d-flex justify-content-end" v-show="settings.showHeaders || settings.customIncr">
+    <h4 class="mb-0 mr-auto" v-show="settings.showHeaders">Jobs</h4>
+    <div v-show="settings.customIncr">
+      Custom Quantity: <input id="homeCustomQty" type="number" min="1" step="1" value="1" />
+    </div>
+  </div>
   <div class="card-block">
-    <p v-show="settings.customIncr">
-      Custom Quantity <input id="homeCustomQty" type="number" min="1" step="1" value="1" />
-    </p>
     <table id="jobs" class="table-sm"></table>
   </div>
 </div>

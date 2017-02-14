@@ -2,11 +2,17 @@
 <div role="tabpanel" id="conquestPane" class="conquest-pane tab-pane">
   <span id="standardRow"></span>
   <div id="conquest">
-    <h4>Army</h4>
-    <p v-show="settings.customIncr">
-      Custom Quantity <input id="partyCustomQty" type="number" min="1" step="1" value="1" />
-    </p>
-    <table id="party"></table>
+    <div class="card-header d-flex justify-content-end" v-show="settings.showHeaders || settings.customIncr">
+      <h4 class="mb-0 mr-auto" v-show="settings.showHeaders">Army</h4>
+      <div v-show="settings.customIncr">
+        Custom Quantity: <input id="partyCustomQty" type="number" min="1" step="1" value="1" />
+      </div>
+    </div>
+    <div class="card-block">
+      <table id="party" class="table-sm"></table>
+    </div>
+
+
     <br>
     <div id="raidGroup">
       <h4>To War!</h4>
