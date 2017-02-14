@@ -79,19 +79,18 @@ function playerCombatMods() { // eslint-disable-line no-unused-vars
 
 // Get an object's requirements in text form.
 // Pass it a cost object and optional quantity
-function getReqText(costObjArg, qty) {
-  const costObj = valOf(costObjArg, isValid(qty) ? qty : 1) // valOf evals it if it's a function
+function getReqText(costObjArg, qtyArg) {
+  const qty = isValid(qtyArg) ? qtyArg : 1
+  const costObj = valOf(costObjArg, qty) // valOf evals it if it's a function
   if (!isValid(costObj)) {
     return ''
   }
 
-  let i
-  let num
   let text = ''
-  for (i in costObj) {
+  for (const i in costObj) {
     // If the cost is a function, eval it with qty as a param.  Otherwise
     // just multiply by qty.
-    num = (typeof costObj[i] === 'function') ? (costObj[i](qty)) : (costObj[i] * qty)
+    const num = (typeof costObj[i] === 'function') ? (costObj[i](qty)) : (costObj[i] * qty)
     if (!num) {
       continue
     }

@@ -2,7 +2,8 @@
 <div role="tabpanel" id="conquestPane" class="conquest-pane tab-pane">
   <span id="standardRow"></span>
   <div id="conquest">
-    <div class="card-header d-flex justify-content-end" v-show="settings.showHeaders || settings.customIncr">
+    <div class="card-header d-flex justify-content-end"
+        v-show="!curCiv.raid.victory && (settings.showHeaders || settings.customIncr)">
       <h4 class="mb-0 mr-auto" v-show="settings.showHeaders">Army</h4>
       <div v-show="settings.customIncr">
         Custom Quantity: <input id="partyCustomQty" type="number" min="1" step="1" value="1" />
