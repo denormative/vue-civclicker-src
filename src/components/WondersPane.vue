@@ -36,10 +36,15 @@
         <div id="lowResources" class="text-center">Limited<span id="limited"> by low resources</span></div>
       </div>
       <div class="col col-auto">
-        <table id="pastWonders">
-          <tr>
-            <td></td>
-          </tr>
+        <table class="table-striped table-hover table-sm">
+          <thead>
+            <tr><th>Name</th><th>Type</th></tr>
+          </thead>
+          <tbody>
+            <tr v-for="w in curCiv.wonders">
+              <td>{{w.name}}</td><td class="text-capitalize">{{w.resourceId}}</td>
+            </tr>
+          </tbody>
         </table>
       </div>
     </div>
@@ -124,10 +129,6 @@ export default {
 </script>
 
 <style>
-#pastWonders td {
-  padding-right: 1em;
-}
-
 .wonderCompleted button {
   width: 5em;
 }

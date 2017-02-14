@@ -832,29 +832,6 @@ function updateMorale() {
 function updateWonder() {
   // Construction in progress; show/hide building area and labourers
   setElemDisplay('labourerRow', (window.vm.$store.state.curCiv.curWonder.stage === 1))
-
-  setElemDisplay('wonderCompleted', (window.vm.$store.state.curCiv.curWonder.stage === 2))
-
-  updateWonderList()
-}
-
-function updateWonderList() {
-  if (window.vm.$store.state.curCiv.wonders.length === 0) {
-    return
-  }
-
-  let i
-  // update wonder list
-  let wonderhtml = '<tr><td><strong>Name</strong></td><td><strong>Type</strong></td></tr>'
-  for (i = (window.vm.$store.state.curCiv.wonders.length - 1); i >= 0; --i) {
-    try {
-      wonderhtml += `<tr><td>${window.vm.$store.state.curCiv.wonders[i].name}</td><td>${window.vm.$store.state.curCiv.wonders[i].resourceId}</td></tr>` // eslint-disable-line max-len
-    }
-    catch (err) {
-      console.error(`Could not build wonder row ${i}`)
-    }
-  }
-  document.getElementById('pastWonders').innerHTML = wonderhtml
 }
 
 function updateReset() {
@@ -886,8 +863,7 @@ function update() {
   updateAchievements() // should probably include else clauses
   // updateTargets();  --- only to be called at initialisation and targetMax alterations
   updateMorale()
-  updateWonder() // remove reference to updateWonderList
-  // updateWonderList(); --- only to be called at initialisation and when wonders are created ---
+  updateWonder()
   updateReset()
 
   // Debugging - mark end of function, calculate delta in milliseconds, and print to console
