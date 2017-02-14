@@ -840,7 +840,7 @@ new Vue({
 
       document.getElementById('tradeContainer').style.display = 'block'
       document.getElementById('tradeType').innerHTML =
-        this.vm.civData[this.curCiv.trader.materialId].getQtyName(this.curCiv.trader.requested)
+        this.civData[this.curCiv.trader.materialId].getQtyName(this.curCiv.trader.requested)
     },
     tickTraders() {
       // traders occasionally show up

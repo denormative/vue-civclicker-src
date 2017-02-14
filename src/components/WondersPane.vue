@@ -1,26 +1,33 @@
 <template>
-<div class="wonders-pane card" id="wondersContainer">
-  <h4 class="card-header">Wonders
-    <div class="btn-group float-right" role="group" v-show="wonderInProgress"> <!-- FIXME: should be v-if -->
-      <button id="renameWonder" class="btn btn-outline-info btn-sm" @click="renameWonder()">Rename</button>
+<!-- Display this section if we have any wonders or could build one. -->
+<div class="wonders-pane card" v-show="haveWonderTech || curCiv.wonders.length > 0">
+  <h4 class="card-header" v-show="!wonderInProgress">Wonders</h4>
+  <h4 class="card-header" v-show="wonderInProgress">Wonders: {{curCiv.curWonder.name}}
+    <div class="btn-group float-right" role="group"> <!-- FIXME: should be v-if -->
+      <button class="btn btn-outline-info btn-sm" @click="renameWonder()">Rename</button>
       <button id="speedWonder" class="btn btn-outline-primary btn-sm" @click="speedWonder()"
-          data-content="<b>100 gold</b><br> Increase wonder progress by 1%">Speed</button>
+          data-content="<b>100 gold</b><br> Increase wonder progress by 1%"
+          :disabled="curCiv.curWonder.stage !== 1 || !canAfford({gold: 100})">
+        Speed
+      </button>
     </div>
   </h4>
   <div class="card-block">
     <div class="row">
-      <div id="startWonderLine" class="col" align="center">
-        <button id="startWonder" class="btn btn-success btn-lg" @click="startWonder()">
+      <!-- Can start building a wonder, but haven't yet. -->
+      <div class="col" align="center" v-show="haveWonderTech && curCiv.curWonder.stage === 0">
+        <button class="btn btn-success btn-lg" @click="startWonder()">
           Start Building Wonder
         </button>
       </div>
+      <!-- Finished, but haven't picked the resource yet -->
       <div id="wonderCompleted" v-show="wonderCompleted" class="col">
         <h5 class="text-success text-center"><b>{{curCiv.curWonder.name}}</b> Completed!</h5>
         <div>Choose Bonus:</div>
       </div>
       <div v-show="wonderInProgress" class="col">
         <!-- FIXME: really should be v-if not v-show -->
-        <div class="">Progress on <b>{{curCiv.curWonder.name}}</b></div>
+        <div class="text-center">Progress on <b>{{curCiv.curWonder.name}}</b></div>
         <div class="progress" style="line-height: 1.5rem; font-size: 1rem">
           <div class="progress-bar bg-success" style="height: 1.5rem" role="progressbar" v-bind:style="{width: curCiv.curWonder.progress + '%'}" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
             {{progressDisplay}}%
@@ -40,7 +47,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 
 export default {
   name:  'wonders-pane',
@@ -64,12 +71,14 @@ export default {
     })
   },
   computed: {
-    ...mapState(['curCiv']),
+    ...mapState(['curCiv', 'civData']),
+    ...mapGetters(['haveWonderTech']),
     progressDisplay() {
       return this.curCiv.curWonder.progress.toFixed(2)
     },
   },
   methods: {
+    canAfford(...args) { return window.canAfford(args) },
     addWonderSelectText() {
       const wcElem = document.getElementById('wonderCompleted')
       if (!wcElem) {
@@ -91,7 +100,7 @@ export default {
       if (this.curCiv.curWonder.stage !== 0) {
         return
       }
-      this.$store.setWonderStage(this.curCiv.curWonder.stage + 1)
+      this.$store.commit('setWonderStage', this.curCiv.curWonder.stage + 1)
       this.renameWonder()
       window.updateWonder()
     },
@@ -104,15 +113,10 @@ export default {
       if (!n) {
         return
       }
-      this.$store.setWonderName(n)
+      this.$store.commit('setWonderName', n)
     },
-    speedWonder() { // eslint-disable-line no-unused-vars
-      if (this.civData.gold.owned < 100) {
-        return
-      }
-      this.civData.gold.owned -= 100
-
-      this.$store.rushWonder(1 / window.getWonderCostMultiplier())
+    speedWonder() {
+      this.$store.commit('rushWonder')
       window.updateWonder()
     },
   },
@@ -120,14 +124,6 @@ export default {
 </script>
 
 <style>
-#wondersContainer {
-  display: none;
-}
-
-#startWonderLine {
-  display: none;
-}
-
 #pastWonders td {
   padding-right: 1em;
 }

@@ -830,22 +830,9 @@ function updateMorale() {
 
 // updates the display of wonders and wonder building
 function updateWonder() {
-  const haveTech = (window.vm.$store.state.civData.architecture.owned && window.vm.$store.state.civData.civilservice.owned)
-
-  // Display this section if we have any wonders or could build one.
-  setElemDisplay('wondersContainer', (haveTech || window.vm.$store.state.curCiv.wonders.length > 0))
-
-  // Can start building a wonder, but haven't yet.
-  setElemDisplay('startWonderLine', (haveTech && window.vm.$store.state.curCiv.curWonder.stage === 0))
-  document.getElementById('startWonder').disabled = (!haveTech || window.vm.$store.state.curCiv.curWonder.stage !== 0)
-
   // Construction in progress; show/hide building area and labourers
   setElemDisplay('labourerRow', (window.vm.$store.state.curCiv.curWonder.stage === 1))
-  document.getElementById('speedWonder').disabled = (window.vm.$store.state.curCiv.curWonder.stage !== 1 || !canAfford({
-    gold: 100,
-  }))
 
-  // Finished, but haven't picked the resource yet.
   setElemDisplay('wonderCompleted', (window.vm.$store.state.curCiv.curWonder.stage === 2))
 
   updateWonderList()
@@ -1604,11 +1591,10 @@ function load(loadType) { // eslint-disable-line
     settingsVar = settingsVarReturn.val
 
     // Merge the loaded data into our own, in case we've added fields.
-    mergeObj(window.vm.$store.state.curCiv, loadVar.curCiv)
+    window.vm.$store.commit('loadGame', loadVar.curCiv)
   }
   else {
-    mergeObj(window.vm.$store.state.curCiv, loadVar.curCiv)
-    // window.vm.$store.state.curCiv = loadVar.window.vm.$store.state.curCiv // No need to merge if the versions match; this is quicker.
+    window.vm.$store.commit('loadGame', loadVar.curCiv)
   }
 
   console.info(`Loaded save game version ${saveVersion.major

@@ -3,7 +3,7 @@ import Vuex from 'vuex'
 
 Vue.use(Vuex)
 
-/* global indexArrayByAttr VersionData */
+/* global indexArrayByAttr */
 
 function VersionData(major, minor, sub, mod) {
   this.major = major
@@ -114,15 +114,8 @@ const storeGetters = {
     }
     return state.civSizes[0]
   },
-  getOwned: (state) => (id) => state[id].owned, // {
-    // return state[id].owned
-    // for (let i = 0; i < state.civSizes.length; ++i) {
-    //   if (popcnt <= state.civSizes[i].max_pop) {
-    //     return state.civSizes[i]
-    //   }
-    // }
-    // return state.civSizes[0]
-  // },
+  getOwned:       (state) => (id) => state[id].owned,
+  haveWonderTech: (state) => state.civData.architecture.owned && state.civData.civilservice.owned,
 }
 
 const storeMutations = {
@@ -206,17 +199,18 @@ const storeMutations = {
     state.curCiv.raid.targetMax = state.civSizes[0].id
   },
   populatePreLoad(state, { civData }) {
-    state.civData.forEach((elem) => {
+    civData.forEach((elem) => {
       if (state.curCiv[elem.id] === undefined) {
-        state.curCiv[elem.id] = { owned: 0, limit: 0 }
+        state.curCiv[elem.id] = Object.assign({}, state.curCiv[elem.id], { owned: 0, limit: 0 })
+        // state.curCiv[elem.id] = { owned: 0, limit: 0 }
       }
 
       if (state.curCiv[elem.id].owned === undefined) {
-        state.curCiv[elem.id].owned = 0
+        Vue.set(state.curCiv[elem.id], 'owned', 0)
       }
 
       if (state.curCiv[elem.id].limit === undefined) {
-        state.curCiv[elem.id].limit = 0
+        Vue.set(state.curCiv[elem.id], 'limit', 0)
       }
     })
 
@@ -250,9 +244,16 @@ const storeMutations = {
   setWonderProgress(state, progress) {
     state.curCiv.curWonder.progress = progress
   },
-  rushWonder(state, progress) {
-    state.curCiv.curWonder.progress += progress
-    state.curCiv.curWonder.rushed = true
+  rushWonder(state) {
+    if (state.civData.gold.owned > 100) {
+      state.civData.gold.owned -= 100
+
+      state.curCiv.curWonder.progress += 1 / window.getWonderCostMultiplier()
+      state.curCiv.curWonder.rushed = true
+    }
+  },
+  loadGame(state, curCiv) {
+    state.curCiv = curCiv
   },
   ADD_NOTE(state) {
     const newNote = {
